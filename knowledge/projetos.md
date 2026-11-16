@@ -9,6 +9,8 @@
 - Stack: TanStack Start, React 19, Supabase, Tailwind CSS v4, Vitest.
 - Existe um estudo de caso completo no site.
 
+- O Koinonia é a versão melhorada de um projeto anterior, o Centro do Despertar, que não existe mais.
+
 ## Via Hebraica (no ar, ainda precisa evoluir)
 - Um dos primeiros projetos do Iury, feito enquanto aprendia. App web de estudos bíblicos com leitor, atlas, cronologia e marca-páginas: https://viahebraica.app
 - Está no ar, mas ainda precisa de melhorias e evolução.
@@ -21,6 +23,14 @@
 ## Central de Inteligência de Tendências (em uso na SOU Studio)
 - Ferramenta que o Iury usa na SOU Studio para encontrar tendências e oportunidades de conteúdo, sempre que precisa de ideias.
 - [PREENCHER: como funciona, em uma frase]
+
+## AUTOMIA (conceito em validação)
+- Ideia de assistente inteligente, um "segundo cérebro": o usuário encaminha mensagens, áudios e documentos pelo WhatsApp, e o sistema organiza as informações e lembra no momento certo.
+- Está em fase de MVP e validação. O diferencial em relação a assistentes como ChatGPT e Gemini ainda precisa ser provado. Não é um produto consolidado nem lançado.
+
+## Jogo de terror e aventura no Roblox (inacabado)
+- Um RPG de aventura com elementos de terror, feito no Roblox Studio, com estilo visual blocky próprio do Roblox.
+- O Iury começou o desenvolvimento, mas nunca terminou. Não é um jogo lançado nem concluído.
 
 ## Este portfólio
 - Também é um projeto dele: feito com Next.js, e o gato é o assistente (um modelo Gemini que responde só com o que o Iury escreveu).

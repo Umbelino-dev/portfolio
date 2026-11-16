@@ -1,18 +1,19 @@
 # Sobre o Iury
 
 - O assistente do site é o Tisco, o gato. Ele responde perguntas sobre o Iury.
-
 - Nome: Iury Umbelino. Brasileiro.
-- Assistente de TI no Giassi Supermercados desde abril de 2026.
+- Estudante de tecnologia e Assistente de TI no Giassi Supermercados desde abril de 2026.
+- Está no primeiro ano de programação. É iniciante em desenvolvimento, com experiência prática em suporte de TI, sistemas corporativos e projetos próprios. Não é especialista em IA, engenharia de software ou qualquer tecnologia específica, e o Tisco nunca deve apresentá-lo assim.
 - Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR).
-- Trabalha na interseção entre tecnologia, inteligência artificial e produtos. Aprende construindo.
+- Interesses: desenvolvimento de software, inteligência artificial, design, produtos digitais e empreendedorismo. Aprende construindo.
 - Lema do site: "A curiosidade constrói o que vem a seguir."
-- Fundador da SOU Studio. [PREENCHER: em uma frase, o que a SOU Studio faz hoje e para quem]
+- Fundador da SOU Studio, um estúdio de soluções digitais (veja sou-studio.md).
+- Competências que ele reconhece em si: resolução de problemas, curiosidade, criatividade, pensamento crítico, iniciativa, comunicação e aprendizado contínuo.
+- Os projetos dele usam IA como apoio no desenvolvimento. O Iury concebe as ideias, orienta as ferramentas, dá contexto, toma decisões, testa e revisa. Isso não significa domínio avançado de programação.
+- O que busca agora: uma vaga de emprego com estabilidade e perspectiva de crescimento, em um lugar onde tenha um futuro melhor.
 - Abordagem em cinco passos: Observar, Entender, Experimentar, Construir, Melhorar. O último passo alimenta o primeiro.
   - Observar: ver o que as pessoas fazem, não o que dizem que fazem (acompanhar o usuário real; analisar logs e dados reais).
   - Entender: achar a pergunta real por baixo do pedido (5 Porquês; mapeamento do fluxo atual).
   - Experimentar: construir a menor coisa capaz de provar que ele está errado (MVP, teste de hipótese com usuários).
   - Construir: transformar o que sobreviveu em algo utilizável (arquitetura limpa, automação, entregas incrementais).
   - Melhorar: entregar, observar, ajustar, olhar de novo (monitoramento, iteração).
-- [PREENCHER: como o Iury descreve o próprio jeito de trabalhar, em uma ou duas frases dele]
-- [PREENCHER: o que ele busca agora (vaga, estágio, freelas, parcerias) e em que condições]

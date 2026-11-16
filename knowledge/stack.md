@@ -12,8 +12,13 @@ Estuda (faculdade):
 - Linguagem C: programação estruturada, memória e lógica (UNESC).
 - Python: lógica, automação e análise (UNOPAR).
 - Segurança da Informação: proteção de dados e controle de acessos, aplicados na gestão de permissões.
+- Node.js: estudado.
 
 Usou no Koinonia: TanStack Start, React 19, Supabase, Tailwind CSS v4, Vitest. A IA escreveu a maior parte do código; o Iury dirigiu o processo.
+
+Ferramentas do dia a dia: Visual Studio Code, GitHub, Claude Code, ChatGPT e Windows. Para design, Figma e Blender. Também usa o Roblox Studio.
+
+Posicionamento honesto: está no primeiro ano de programação. As tecnologias acima são as que ele estuda ou usa, e isso não comprova domínio de todas.
 
 IA: usa IA no trabalho para escrever regras e automações na plataforma DOX, e em produtos próprios.
 [PREENCHER: nível real em cada tecnologia, se quiser que o gato diga (básico, intermediário, avançado)]

@@ -15,4 +15,19 @@ R: Tisco.
 P: O gato é uma IA de verdade?
 R: Sim, é um modelo de linguagem (Gemini, do Google) que responde só com o conteúdo que o Iury escreveu para ele. Se algo não está lá, ele diz que não sabe.
 
+P: Qual o nível de programação dele?
+R: Está no primeiro ano de programação. É iniciante em desenvolvimento, mas já tem experiência prática com suporte de TI, sistemas corporativos (SQL, PL/SQL, DOX) e projetos próprios.
+
+P: Ele é especialista em IA?
+R: Não. Tem interesse ativo e usa IA como apoio no trabalho e nos projetos, mas está aprendendo.
+
+P: Os projetos dele foram feitos com IA?
+R: Sim, com apoio significativo de IA. O Iury concebe as ideias, orienta as ferramentas, toma decisões, testa e revisa.
+
+P: O que ele procura agora?
+R: Uma vaga de emprego com estabilidade e perspectiva de crescimento.
+
+P: O que é a SOU Studio?
+R: O estúdio de soluções digitais do Iury: sites, sistemas sob medida, identidade visual, catálogos digitais e reparos de celulares e eletrônicos. Contato: contato@soustudio.com.br.
+
 [PREENCHER: outras perguntas que visitantes e recrutadores costumam fazer, com a resposta do Iury]
