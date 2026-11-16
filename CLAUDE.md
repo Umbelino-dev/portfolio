@@ -91,7 +91,7 @@ One character. `CatFigure` (SVG, `data-cat` parts) is the only drawing; `CatObse
 - **Grounding, not training.** The model answers only from `knowledge/*.md` (Iury's words; one topic per file). `scripts/knowledge.mjs` (runs in `prebuild`, or `npm run knowledge`) writes `worker/knowledge.generated.ts` (generated, committed, never hand-edit). Lines with `[PREENCHER` and HTML comments are left out. **`knowledge/` is public and goes to Google on every question: only write what may be read by anyone.** Same no-fabrication rule as the site.
 - Secret `GEMINI_API_KEY` lives in the Worker (dashboard → Settings → Variables and Secrets; it cannot be added to an assets-only Worker, so the script had to ship first). Never in the repo or the browser. `GEMINI_MODEL` is a comma-separated list in `wrangler.jsonc` (order of preference; the Worker moves on at 404/429 because Google retires models: gemini-2.5-flash answered 404 on 2026-11-16).
 - Free-tier data may be used by Google to improve its products (pricing page): the panel shows `assistant.ui.privacy` in both locales. Keep it.
-- Limits in the Worker: same-origin only, ≤7 turns, user text ≤300 chars, `maxOutputTokens` 800, 9 s upstream timeout, a best-effort per-isolate limiter. The client sends the last 6 turns and the case slug.
+- Limits in the Worker: same-origin only, ≤7 turns, user text ≤300 chars, `maxOutputTokens` 800, 12 s upstream timeout, a best-effort per-isolate limiter. The client sends the last 6 turns and the case slug.
 - Test without a key: `npx wrangler dev --var GEMINI_API_KEY:fake` (the model call returns 502, the scripted fallback shows) and mock `/api/chat` in Playwright.
 
 ## Hero, copy and cursor (Redesign R2)

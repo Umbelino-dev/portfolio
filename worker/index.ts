@@ -24,7 +24,7 @@ const MAX_TURNS = 7;
 const MAX_USER_CHARS = 300;
 const MAX_ASSISTANT_CHARS = 1200;
 const MAX_OUTPUT_TOKENS = 800;
-const UPSTREAM_TIMEOUT_MS = 9000;
+const UPSTREAM_TIMEOUT_MS = 12000;
 
 const SYSTEM_PROMPT = `Você é o gato do portfólio de Iury Umbelino, um assistente que responde perguntas sobre o Iury.
 
@@ -105,7 +105,7 @@ async function chat(request: Request, env: Env): Promise<Response> {
   const key = env.GEMINI_API_KEY;
   if (!key) return json({ error: "not_configured" }, 503);
   // GEMINI_MODEL is a comma-separated list in order of preference: models get
-  // retired, so a 404 (gone) or 429 (no quota on that one) moves on to the next.
+  // retired or overloaded, so a 404, 429 or 5xx moves on to the next.
   const models = (env.GEMINI_MODEL ?? "")
     .split(",")
     .map((m) => m.trim())
@@ -139,7 +139,9 @@ async function chat(request: Request, env: Env): Promise<Response> {
       generationConfig: { temperature: 0.2, maxOutputTokens: MAX_OUTPUT_TOKENS },
     });
     let upstream: Response | null = null;
+    let used = "";
     for (const model of models) {
+      used = model;
       upstream = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
         {
@@ -149,11 +151,12 @@ async function chat(request: Request, env: Env): Promise<Response> {
           signal: controller.signal,
         },
       );
-      if (upstream.status !== 404 && upstream.status !== 429) break;
+      // 404 gone, 429 no quota, 5xx overloaded: try the next model.
+      if (upstream.status !== 404 && upstream.status !== 429 && upstream.status < 500) break;
     }
     if (!upstream) return json({ error: "upstream" }, 502);
     if (upstream.status === 429) return json({ error: "quota" }, 429);
-    if (!upstream.ok) return json({ error: "upstream", status: upstream.status }, 502);
+    if (!upstream.ok) return json({ error: "upstream", status: upstream.status, model: used }, 502);
 
     const data = (await upstream.json()) as GeminiResponse;
     if (data.promptFeedback?.blockReason) return json({ error: "blocked" }, 502);
@@ -163,7 +166,7 @@ async function chat(request: Request, env: Env): Promise<Response> {
       .join("")
       .trim();
     if (!reply) return json({ error: "empty", finish: candidate?.finishReason ?? null }, 502);
-    return json({ reply });
+    return json({ reply, model: used });
   } catch {
     return json({ error: "upstream_timeout" }, 504);
   } finally {

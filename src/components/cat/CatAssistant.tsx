@@ -38,7 +38,7 @@ type Message = { from: "cat" | "you"; text: string };
 
 const MOBILE = "(max-width: 767px)";
 const REPLY_MS = 650;
-const CHAT_TIMEOUT_MS = 10_000;
+const CHAT_TIMEOUT_MS = 14_000;
 /** Turns of context sent with each question (the Worker accepts at most 7). */
 const CHAT_HISTORY = 6;
 
