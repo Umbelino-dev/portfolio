@@ -5,7 +5,7 @@ import { gsap, MQ, useGSAP } from "@/lib/gsap";
 import { anchors } from "@/components/hero/name-paths";
 import { CatFigure } from "./CatFigure";
 import { TAIL_WAVE } from "./CatFigure";
-import { catParts, crouch, prime, run, stretch, tailFlick, walk } from "./clips";
+import { catParts, crouch, pivot, prime, run, stretch, tailFlick, walk } from "./clips";
 import { CAT_OPEN } from "./states";
 
 /** Pointer rules from Homepage R02 · N3 (Cat — observer mode). */
@@ -62,9 +62,9 @@ export function CatObserver({
       const mm = gsap.matchMedia();
 
       mm.add(MQ.motion, () => {
-        gsap.set(body, { svgOrigin: "50 125" });
-        gsap.set(head, { svgOrigin: "50 62" });
-        gsap.set(eyes, { svgOrigin: "50 40" });
+        pivot(body, "50 125");
+        pivot(head, "50 62");
+        pivot(eyes, "50 40");
 
         const breath = gsap.to(el, {
           scaleY: 1.025,
@@ -80,7 +80,7 @@ export function CatObserver({
         // waves (a slow sine between two curves) and the right ear twitches now and then.
         const [tailWave] = q<SVGPathElement>('[data-cat="tail-wave"]');
         const [earR] = q<SVGGElement>('[data-cat="ear-r"]');
-        if (earR) gsap.set(earR, { svgOrigin: "72 30" });
+        if (earR) pivot(earR, "72 30");
         const wave = tailWave
           ? gsap.to(tailWave, { attr: { d: TAIL_WAVE }, duration: 2.2, ease: "sine.inOut", yoyo: true, repeat: -1, paused: true })
           : null;
@@ -96,7 +96,7 @@ export function CatObserver({
         let onScreen = false;
         let blinkTimer: number | undefined;
         const idleParts = catParts(el);
-        if (idleParts) gsap.set(idleParts.tail, { svgOrigin: "80 118" });
+        if (idleParts?.tail) pivot(idleParts.tail, "80 118");
         const blink = () => {
           gsap
             .timeline()
@@ -200,7 +200,7 @@ export function CatObserver({
       // Scroll narrative (Cat Journey R03 · S1 → S2), one scrubbed timeline per slot.
       // Desktop: as the hero scrolls away the cat stretches, walks left over the
       // "n", turns, runs right to the edge of the "o" and crouches; CatAssistant
-      // then takes the leap at 50% (JUMP → FALL → GRAB). Scrubbed, so scrolling
+      // then glides it to the dock when it reaches the nav line. Scrubbed, so scrolling
       // back plays it in reverse and the cat can never be left half-way.
       // Mobile: there is no room to walk, so it stretches, looks up at the name and
       // crouches before its hop to the dock.
@@ -209,29 +209,55 @@ export function CatObserver({
         const [lean] = q<HTMLElement>("[data-cat-lean]");
         const p = lean ? catParts(el, lean) : null;
         if (!hero || !p) return;
-        prime(p);
         const mark = el.closest<HTMLElement>("[data-hero-mark]");
         const span = () => (mark?.offsetWidth ?? 0) / 100;
-        const tl = gsap.timeline({
-          defaults: { ease: "sine.inOut" },
-          scrollTrigger: { trigger: hero, start: "top top", end: "48% top", scrub: 0.5, invalidateOnRefresh: true },
+        // Built here and rebuilt only when the mark's width really changes. Not
+        // `invalidateOnRefresh`: invalidating drops GSAP's transform cache on the SVG
+        // parts and their pivots were re-read wrong (a leg pivoting round a point
+        // ~1000 units away), so legs and tail flew off the body on scroll
+        // (Iury, 2026-11-16).
+        let tl: gsap.core.Timeline | null = null;
+        const build = () => {
+          const progress = tl?.scrollTrigger?.progress ?? 0;
+          tl?.scrollTrigger?.kill();
+          tl?.kill();
+          prime(p);
+          tl = gsap.timeline({
+            defaults: { ease: "sine.inOut" },
+            scrollTrigger: { trigger: hero, start: "top top", end: "48% top", scrub: 0.5 },
+          });
+          if (look === "left") {
+            const toN = (anchors.nCenter - anchors.oCenter) * span();
+            const toEdge = (anchors.oRight - anchors.oCenter) * span() - el.offsetWidth * 0.2;
+            tl.add(stretch(p, 0.14), 0)
+              .add(walk(p, el, () => toN, { steps: 3, d: 0.2, dir: -1 }), 0.14)
+              // Turns: head and eyes swing the other way before it sets off.
+              .to(p.look, { rotation: 8, duration: 0.04 }, 0.34)
+              .to(p.gaze, { x: 2.5, duration: 0.04 }, 0.34)
+              .add(run(p, el, () => toEdge, { strides: 3, d: 0.1, dir: 1 }), 0.38)
+              .add(crouch(p, 0.04), 0.48);
+          } else {
+            tl.add(stretch(p, 0.2), 0)
+              .to(p.look, { rotation: -9, duration: 0.15 }, 0.22)
+              .to(p.gaze, { x: -1.6, y: -2.4, duration: 0.15 }, 0.22)
+              .add(crouch(p, 0.08), 0.42);
+          }
+          tl.progress(progress);
+        };
+        build();
+        let width = mark?.offsetWidth ?? 0;
+        const ro = new ResizeObserver(() => {
+          const w = mark?.offsetWidth ?? 0;
+          if (w === width) return;
+          width = w;
+          build();
         });
-        if (look === "left") {
-          const toN = () => (anchors.nCenter - anchors.oCenter) * span();
-          const toEdge = () => (anchors.oRight - anchors.oCenter) * span() - el.offsetWidth * 0.2;
-          tl.add(stretch(p, 0.14), 0)
-            .add(walk(p, el, toN, { steps: 3, d: 0.2, dir: -1 }), 0.14)
-            // Turns: head and eyes swing toward the rail before it sets off.
-            .to(p.look, { rotation: 8, duration: 0.04 }, 0.34)
-            .to(p.gaze, { x: 2.5, duration: 0.04 }, 0.34)
-            .add(run(p, el, toEdge, { strides: 3, d: 0.1, dir: 1 }), 0.38)
-            .add(crouch(p, 0.04), 0.48);
-        } else {
-          tl.add(stretch(p, 0.2), 0)
-            .to(p.look, { rotation: -9, duration: 0.15 }, 0.22)
-            .to(p.gaze, { x: -1.6, y: -2.4, duration: 0.15 }, 0.22)
-            .add(crouch(p, 0.08), 0.42);
-        }
+        if (mark) ro.observe(mark);
+        return () => {
+          ro.disconnect();
+          tl?.scrollTrigger?.kill();
+          tl?.kill();
+        };
       });
 
       return () => mm.revert();

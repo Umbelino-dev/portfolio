@@ -16,7 +16,8 @@
     "skip": "Pular para o conteúdo",
     "localeShort": "EN",
     "allProjects": "Todos os projetos",
-    "projectsShort": "Projetos"
+    "projectsShort": "Projetos",
+    "language": "Idioma"
   },
   "status": {
     "concept": "Conceito",
@@ -26,7 +27,9 @@
     "validating": "Validando o problema",
     "live": "No ar, em uso",
     "evolving": "No ar, em evolução",
-    "in-use": "Em uso"
+    "in-use": "Em uso",
+    "pitch": "Pitch no Startup Weekend",
+    "shaping": "Em estruturação"
   },
   "hero": {
     "cta": "Me conheça",
@@ -91,16 +94,21 @@
     "data": "Dados",
     "research": "Pesquisa",
     "retail": "Varejo",
-    "personalTools": "Ferramentas pessoais"
+    "personalTools": "Ferramentas pessoais",
+    "design": "Design",
+    "audiovisual": "Audiovisual",
+    "business": "Negócio",
+    "event": "Evento"
   },
   "projects": {
     "label": "Projetos",
-    "note": "Quatro projetos, cada um na sua etapa real: do problema ainda em validação ao produto em uso diário.",
+    "note": "Seis projetos, cada um na sua etapa real: do problema ainda em validação ao produto em uso diário.",
     "visit": "abre o site em nova aba",
     "listLabel": "Projetos",
     "openCase": "Ver o projeto",
     "pending": "imagem em breve",
-    "indexLabel": "Escolha um projeto"
+    "indexLabel": "Escolha um projeto",
+    "site": "Ir direto para o site"
   },
   "approach": {
     "label": "Abordagem",
@@ -220,7 +228,20 @@
     "process": "Processo e desenvolvimento",
     "access": "Acesso ao projeto",
     "stage": "Etapa atual",
-    "stageOf": "{step}, etapa {n} de {total}"
+    "stageOf": "{step}, etapa {n} de {total}",
+    "stageHint": "Toque em uma etapa para ver o que ela teve neste projeto.",
+    "research": "Pesquisa externa",
+    "sourceLabel": "Fonte",
+    "notReached": "Ainda não chegou aqui.",
+    "noRecord": "Ainda não documentei esta etapa.",
+    "stageCurrent": "etapa atual",
+    "video": "Vídeo",
+    "videoPending": "O vídeo entra aqui em breve.",
+    "related": "Também no",
+    "relatedKinds": {
+      "linkedin": "LinkedIn",
+      "github": "GitHub"
+    }
   },
   "assistant": {
     "ui": {

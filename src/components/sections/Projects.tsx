@@ -35,6 +35,8 @@ export async function Projects() {
       cursorLabel: caseHref ? tc("project") : live ? tc("visit") : undefined,
       summary: p.summary[locale] || undefined,
       hasCover: Boolean(p.cover),
+      site: caseHref && p.links?.[0] ? { href: p.links[0].href, label: `${t("site")}: ${p.links[0].label[locale]}` } : undefined,
+      cursorSite: tc("visit"),
       action: caseHref ? t("openCase") : live ? live.label[locale] : undefined,
       meta: (
         <span className="flex flex-wrap items-baseline gap-x-4 gap-y-1">

@@ -78,6 +78,11 @@ for (const name of ["koinonia-cover", "koinonia-map", "koinonia-brand"]) {
   await variants(name, await fs.readFile(path.join(SRC, `${name}.png`)));
 }
 
+// Project covers drawn from the logos (scripts/covers.mjs).
+for (const name of ["via-hebraica-cover", "1kid-cover", "hyper-cover"]) {
+  await variants(name, await fs.readFile(path.join(SRC, `${name}.png`)));
+}
+
 // Event photos for the About deck (from Iury's LinkedIn posts), kept as shot.
 for (const file of ["startup-weekend-team.webp", "startup-weekend.png", "crio-conecta.jpg"]) {
   const input = await fs.readFile(path.join(SRC, file));

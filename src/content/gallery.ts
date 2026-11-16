@@ -58,7 +58,7 @@ export const gallery: GalleryPhoto[] = [
       pt: "Iury no centro de um grupo de seis pessoas, quase todas de camiseta verde e crachá do T.S.W., num espaço de trabalho.",
       en: "Iury at the centre of a group of six people, most in green T-shirts and T.S.W. badges, in a workspace.",
     },
-    caption: { pt: "O time do AutonomIA", en: "The AutonomIA team" },
+    caption: { pt: "O AutonomIA", en: "AutonomIA" },
     summary: {
       pt: "Um time que se conheceu no próprio Startup Weekend. Ninguém se conhecia antes, e juntos criamos o AutonomIA.",
       en: "A team that met at Startup Weekend itself. None of us knew each other before, and together we created AutonomIA.",

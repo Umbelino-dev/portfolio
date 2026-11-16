@@ -16,6 +16,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SectionTitle } from "@/components/layout/SectionTitle";
 import { StageStrip } from "@/components/case-study/StageStrip";
 import { button } from "@/components/layout/button";
+import { PhoneVideo } from "@/components/case-study/PhoneVideo";
 
 // Only confirmed case studies exist as pages; everything else is a 404 at build time.
 export const dynamicParams = false;
@@ -94,6 +95,18 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
             </figure>
           )}
 
+          {/* The project's video, inside a phone (AutonomIA's motion piece). */}
+          {cs.video && (
+            <figure className="page-grid w-full gap-y-4 pt-[clamp(1rem,3vw,2rem)]">
+              <div className="col-span-full flex justify-center rounded-[1.5rem] bg-[#e7e3d9] py-[clamp(2.5rem,6vw,5rem)]">
+                <PhoneVideo src={cs.video.src} poster={cs.video.poster} title={cs.video.title[locale]} pending={t("videoPending")} />
+              </div>
+              <figcaption className="col-span-full text-caption text-gray-600 max-md:pr-12">
+                {t("video")}: {cs.video.title[locale]}
+              </figcaption>
+            </figure>
+          )}
+
           {/* 2 · Sobre o projeto */}
           {about.length > 0 && (
             <section aria-labelledby="part-about" className="flex flex-col gap-[clamp(2.5rem,5vw,4rem)] pt-(--section-space)">
@@ -111,7 +124,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
             {part("part-process", t("process"))}
             <div className="page-grid w-full max-md:pr-12">
               <div className="col-span-4 md:col-span-12 lg:col-span-8 lg:col-start-5">
-                <StageStrip project={project} locale={locale} />
+                <StageStrip project={project} caseStudy={cs} locale={locale} />
               </div>
             </div>
             <div className="flex flex-col gap-[clamp(3.5rem,7vw,6rem)]">
@@ -134,8 +147,15 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
                     </a>
                   ))
                 ) : (
-                  <p className="max-w-[52ch] text-lead leading-snug text-pretty text-[#3f3d39]">{cs.access?.[locale]}</p>
+                  <p className="w-full max-w-[52ch] text-lead leading-snug text-pretty text-[#3f3d39]">{cs.access?.[locale]}</p>
                 )}
+                {/* Where the project also lives: its post, its repository (verified links only). */}
+                {project.related?.map((r) => (
+                  <a key={r.href} href={r.href} target="_blank" rel="noopener noreferrer" className={`${button.outline} text-ink`}>
+                    {t(`relatedKinds.${r.kind}`)} · {r.label[locale]} <span aria-hidden="true">↗</span>
+                    <span className="sr-only"> ({t("newTab")})</span>
+                  </a>
+                ))}
               </div>
             </div>
           </section>

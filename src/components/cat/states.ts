@@ -27,8 +27,6 @@ export type CatEvent =
   | { type: "CLOSE" }; // ×, Escape, scrim, drag down
 
 export const IDLE_MS = 4000;
-/** The hero counts as "left" once this much of it is out of view (jump trigger). */
-export const HERO_LEFT_AT = 0.5;
 
 const table: Record<CatState, Partial<Record<CatEvent["type"], CatState>>> = {
   observer: { HERO_LEFT: "jump", OPEN: "awaken" },

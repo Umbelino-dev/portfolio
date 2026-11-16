@@ -4,7 +4,7 @@ import { useCallback, useEffect, useId, useReducer, useRef, useState, type FormE
 import { gsap, MQ } from "@/lib/gsap";
 import { CatFigure } from "./CatFigure";
 import { catParts, greet, prime, settle, wake, type CatParts } from "./clips";
-import { CAT_OPEN, HERO_LEFT_AT, IDLE_MS, transition, type CatEvent, type CatState } from "./states";
+import { CAT_OPEN, IDLE_MS, transition, type CatEvent, type CatState } from "./states";
 
 export interface AssistantChip {
   label: string;
@@ -132,19 +132,26 @@ export function CatAssistant({
     gsap.to(p.paws, { opacity: gripping ? 1 : 0, duration: d * 0.3 });
   };
   // ── Hero visibility drives S1 ⇄ S2 (home only) ───────────────────────────
+  // The cat leaves the hero as soon as it reaches the nav line, not when half the
+  // hero is gone: riding the page, it used to slide under the nav's frosted glass,
+  // where its body blurred away while the tail still showed below, so it looked
+  // as if it came apart (Iury, 2026-11-16). So the trigger is the cat itself: fully
+  // visible below the nav = in the hero; any part of it at or above the nav = left.
   useEffect(() => {
     if (context !== "home") return;
-    const hero = document.getElementById("hero");
-    if (!hero) return;
+    const cat = heroCat();
+    if (!cat) return;
+    const nav = document.querySelector("nav");
+    const line = Math.round((nav?.getBoundingClientRect().bottom ?? 72) + 12);
     const io = new IntersectionObserver(
       ([entry]) => {
-        const visible = (entry?.intersectionRatio ?? 0) >= 1 - HERO_LEFT_AT; // half out of view = left
+        const visible = (entry?.intersectionRatio ?? 0) >= 0.98;
         heroVisible.current = visible;
         send({ type: visible ? "HERO_ENTERED" : "HERO_LEFT" });
       },
-      { threshold: [0, 1 - HERO_LEFT_AT, 1] },
+      { rootMargin: `-${line}px 0px 0px 0px`, threshold: [0, 0.98, 1] },
     );
-    io.observe(hero);
+    io.observe(cat);
     return () => io.disconnect();
   }, [context]);
 
@@ -363,6 +370,8 @@ export function CatAssistant({
         }
         gsap.set(hero, { autoAlpha: 0 });
         gsap.set(d, { autoAlpha: 1 });
+        const discEl = inner.querySelector("[data-cat-disc]");
+        if (discEl) gsap.fromTo(discEl, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, delay: 0.12, ease: "power2.out" });
         gsap.fromTo(
           inner,
           { x: dx, y: dy, scale: hr.width / dr.width },
@@ -376,6 +385,7 @@ export function CatAssistant({
         const back = () => {
           gsap.set(d, { autoAlpha: 0, y: 0 });
           gsap.set(inner, { x: 0, y: 0, scale: 1 });
+          gsap.set(inner.querySelector("[data-cat-disc]"), { opacity: 1, scale: 1 });
           if (hero) gsap.to(hero, { autoAlpha: 1, duration: rm ? 0.16 : 0.12 });
         };
         if (rm || !hero) {
@@ -384,6 +394,8 @@ export function CatAssistant({
         }
         const hr = hero.getBoundingClientRect();
         const dr = inner.getBoundingClientRect();
+        const discBack = inner.querySelector("[data-cat-disc]");
+        if (discBack) gsap.to(discBack, { opacity: 0, scale: 0.4, duration: 0.3, ease: "power2.in" });
         gsap.to(inner, {
           x: hr.left + hr.width / 2 - (dr.left + dr.width / 2),
           y: hr.top + hr.height / 2 - (dr.top + dr.height / 2),
@@ -592,9 +604,12 @@ export function CatAssistant({
             aria-haspopup="dialog"
             aria-expanded={open}
             onClick={() => (open ? close() : requestOpen())}
-            className={`group relative flex ${disc} items-end justify-center rounded-full border border-ink/14 bg-paper pb-1.5 focus-visible:outline-ink`}
+            className={`group relative flex ${disc} items-end justify-center rounded-full pb-1.5 focus-visible:outline-ink`}
           >
-            <CatFigure className={`${catSize} overflow-visible`} />
+            {/* The disc is its own layer, so it can grow in while the cat glides down
+                from the hero (and fade on the way back) instead of popping in. */}
+            <span data-cat-disc aria-hidden="true" className="absolute inset-0 rounded-full border border-ink/14 bg-paper" />
+            <CatFigure className={`${catSize} relative overflow-visible`} />
             {/* Zzz — only while asleep */}
             <span
               aria-hidden="true"
