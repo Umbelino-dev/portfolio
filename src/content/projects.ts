@@ -482,8 +482,8 @@ export const projects: Project[] = [
       },
       // Iury's motion piece (2026-11-16): 1080×1920 source, served at 720×1280 H.264 + AAC with faststart (1.1 MB).
       video: {
-        src: "/media/automia.mp4",
-        poster: "/media/automia-poster.webp",
+        src: "/video/automia.mp4",
+        poster: "/video/automia-poster.webp",
         aspect: "9 / 16",
         title: { pt: "AutomIA em motion design", en: "AutomIA in motion design" },
       },

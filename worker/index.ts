@@ -9,6 +9,7 @@
  * client falls back to the scripted assistant.
  */
 import { checkReply } from "./guard";
+import { video } from "./media";
 import { KNOWLEDGE } from "./knowledge.generated";
 
 /** Minimal KV surface (avoids pulling in @cloudflare/workers-types). */
@@ -25,6 +26,8 @@ interface Env {
   GEMINI_MODEL?: string;
   /** Answers to first questions, so repeated ones cost no Gemini quota. */
   CHAT_CACHE?: KV;
+  /** The static export (wrangler.jsonc `assets.binding`), read by /video/* for byte ranges. */
+  ASSETS?: { fetch(request: Request): Promise<Response> };
 }
 
 interface ChatTurn {
@@ -249,6 +252,7 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: Ctx): Promise<Response> {
     const { pathname } = new URL(request.url);
     if (pathname === "/api/chat") return chat(request, env, ctx);
+    if (pathname.startsWith("/video/") && env.ASSETS) return video(request, env.ASSETS);
     return json({ error: "not_found" }, 404);
   },
 };
