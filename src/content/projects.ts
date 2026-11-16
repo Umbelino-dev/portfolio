@@ -307,32 +307,30 @@ export const projects: Project[] = [
     name: "SOU Studio",
     status: "shaping",
     stage: 3,
-    stageNote: { pt: "Em estruturação como negócio.", en: "Taking shape as a business." },
-    tags: ["business", "design", "web", "audiovisual"],
+    stageNote: { pt: "Em desenvolvimento: um estúdio pequeno, ainda se estruturando.", en: "In progress: a small studio, still taking shape." },
+    tags: ["business", "design", "web"],
     summary: {
-      pt: "O estúdio que estou construindo: sites e sistemas, identidade visual, produção audiovisual, assistência técnica e automações.",
-      en: "The studio I am building: websites and systems, visual identity, video production, device repair and automations.",
+      pt: "Meu estúdio de soluções digitais: sites, sistemas sob medida, catálogos digitais, identidade visual, reparos e soluções com IA. Feito para ser seu.",
+      en: "My digital solutions studio: websites, custom systems, digital catalogues, visual identity, repairs and AI solutions. Made to be yours.",
     },
-    source: "Iury (profile and chat, 2026-11-16): SOU Studio services; Koinonia is 'uma produção SOU Studio'; Hyper is used in the studio's routine",
+    links: [{ label: { pt: "Ver a SOU Studio", en: "Visit SOU Studio" }, href: "https://soustudio.com.br" }],
+    related: [{ kind: "instagram", label: { pt: "@sou_studioo", en: "@sou_studioo" }, href: "https://instagram.com/sou_studioo" }],
+    source: "knowledge/sou-studio.md (Iury's profile, 2026-11-16): site, Instagram, slogan, service areas, 'em desenvolvimento'",
     confirmed: true,
     caseStudy: {
       confirmed: true,
-      source: "Iury (2026-11-16)",
+      source: "knowledge/sou-studio.md (2026-11-16)",
       lead: {
-        pt: "A SOU Studio é a iniciativa que estou construindo para unir tecnologia, design e conteúdo num só lugar.",
-        en: "SOU Studio is the venture I am building to bring technology, design and content together in one place.",
-      },
-      access: {
-        pt: "Ainda não há um link público da SOU Studio aqui. Para falar sobre um projeto, escreva para mim.",
-        en: "There is no public SOU Studio link here yet. To talk about a project, write to me.",
+        pt: "Um estúdio de soluções digitais que reúne tecnologia, design e desenvolvimento para negócios e necessidades específicas. Feito para ser seu.",
+        en: "A digital solutions studio bringing technology, design and development together for businesses and specific needs. Made to be yours.",
       },
       evidence: {
         3: [
           {
-            title: { pt: "Cinco frentes", en: "Five areas" },
+            title: { pt: "Seis frentes", en: "Six areas" },
             text: {
-              pt: "Sites e sistemas, identidade visual e design, assistência técnica em dispositivos, produção audiovisual e conteúdo, soluções e automações.",
-              en: "Websites and systems, visual identity and design, device repair, video production and content, solutions and automations.",
+              pt: "Sites; sistemas e aplicações sob medida; catálogos e vitrines digitais com área administrativa; identidade visual e design; reparos de celulares e eletrônicos; soluções com IA para negócios.",
+              en: "Websites; custom systems and apps; digital catalogues and storefronts with an admin area; visual identity and design; phone and electronics repair; AI solutions for businesses.",
             },
           },
           {
@@ -349,23 +347,24 @@ export const projects: Project[] = [
           id: "idea",
           part: "about",
           label: { pt: "O estúdio", en: "The studio" },
-          title: { pt: "Tecnologia, design e conteúdo no mesmo lugar.", en: "Technology, design and content in one place." },
+          title: { pt: "Feito para ser seu.", en: "Made to be yours." },
           steps: [
-            { title: { pt: "Sites e sistemas", en: "Websites and systems" }, text: { pt: "Do site institucional ao sistema sob medida.", en: "From a company site to a custom system." } },
-            { title: { pt: "Identidade visual e design", en: "Visual identity and design" }, text: { pt: "Marca, materiais e interfaces.", en: "Brand, materials and interfaces." } },
-            { title: { pt: "Produção audiovisual", en: "Video production" }, text: { pt: "Conteúdo digital, vídeo e motion.", en: "Digital content, video and motion." } },
-            { title: { pt: "Assistência técnica", en: "Device repair" }, text: { pt: "Cuidado com os dispositivos do dia a dia.", en: "Care for everyday devices." } },
-            { title: { pt: "Soluções e automações", en: "Solutions and automations" }, text: { pt: "Tecnologia para tirar trabalho repetitivo do caminho.", en: "Technology to take repetitive work out of the way." } },
+            { title: { pt: "Sites", en: "Websites" }, text: { pt: "Desenvolvimento de sites.", en: "Website development." } },
+            { title: { pt: "Sistemas sob medida", en: "Custom systems" }, text: { pt: "Sistemas e aplicações feitos para cada necessidade.", en: "Systems and apps made for each need." } },
+            { title: { pt: "Catálogos digitais", en: "Digital catalogues" }, text: { pt: "Vitrines digitais com área administrativa.", en: "Digital storefronts with an admin area." } },
+            { title: { pt: "Identidade visual", en: "Visual identity" }, text: { pt: "Marca e design.", en: "Brand and design." } },
+            { title: { pt: "Reparos", en: "Repairs" }, text: { pt: "Celulares e eletrônicos.", en: "Phones and electronics." } },
+            { title: { pt: "Soluções com IA", en: "AI solutions" }, text: { pt: "Explorar o que a IA resolve para cada negócio.", en: "Exploring what AI can solve for each business." } },
           ],
         },
         {
           id: "use",
           part: "process",
           label: { pt: "Onde está agora", en: "Where it is now" },
-          title: { pt: "Um negócio em construção.", en: "A business in the making." },
+          title: { pt: "Um estúdio em construção.", en: "A studio in the making." },
           body: {
-            pt: ["O objetivo é transformar a SOU num negócio profissional e sustentável. Os projetos desta página mostram o tipo de trabalho que sai dela."],
-            en: ["The goal is to turn SOU into a professional, sustainable business. The projects on this page show the kind of work that comes out of it."],
+            pt: ["A SOU está em desenvolvimento: é um estúdio pequeno, não uma grande agência. Os projetos desta página mostram o tipo de trabalho que sai dela."],
+            en: ["SOU is in progress: a small studio, not a big agency. The projects on this page show the kind of work that comes out of it."],
           },
         },
       ],
@@ -457,36 +456,45 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "autonomia",
+    slug: "automia",
     index: "P.04",
-    name: "AutonomIA",
-    status: "pitch",
-    stage: 1,
+    name: "AutomIA",
+    status: "mvp",
+    stage: 2,
     stageNote: {
-      pt: "Criado no Startup Weekend: o aprendizado foi validar o problema antes da solução.",
-      en: "Created at Startup Weekend: the lesson was to validate the problem before the solution.",
+      pt: "MVP em validação: o diferencial frente a assistentes como ChatGPT e Gemini ainda precisa ser provado.",
+      en: "MVP being validated: what sets it apart from assistants like ChatGPT and Gemini still has to be proven.",
     },
     tags: ["ai", "product", "event"],
     summary: {
-      pt: "Organizador de tarefas com IA que lembra você pelo WhatsApp, criado em equipe no Startup Weekend. O pitch ficou comigo.",
-      en: "An AI task organiser that reminds you over WhatsApp, created as a team at Startup Weekend. I gave the pitch.",
+      pt: "Um segundo cérebro pelo WhatsApp: você encaminha mensagens, áudios e documentos, ele organiza e lembra na hora certa. Nasceu em equipe no Startup Weekend.",
+      en: "A second brain over WhatsApp: you forward messages, audio and documents, it organises them and reminds you at the right time. Born as a team at Startup Weekend.",
     },
     related: [{ kind: "linkedin", label: { pt: "Post no LinkedIn", en: "LinkedIn post" }, href: "https://lnkd.in/p/dqdj2qYm" }],
-    source: "Iury's Startup Weekend post (2026-11-12) + Iury (chat, 2026-11-16): add AutonomIA as a project, with its motion video in a phone",
+    source: "Iury's Startup Weekend post (2026-11-12); knowledge/projetos.md (Iury's profile, 2026-11-16): AUTOMIA, second brain over WhatsApp, MVP and validation; Iury (chat): spelling AutomIA, motion video in a phone",
     confirmed: true,
     caseStudy: {
       confirmed: true,
-      source: "Iury's Startup Weekend post + chat (2026-11-16)",
+      source: "Iury's post + knowledge/projetos.md + chat (2026-11-16)",
       lead: {
-        pt: "Um organizador de tarefas com IA que lembra você pelo WhatsApp. Nasceu em um fim de semana, com um time que se conheceu ali.",
-        en: "An AI task organiser that reminds you over WhatsApp. It was born in one weekend, with a team that met there.",
+        pt: "Um assistente que funciona como segundo cérebro: você encaminha pelo WhatsApp o que não quer esquecer, e ele organiza e lembra no momento certo.",
+        en: "An assistant that works as a second brain: you forward over WhatsApp what you don't want to forget, and it organises it and reminds you at the right moment.",
       },
-      video: { title: { pt: "AutonomIA em motion design", en: "AutonomIA in motion design" } },
+      video: { title: { pt: "AutomIA em motion design", en: "AutomIA in motion design" } },
       access: {
-        pt: "O AutonomIA ficou no pitch do Startup Weekend: não há uma versão para acessar. O post conta como foi.",
-        en: "AutonomIA stayed at the Startup Weekend pitch: there is no version to open. The post tells how it went.",
+        pt: "Ainda não há uma versão pública: o AutomIA está em MVP e validação.",
+        en: "There is no public version yet: AutomIA is at MVP and validation.",
       },
       evidence: {
+        0: [
+          {
+            title: { pt: "Onde começou", en: "Where it started" },
+            text: {
+              pt: "No Startup Weekend, com um time que se conheceu no próprio evento, num sábado das 8h às 22h.",
+              en: "At Startup Weekend, with a team that met at the event itself, on a Saturday from 8 am to 10 pm.",
+            },
+          },
+        ],
         1: [
           {
             title: { pt: "O que o evento ensinou", en: "What the event taught" },
@@ -498,10 +506,10 @@ export const projects: Project[] = [
         ],
         2: [
           {
-            title: { pt: "A solução do pitch, ainda não validada", en: "The pitch's solution, not validated yet" },
+            title: { pt: "MVP em validação", en: "MVP being validated" },
             text: {
-              pt: "Um organizador de tarefas com IA que lembra pelo WhatsApp. Foi o que apresentamos; testar se ele resolve a dor seria o passo seguinte.",
-              en: "An AI task organiser that reminds you over WhatsApp. That is what we presented; testing whether it solves the pain would be the next step.",
+              pt: "A ideia já virou um MVP. O que falta provar é o diferencial: por que usar o AutomIA e não um assistente como ChatGPT ou Gemini.",
+              en: "The idea is now an MVP. What still has to be proven is the difference: why use AutomIA instead of an assistant like ChatGPT or Gemini.",
             },
           },
         ],
@@ -511,26 +519,32 @@ export const projects: Project[] = [
           id: "idea",
           part: "about",
           label: { pt: "A ideia", en: "The idea" },
-          title: { pt: "Um time, um fim de semana, uma ideia.", en: "One team, one weekend, one idea." },
+          title: { pt: "Um segundo cérebro no WhatsApp.", en: "A second brain in WhatsApp." },
           body: {
             pt: [
-              "No Startup Weekend, conheci todo o time no próprio evento. Juntos criamos o AutonomIA, um organizador de tarefas com IA que lembra você pelo WhatsApp.",
-              "Foi um sábado das 8h às 22h. O pitch ficou comigo, e o passador de slides parou de funcionar justo na minha vez.",
+              "Você encaminha mensagens, áudios e documentos pelo WhatsApp. O AutomIA organiza as informações e lembra você no momento certo.",
+              "A ideia nasceu no Startup Weekend, com um time que eu conheci ali. O pitch ficou comigo, e o passador de slides parou de funcionar justo na minha vez.",
             ],
             en: [
-              "At Startup Weekend, I met the whole team at the event itself. Together we created AutonomIA, an AI task organiser that reminds you over WhatsApp.",
-              "It was a Saturday from 8 am to 10 pm. I gave the pitch, and the slide clicker stopped working right on my turn.",
+              "You forward messages, audio and documents over WhatsApp. AutomIA organises the information and reminds you at the right moment.",
+              "The idea was born at Startup Weekend, with a team I met there. I gave the pitch, and the slide clicker stopped working right on my turn.",
             ],
           },
         },
         {
           id: "stage",
           part: "process",
-          label: { pt: "O que ficou", en: "What stayed" },
-          title: { pt: "Provar a dor antes da solução.", en: "Prove the pain before the solution." },
+          label: { pt: "Onde está agora", en: "Where it is now" },
+          title: { pt: "Provar a diferença.", en: "Proving the difference." },
           body: {
-            pt: ["O maior aprendizado foi sobre ordem: primeiro provar que outras pessoas sentem a mesma dor, só depois construir. Apresentar sem o cenário ideal também me ensinou mais do que um pitch perfeito ensinaria."],
-            en: ["The biggest lesson was about order: first prove other people feel the same pain, only then build. Presenting without the ideal setting also taught me more than a perfect pitch would have."],
+            pt: [
+              "Está em fase de MVP e validação. Não é um produto lançado.",
+              "A pergunta que falta responder é a mais difícil: o que ele faz melhor do que os assistentes que as pessoas já usam.",
+            ],
+            en: [
+              "It is at the MVP and validation stage. It is not a launched product.",
+              "The question still open is the hardest one: what it does better than the assistants people already use.",
+            ],
           },
         },
       ],

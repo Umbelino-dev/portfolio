@@ -95,7 +95,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
             </figure>
           )}
 
-          {/* The project's video, inside a phone (AutonomIA's motion piece). */}
+          {/* The project's video, inside a phone (AutomIA's motion piece). */}
           {cs.video && (
             <figure className="page-grid w-full gap-y-4 pt-[clamp(1rem,3vw,2rem)]">
               <div className="col-span-full flex justify-center rounded-[1.5rem] bg-[#e7e3d9] py-[clamp(2.5rem,6vw,5rem)]">
@@ -173,7 +173,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
         )}
         <SiteFooter />
       </main>
-      <CatAssistant context="case" projectsHref={`/${locale}#projects`} {...assistant} />
+      <CatAssistant context="case" projectsHref={`/${locale}#projects`} slug={slug} {...assistant} />
     </>
   );
 }

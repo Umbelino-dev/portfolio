@@ -1,5 +1,5 @@
 /**
- * A video inside a phone (Iury, 2026-11-16: the AutonomIA motion piece). The frame
+ * A video inside a phone (Iury, 2026-11-16: the AutomIA motion piece). The frame
  * is drawn in CSS (rounded body, a thin bezel, the island), the screen holds a
  * native <video> with controls, muted inline playback allowed, no autoplay. Until
  * the file exists the screen says so: never a fake video.

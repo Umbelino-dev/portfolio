@@ -9,7 +9,7 @@
 import type { Locale } from "@/i18n/routing";
 
 /** Project stage — encoded by shape in the UI (StatusMark), never by colour. */
-export type ProjectStatus = "concept" | "experiment" | "prototype" | "in-development" | "validating" | "live" | "evolving" | "in-use" | "pitch" | "shaping";
+export type ProjectStatus = "concept" | "experiment" | "prototype" | "in-development" | "validating" | "live" | "evolving" | "in-use" | "pitch" | "shaping" | "mvp";
 
 /**
  * Where a project stands on the five-step approach (Approach section): 0 observe
@@ -66,7 +66,7 @@ export interface Evidence {
 
 /** A link related to a project that is not the product itself (its post, its repository). */
 export interface RelatedLink {
-  kind: "linkedin" | "github";
+  kind: "linkedin" | "github" | "instagram";
   label: Localized;
   href: string;
 }
