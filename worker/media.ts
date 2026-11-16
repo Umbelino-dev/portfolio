@@ -29,8 +29,8 @@ export async function video(request: Request, assets: Assets): Promise<Response>
     return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${size}`, "Accept-Ranges": "bytes" } });
   }
   // "bytes=a-b", "bytes=a-" or the suffix form "bytes=-n" (the last n bytes).
-  let start = m[1] === "" ? Math.max(0, size - Number(m[2])) : Number(m[1]);
-  let end = m[1] === "" || m[2] === "" ? size - 1 : Math.min(Number(m[2]), size - 1);
+  const start = m[1] === "" ? Math.max(0, size - Number(m[2])) : Number(m[1]);
+  const end = m[1] === "" || m[2] === "" ? size - 1 : Math.min(Number(m[2]), size - 1);
   if (start >= size || start > end) {
     return new Response(null, { status: 416, headers: { "Content-Range": `bytes */${size}`, "Accept-Ranges": "bytes" } });
   }
