@@ -1,6 +1,6 @@
 # Sobre o Iury
 
-- Nome: Iury Umbelino. Brasileiro, de Santa Catarina.
+- Nome: Iury Umbelino. Brasileiro.
 - Assistente de TI no Giassi Supermercados desde abril de 2026.
 - Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR).
 - Trabalha na interseção entre tecnologia, inteligência artificial e produtos. Aprende construindo.
