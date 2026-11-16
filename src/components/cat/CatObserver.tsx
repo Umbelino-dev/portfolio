@@ -290,8 +290,8 @@ export function CatObserver({
       data-cat-root="observer"
       data-cursor-label={cursorLabel}
     >
-      {/* Back light: a soft pool of light behind Tisco's head and shoulders, so the
-          dark body reads against the dark hero (static, no filter, no animation). */}
+      {/* Aura: a soft signal-green glow round Tisco, so the black body never fights the
+          dark hero (static, no filter, no animation; globals.css). */}
       <span aria-hidden="true" data-cat-halo className="pointer-events-none absolute -z-10" />
       <span data-cat-breath className="block h-full w-full">
         <span data-cat-lean className="block h-full w-full">

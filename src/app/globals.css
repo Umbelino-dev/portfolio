@@ -258,13 +258,12 @@
  * 1.6 s each way, forever while it is on screen (CatObserver sets data-on). Dock,
  * asleep: 3%, 1.4 s, six breaths after it curls up (the old bounded GSAP tween).
  */
-/* Tisco's back light in the hero (CatObserver): paper at low alpha, centred on the
-   head, fading to nothing; a touch of signal at the core echoes the eyes. */
+/* Tisco's aura in the hero (CatObserver; Iury, 2026-11-16): a soft signal-green
+   glow round his silhouette so the black body never fights the dark page. Radial
+   gradients only, static: no filter, no animation. */
 [data-cat-halo] {
-  inset: -30% -70% -5%;
-  background:
-    radial-gradient(closest-side at 50% 34%, rgb(200 241 105 / 0.05), transparent 55%),
-    radial-gradient(closest-side at 50% 40%, rgb(243 241 235 / 0.11), rgb(243 241 235 / 0.045) 55%, transparent 100%);
+  inset: -26% -46% -4%;
+  background: radial-gradient(closest-side at 50% 48%, rgb(200 241 105 / 0.22), rgb(200 241 105 / 0.09) 50%, rgb(200 241 105 / 0.025) 78%, transparent 100%);
 }
 
 [data-cat-breath] {
