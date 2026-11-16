@@ -42,8 +42,8 @@ const SECTIONS = ["about", "projects", "approach", "contact"];
 const MOBILE = "(max-width: 767px)";
 const REPLY_MS = 650;
 const CHAT_TIMEOUT_MS = 14_000;
-/** Turns of context sent with each question (the Worker accepts at most 7). */
-const CHAT_HISTORY = 6;
+/** Turns of context sent with each question (the Worker accepts at most 11). */
+const CHAT_HISTORY = 10;
 
 const reducer = (s: CatState, e: CatEvent) => transition(s, e);
 const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");

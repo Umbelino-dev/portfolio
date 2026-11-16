@@ -10,7 +10,7 @@
  *  - leaks: markers of the system prompt must never appear.
  */
 
-export const MAX_REPLY_CHARS = 1200;
+export const MAX_REPLY_CHARS = 2000;
 
 const EMAIL = /[a-z0-9._%+-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+/gi;
 const URL_LIKE = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+(?:com|br|dev|app|io|net|org|me|co)\b(?:\/[^\s)]*)?/gi;
@@ -55,4 +55,14 @@ export function extractGo(raw: string, projectSlugs: readonly string[]): { text:
   const allowed = new Set<string>([...SECTION_DESTINATIONS, ...projectSlugs]);
   const last = found[found.length - 1];
   return { text, go: last && allowed.has(last) ? last : null };
+}
+
+// Code-level backstop for the navigation link: personal life has no page on the
+// site, so a question or reply about it never gets a "go" (the prompt asks the
+// same, but a prompt is not a guarantee). Accents are stripped before matching.
+const PERSONAL =
+  /namorad|casar|casamento|igreja|evangel|congreg|awake|quadrangular|religi|\bfe\b|\bdeus\b|\bmora\b|\bmoram\b|resid[ei]|rincao|icara|santa catarina|nasceu|nascimento|aniversario|quantos anos|\bidade\b|hobb|praia|corrida|correr|filme|cozinh|fim de semana|fins de semana|tisco|\bgato\b|familia|vida pessoal|pessoal/;
+
+export function isPersonalTopic(text: string): boolean {
+  return PERSONAL.test(text.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""));
 }
