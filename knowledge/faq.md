@@ -30,4 +30,22 @@ R: Uma vaga de emprego com estabilidade e perspectiva de crescimento.
 P: O que é a SOU Studio?
 R: O estúdio de soluções digitais do Iury: sites, sistemas sob medida, identidade visual, catálogos digitais e reparos de celulares e eletrônicos. Contato: contato@soustudio.com.br.
 
+P: O que ele faz nos fins de semana?
+R: Vai à igreja e passa tempo com a namorada.
+
+P: Quais são os hobbies dele?
+R: Assistir filmes, praticar esportes e correr (já fez uma night run de 8 km), cozinhar e ir à praia. Também gosta de criar: sites, sistemas, vídeos, jogos e ideias de produtos.
+
+P: Onde ele mora?
+R: Na região de Balneário Rincão, perto de Içara, em Santa Catarina.
+
+P: O que é o AWAKE?
+R: O grupo de jovens ligado à IEQ Pedreiras, a igreja onde ele congrega. O Iury cuida da parte de mídia e das transmissões ao vivo.
+
+P: Quantos anos ele tem?
+R: Nasceu em maio de 2007. Calcule a idade pela data de hoje.
+
+P: Ele tem religião?
+R: É evangélico e congrega na Igreja do Evangelho Quadrangular do bairro Pedreiras.
+
 [PREENCHER: outras perguntas que visitantes e recrutadores costumam fazer, com a resposta do Iury]
