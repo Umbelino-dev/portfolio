@@ -57,7 +57,7 @@ export function HeroPortrait({ locale, profileLabel, className = "" }: { locale:
       href="#about"
       tabIndex={-1}
       aria-label={profileLabel}
-      className={`group/portrait relative block aspect-[4/5] flex-none overflow-hidden rounded-[1rem] bg-ink-800 ring-1 ring-paper/10 transition-[box-shadow,translate] duration-(--duration-base) ease-out hover:-translate-y-1 hover:ring-signal motion-reduce:hover:translate-y-0 ${className}`}
+      className={`group/portrait relative isolate block aspect-[4/5] flex-none overflow-hidden rounded-[1rem] bg-ink-800 shadow-[0_22px_40px_-18px_rgb(0_0_0/0.95),0_0_0_1px_rgb(0_0_0/0.6)] ring-1 ring-paper/10 transition-[box-shadow,translate] duration-(--duration-base) ease-out hover:-translate-y-1 hover:ring-signal motion-reduce:hover:translate-y-0 ${className}`}
     >
       <Image
         src={img.src}
@@ -66,7 +66,19 @@ export function HeroPortrait({ locale, profileLabel, className = "" }: { locale:
         height={img.height}
         sizes="12rem"
         loading="eager"
-        className="h-full w-full object-cover object-[50%_18%] contrast-110 grayscale transition-[filter] duration-(--duration-slow) ease-out group-hover/portrait:grayscale-0"
+        className="h-full w-full object-cover object-[50%_18%] brightness-[1.06] contrast-[1.04] grayscale transition-[filter] duration-(--duration-slow) ease-out group-hover/portrait:grayscale-0"
+      />
+      {/* Separation from the hero (Iury, 2026-11-16: the dark backdrop and the dark
+          jacket merged with the page). A studio light in screen blend lifts the
+          blacks a little, more round the head; then the nav's luminous edge: a 1px
+          inner rim and a brighter top line. Above the photo, below nothing else. */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(110%_75%_at_50%_22%,rgb(243_241_235/0.16),rgb(243_241_235/0.05)_62%,rgb(243_241_235/0.09))] mix-blend-screen"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[inherit] shadow-[inset_0_1px_0_rgb(243_241_235/0.28),inset_0_0_0_1px_rgb(243_241_235/0.14)]"
       />
     </a>
   );

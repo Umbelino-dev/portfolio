@@ -34,7 +34,7 @@
   },
   "hero": {
     "cta": "Get to know me",
-    "stack": "IT Assistant. SQL, PL/SQL, AI and products.",
+    "stack": "Systems Support. SQL, PL/SQL, AI and products.",
     "tagline": {
       "lead": "Curiosity builds",
       "rest": "what comes",
@@ -65,9 +65,9 @@
   },
   "experience": {
     "title": "Where curiosity becomes routine.",
-    "roleSummary": "I look after internal systems in IT at Giassi's head office. I work with data on Oracle, rules and automations in DOX, and support for the people who use them every day.",
+    "roleSummary": "Responsible for support and for rolling out BPM processes in DOX, available across the whole Giassi Group network. I work with Oracle (SQL and PL/SQL), Pascal Script and technical support for users.",
     "highlights": "What I do",
-    "path": "Path",
+    "path": "Career progression",
     "stack": "Daily tools",
     "skills": "Skills & stack",
     "skillsHint": "Tap or hover a skill to see where I use it.",
@@ -247,12 +247,12 @@
   },
   "assistant": {
     "ui": {
-      "title": "Ask the cat",
+      "title": "Ask Tisco",
       "subtitle": "answers only from what Iury wrote",
       "subtitleCase": "ask about this project",
-      "open": "Ask the cat about Iury",
-      "openCase": "Ask the cat about this project",
-      "hint": "Ask the cat",
+      "open": "Ask Tisco about Iury",
+      "openCase": "Ask Tisco about this project",
+      "hint": "Ask Tisco",
       "close": "Close the assistant",
       "handle": "Drag down to close",
       "placeholder": "Ask something…",
@@ -260,14 +260,14 @@
       "send": "Send",
       "thinking": "thinking…",
       "you": "You",
-      "cat": "Cat",
-      "log": "Conversation with the cat",
+      "cat": "Tisco",
+      "log": "Conversation with Tisco",
       "privacy": "Typed text is processed by Gemini (Google) and may be used to improve their products. Don't send personal data.",
       "rateLimited": "You sent a lot of questions in a short time. Wait about a minute and try again, or use the suggestions below.",
       "busy": "I'm getting a lot of conversations right now and couldn't reach the model. Use one of the suggestions or try again in a few minutes."
     },
     "home": {
-      "greeting": "Hi, I'm Tisco, the cat. I know a few things about Iury. What would you like to know?",
+      "greeting": "Hi, I'm Tisco. I know a few things about Iury. What would you like to know?",
       "chips": [
         {
           "label": "Who is Iury?",
@@ -278,7 +278,7 @@
             "work",
             "study"
           ],
-          "answer": "An IT Assistant at Giassi Supermercados, working with SQL, PL/SQL and Oracle. He studies Computer Science (UNESC) and Systems Analysis and Development (UNOPAR). He learns by building, and this site shows what he found."
+          "answer": "Systems Support at Giassi Supermercados, working with SQL, PL/SQL and Oracle. He studies Computer Science (UNESC) and Systems Analysis and Development (UNOPAR). He learns by building, and this site shows what he found."
         },
         {
           "label": "AI experience?",
@@ -371,8 +371,8 @@
     "open": "Open to collaborations, roles & good questions",
     "lead": "Got a question worth building? Write to me.",
     "cta": "Write to me",
-    "pending": "Contact channels arrive here soon. Meanwhile, the cat answers the basics.",
-    "askCat": "Ask the cat",
+    "pending": "Contact channels arrive here soon. Meanwhile, Tisco answers the basics.",
+    "askCat": "Ask Tisco",
     "links": "Contact links",
     "kinds": {
       "email": "Email",
@@ -380,8 +380,8 @@
       "github": "GitHub",
       "instagram": "Instagram"
     },
-    "catTitle": "Ask the cat",
-    "catText": "Tisco, my cat, answers about my work, my projects and how to reach me. It uses AI and only what I wrote for it.",
+    "catTitle": "Ask Tisco",
+    "catText": "Tisco answers about my work, my projects and how to reach me. It uses AI and only what I wrote for it.",
     "catCta": "Start a conversation"
   },
   "footer": {

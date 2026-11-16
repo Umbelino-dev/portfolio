@@ -34,7 +34,7 @@
   },
   "hero": {
     "cta": "Me conheça",
-    "stack": "Assistente de TI. SQL, PL/SQL, IA e produtos.",
+    "stack": "Suporte de Sistemas. SQL, PL/SQL, IA e produtos.",
     "tagline": {
       "lead": "A curiosidade constrói",
       "rest": "o que vem",
@@ -65,9 +65,9 @@
   },
   "experience": {
     "title": "Onde a curiosidade vira rotina.",
-    "roleSummary": "Cuido dos sistemas internos na TI da Matriz do Giassi. Trabalho com dados em Oracle, regras e automações no DOX e suporte a quem usa esses sistemas no dia a dia.",
+    "roleSummary": "Responsável pelo suporte e pela implementação de processos BPM no DOX, disponíveis para toda a rede do Grupo Giassi. Trabalho com Oracle (SQL e PL/SQL), Pascal Script e atendimento técnico aos usuários.",
     "highlights": "O que faço",
-    "path": "Trajetória",
+    "path": "Evolução de carreira",
     "stack": "Uso no dia a dia",
     "skills": "Competências & stack",
     "skillsHint": "Toque ou passe o mouse em uma competência para ver onde a uso.",
@@ -247,12 +247,12 @@
   },
   "assistant": {
     "ui": {
-      "title": "Pergunte ao gato",
+      "title": "Pergunte ao Tisco",
       "subtitle": "responde só com o que o Iury escreveu",
       "subtitleCase": "pergunte sobre este projeto",
-      "open": "Pergunte ao gato sobre o Iury",
-      "openCase": "Pergunte ao gato sobre este projeto",
-      "hint": "Pergunte ao gato",
+      "open": "Pergunte ao Tisco sobre o Iury",
+      "openCase": "Pergunte ao Tisco sobre este projeto",
+      "hint": "Pergunte ao Tisco",
       "close": "Fechar o assistente",
       "handle": "Arraste para baixo para fechar",
       "placeholder": "Pergunte algo…",
@@ -260,14 +260,14 @@
       "send": "Enviar",
       "thinking": "pensando…",
       "you": "Você",
-      "cat": "Gato",
-      "log": "Conversa com o gato",
+      "cat": "Tisco",
+      "log": "Conversa com o Tisco",
       "privacy": "Texto digitado é processado pelo Gemini (Google) e pode ser usado para melhorar os produtos deles. Não envie dados pessoais.",
       "rateLimited": "Você mandou muitas perguntas em pouco tempo. Espere cerca de um minuto e tente de novo, ou use as sugestões abaixo.",
       "busy": "Estou com muita conversa agora e não consegui consultar o modelo. Use uma das sugestões ou tente de novo em alguns minutos."
     },
     "home": {
-      "greeting": "Oi, eu sou o Tisco, o gato. Sei umas coisas sobre o Iury. O que você quer saber?",
+      "greeting": "Oi, eu sou o Tisco. Sei umas coisas sobre o Iury. O que você quer saber?",
       "chips": [
         {
           "label": "Quem é o Iury?",
@@ -279,7 +279,7 @@
             "estuda",
             "formação"
           ],
-          "answer": "Assistente de TI no Giassi Supermercados, onde trabalha com SQL, PL/SQL e Oracle. Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR). Aprende construindo, e este site mostra o que ele encontrou."
+          "answer": "Suporte de Sistemas no Giassi Supermercados, onde trabalha com SQL, PL/SQL e Oracle. Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR). Aprende construindo, e este site mostra o que ele encontrou."
         },
         {
           "label": "Experiência com IA?",
@@ -376,8 +376,8 @@
     "open": "Aberto a colaborações, vagas e boas perguntas",
     "lead": "Tem uma pergunta que vale construir? Me escreve.",
     "cta": "Escrever para mim",
-    "pending": "Os canais de contato entram aqui em breve. Enquanto isso, o gato responde o básico.",
-    "askCat": "Pergunte ao gato",
+    "pending": "Os canais de contato entram aqui em breve. Enquanto isso, o Tisco responde o básico.",
+    "askCat": "Pergunte ao Tisco",
     "links": "Links de contato",
     "kinds": {
       "email": "E-mail",
@@ -385,8 +385,8 @@
       "github": "GitHub",
       "instagram": "Instagram"
     },
-    "catTitle": "Pergunte ao gato",
-    "catText": "O Tisco, meu gato, responde sobre meu trabalho, meus projetos e como falar comigo. Usa IA e só o que eu escrevi para ele.",
+    "catTitle": "Pergunte ao Tisco",
+    "catText": "O Tisco responde sobre meu trabalho, meus projetos e como falar comigo. Usa IA e só o que eu escrevi para ele.",
     "catCta": "Começar a conversa"
   },
   "footer": {

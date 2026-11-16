@@ -286,13 +286,16 @@ export function CatObserver({
       aria-label={label}
       aria-haspopup="dialog"
       onClick={() => window.dispatchEvent(new Event(CAT_OPEN))}
-      className={`cursor-pointer ${className ?? ""}`}
+      className={`isolate cursor-pointer ${className ?? ""}`}
       data-cat-root="observer"
       data-cursor-label={cursorLabel}
     >
+      {/* Back light: a soft pool of light behind Tisco's head and shoulders, so the
+          dark body reads against the dark hero (static, no filter, no animation). */}
+      <span aria-hidden="true" data-cat-halo className="pointer-events-none absolute -z-10" />
       <span data-cat-breath className="block h-full w-full">
         <span data-cat-lean className="block h-full w-full">
-          <CatFigure className="block h-full w-full overflow-visible" />
+          <CatFigure lit className="block h-full w-full overflow-visible" />
         </span>
       </span>
     </button>

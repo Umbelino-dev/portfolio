@@ -52,8 +52,13 @@ export const WAVE_STEP_MS = 4400 / TAIL_WAVE_VALUES.length;
 const FUR = "#1c1c1c";
 const FUR_FRONT = "#232323";
 
-/** The cat drawing (one for every state). Parts carry `data-cat` for the clips. */
-export function CatFigure({ className }: { className?: string }) {
+/**
+ * Tisco's drawing (one for every state). Parts carry `data-cat` for the clips.
+ * `lit`: a stronger rim of light, for the dark hero, where the graphite body
+ * otherwise sinks into the background (Iury, 2026-11-16). The dock sits on its
+ * paper disc and keeps the quiet rim.
+ */
+export function CatFigure({ className, lit = false }: { className?: string; lit?: boolean }) {
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const rim = `url(#rim-${id})`;
   const glow = `url(#glow-${id})`;
@@ -62,9 +67,9 @@ export function CatFigure({ className }: { className?: string }) {
       <defs>
         {/* Rim light: bright on each part's upper edge, gone by its middle. */}
         <linearGradient id={`rim-${id}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#cfdbe6" stopOpacity="0.62" />
-          <stop offset="0.3" stopColor="#cfdbe6" stopOpacity="0.14" />
-          <stop offset="0.6" stopColor="#cfdbe6" stopOpacity="0" />
+          <stop offset="0" stopColor="#dde6ee" stopOpacity={lit ? 0.95 : 0.62} />
+          <stop offset="0.3" stopColor="#cfdbe6" stopOpacity={lit ? 0.3 : 0.14} />
+          <stop offset={lit ? 0.75 : 0.6} stopColor="#cfdbe6" stopOpacity={lit ? 0.06 : 0} />
         </linearGradient>
         <radialGradient id={`glow-${id}`}>
           <stop offset="0" stopColor="#c8f169" stopOpacity="0.55" />
@@ -83,7 +88,7 @@ export function CatFigure({ className }: { className?: string }) {
           d="M50 54 C63 54 71 63 75 78 C78 89 85 100 83 110 C82 116.5 77 119 69 119 L31 119 C23 119 18 116.5 17 110 C15 100 22 89 25 78 C29 63 37 54 50 54 Z"
           fill={FUR}
           stroke={rim}
-          strokeWidth="1"
+          strokeWidth={lit ? 1.4 : 1}
         />
         {/* Haunch: the back leg folded under, read only by a slightly lighter curve. */}
         <path d="M73 90 C81 95 83 106 78 115" fill="none" stroke="#2b2b2b" strokeWidth="1.2" strokeLinecap="round" />
@@ -111,13 +116,13 @@ export function CatFigure({ className }: { className?: string }) {
         <g data-cat="head">
           <g data-cat="ears">
             <g data-cat="ear-tilt-l">
-              <path d="M22 31 C19.5 21 20 12 22.5 6.8 C23.4 4.9 25.6 4.6 27.2 5.9 C33 10.5 38 15 42 20.5 Z" fill={FUR} stroke={rim} strokeWidth="1" />
+              <path d="M22 31 C19.5 21 20 12 22.5 6.8 C23.4 4.9 25.6 4.6 27.2 5.9 C33 10.5 38 15 42 20.5 Z" fill={FUR} stroke={rim} strokeWidth={lit ? 1.4 : 1} />
               <path d="M25.5 22 C24.6 16.5 25 11.8 26.4 9.4 C30 12.2 33 15.2 35.4 18.6 Z" fill="#272727" />
             </g>
             {/* The right ear twitches now and then (idle). Pivot at its base. */}
             <g data-cat="ear-r">
               <g data-cat="ear-tilt-r">
-                <path d="M78 31 C80.5 21 80 12 77.5 6.8 C76.6 4.9 74.4 4.6 72.8 5.9 C67 10.5 62 15 58 20.5 Z" fill={FUR} stroke={rim} strokeWidth="1" />
+                <path d="M78 31 C80.5 21 80 12 77.5 6.8 C76.6 4.9 74.4 4.6 72.8 5.9 C67 10.5 62 15 58 20.5 Z" fill={FUR} stroke={rim} strokeWidth={lit ? 1.4 : 1} />
                 <path d="M74.5 22 C75.4 16.5 75 11.8 73.6 9.4 C70 12.2 67 15.2 64.6 18.6 Z" fill="#272727" />
               </g>
             </g>
@@ -127,7 +132,7 @@ export function CatFigure({ className }: { className?: string }) {
             d="M50 62 C36 62 21.5 58 18.8 46 C16.6 36 21 27 29 21.5 C35 17.6 42 16.5 50 16.5 C58 16.5 65 17.6 71 21.5 C79 27 83.4 36 81.2 46 C78.5 58 64 62 50 62 Z"
             fill={FUR}
             stroke={rim}
-            strokeWidth="1"
+            strokeWidth={lit ? 1.4 : 1}
           />
           {/* Muzzle: nose and a small mouth, barely lighter than the fur. */}
           <path d="M47.6 48.2 C48.6 47.4 51.4 47.4 52.4 48.2 C51.8 49.5 50.8 50.3 50 50.3 C49.2 50.3 48.2 49.5 47.6 48.2 Z" fill="#363636" />

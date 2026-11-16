@@ -162,7 +162,7 @@ export interface PathStep {
 export const experience = {
   publishEmployer: true,
   employer: "Giassi Supermercados",
-  role: { pt: "Assistente de TI", en: "IT Assistant" } satisfies Localized,
+  role: { pt: "Suporte de Sistemas", en: "Systems Support" } satisfies Localized,
   period: { pt: "abr 2026 – atual", en: "Apr 2026 – present" } satisfies Localized,
   /**
    * "O que faço": four short lines in Iury's own words (2026-11-13; they replace the
@@ -196,13 +196,13 @@ export const experience = {
    */
   path: [
     {
-      role: { pt: "Assistente de TI", en: "IT Assistant" },
+      role: { pt: "Suporte de Sistemas", en: "Systems Support" },
       period: "04.2026 –",
       area: { pt: "Tecnologia (TI)", en: "Technology (IT)" },
-      summary: { pt: "Sistemas internos, com dados e usuários reais.", en: "Internal systems, with real data and real users." },
+      summary: { pt: "Suporte e processos BPM para toda a rede, com dados reais.", en: "Support and BPM processes for the whole network, on real data." },
       details: [
         { pt: "SQL, PL/SQL e Oracle no dia a dia", en: "SQL, PL/SQL and Oracle every day" },
-        { pt: "Regras e automações na plataforma DOX", en: "Rules and automations on the DOX platform" },
+        { pt: "Processos BPM e automações no DOX", en: "BPM processes and automations in DOX" },
       ],
       more: { pt: "O que faço hoje, segundo o currículo:", en: "What I do today, from my CV:" },
       highlights: true,
@@ -215,8 +215,8 @@ export const experience = {
       summary: { pt: "A entrada na área de Tecnologia.", en: "The way into the IT team." },
       details: [{ pt: "Primeiro cargo dentro do time de TI", en: "First role inside the IT team" }],
       more: {
-        pt: "Foi o primeiro cargo na área de Tecnologia do Giassi. O passo seguinte foi o de Assistente de TI, a função de hoje.",
-        en: "My first role in Giassi's IT team. The next step was IT Assistant, the role I hold today.",
+        pt: "Foi o primeiro cargo na área de Tecnologia do Giassi. O passo seguinte foi o Suporte de Sistemas, a função de hoje.",
+        en: "My first role in Giassi's IT team. The next step was Systems Support, the role I hold today.",
       },
       confirmed: false,
     },

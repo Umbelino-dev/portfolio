@@ -107,7 +107,7 @@ export async function Hero() {
                 label={ta("open")}
                 cursorLabel={tc("ask")}
                 look="up"
-                className="mb-1 aspect-[4/5] w-12 flex-none md:hidden"
+                className="relative mb-1 aspect-[4/5] w-12 flex-none md:hidden"
               />
             </div>
             {/* Desktop: perched on the final "o" (anchors from the lettering script). */}

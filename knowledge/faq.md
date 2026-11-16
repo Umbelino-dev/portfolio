@@ -1,7 +1,7 @@
 # Perguntas frequentes
 
 P: Quem é o Iury?
-R: Assistente de TI no Giassi Supermercados, onde trabalha com SQL, PL/SQL e Oracle. Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR). Aprende construindo, e o site mostra o que ele encontrou.
+R: Suporte de Sistemas no Giassi Supermercados, onde trabalha com SQL, PL/SQL e Oracle. Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR). Aprende construindo, e o site mostra o que ele encontrou.
 
 P: Ele tem experiência com IA?
 R: O caso mais completo é o Koinonia, um produto no ar feito com IA, com o Iury dirigindo. No trabalho usa IA para escrever regras e automações no DOX.
