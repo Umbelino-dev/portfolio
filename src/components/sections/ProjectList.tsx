@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { MQ } from "@/lib/gsap";
 
 export interface ProjectRow {
   slug: string;
+  /** "main": live work, first and largest; "exploring" and "closed": grouped below, smaller. */
+  tier: "main" | "exploring" | "closed";
   name: string;
   nameLang?: string;
   /** Status mark + label, year, tags — rendered on the server. */
@@ -43,7 +45,15 @@ const GAP = 28; // px between pointer and image
  * - Touch (hover: none): every image sits above its title, nothing depends on hover.
  * - Reduced motion: the image jumps to its target, no lerp or tilt.
  */
-export function ProjectList({ rows, label }: { rows: ProjectRow[]; label: string }) {
+export function ProjectList({
+  rows,
+  label,
+  groupLabels,
+}: {
+  rows: ProjectRow[];
+  label: string;
+  groupLabels: { exploring: string; closed: string };
+}) {
   const [active, setActive] = useState<number | null>(null);
   const float = useRef<HTMLDivElement>(null);
   const pos = useRef({ fx: 0, fy: 0, tx: 0, ty: 0, frame: 0, fine: false, reduced: false });
@@ -116,105 +126,129 @@ export function ProjectList({ rows, label }: { rows: ProjectRow[]; label: string
   };
   const leave = () => setActive(null);
 
+  const renderRow = (row: ProjectRow, i: number) => {
+    const small = row.tier !== "main";
+    const content = (
+      <>
+        <span className="flex min-w-0 flex-col gap-[clamp(0.5rem,0.8vw,0.875rem)]">
+          {/* Touch: a real cover sits above the title (hidden where hover exists).
+              Posters are left out here: four "image coming soon" frames were
+              screens of scrolling with nothing new to see. */}
+          {row.hasCover && <span className="relative hidden aspect-[4/3] w-full max-w-[520px] [@media(hover:none)]:block">{row.image}</span>}
+          <span
+            lang={row.nameLang}
+            onPointerEnter={(e) => e.pointerType === "mouse" && enter(i, e.clientX, e.clientY)}
+            onPointerLeave={(e) => e.pointerType === "mouse" && leave()}
+            className={`max-w-full self-start font-display ${small ? "text-[clamp(1.75rem,1.3rem+1.9vw,3.25rem)] leading-[1]" : "text-[clamp(2rem,1.1rem+5.2vw,7rem)] leading-[0.94]"} font-bold tracking-[-0.035em] text-balance hyphens-none`}
+          >
+            {row.name}
+            {row.external && <span className="sr-only"> ({row.externalLabel})</span>}
+          </span>
+          <span id={`project-desc-${row.slug}`} className="flex flex-col gap-[clamp(0.5rem,0.8vw,0.875rem)]">
+            <span className="text-caption leading-[1.4] text-gray-600">{row.meta}</span>
+            {row.summary && <span className="max-w-[56ch] text-ui leading-snug text-pretty text-[#3f3d39]">{row.summary}</span>}
+          </span>
+          {/* The row's action, written out: only rows that lead somewhere have one. */}
+          {row.action && (
+            <span className="mt-1 flex items-center gap-2 self-start font-display text-[1.0625rem] font-bold tracking-[-0.01em] underline decoration-1 underline-offset-[0.3em]">
+              {row.action} <span aria-hidden="true">{row.external ? "↗" : "→"}</span>
+            </span>
+          )}
+        </span>
+      </>
+    );
+    const rowClass = `block py-[clamp(1rem,2vw,1.75rem)] ${row.site ? "pr-14 md:pr-16" : ""} transition-opacity duration-(--duration-base) ease-(--ease-out-soft) ${
+      active !== null && active !== i ? "opacity-25" : "opacity-100"
+    }`;
+    return (
+      <li key={row.slug} className="relative">
+        {/* Straight to the product's site, beside the row (a link can't sit inside the row's link). */}
+        {row.site && (
+          <a
+            href={row.site.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={row.site.label}
+            title={row.site.label}
+            data-cursor-label={row.cursorSite}
+            className="absolute top-[clamp(1rem,2vw,1.75rem)] right-0 z-10 flex size-11 items-center justify-center rounded-full border border-ink/15 bg-paper text-ink transition-colors duration-(--duration-fast) hover:border-ink hover:bg-ink hover:text-paper focus-visible:outline-ink md:size-12"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 17L17 7M9 7h8v8" />
+            </svg>
+          </a>
+        )}
+        {row.href ? (
+          <a
+            href={row.href}
+            data-cursor-label={row.cursorLabel}
+            // A short name ("Koinonia. Ler o estudo de caso"); status, tags and
+            // summary stay readable as the link's description.
+            aria-label={`${row.name}${row.external ? ` (${row.externalLabel})` : ""}. ${row.action ?? ""}`.replace(/\.\s*$/, "")}
+            aria-describedby={`project-desc-${row.slug}`}
+            target={row.external ? "_blank" : undefined}
+            rel={row.external ? "noopener noreferrer" : undefined}
+            className={rowClass}
+            onFocus={(e) => {
+              const p = pos.current;
+              if (!p.fine) return;
+              // Keyboard: anchor the image to the right of the line.
+              const b = e.currentTarget.getBoundingClientRect();
+              const w = float.current?.offsetWidth ?? 0;
+              p.tx = Math.max(16, b.right - w);
+              p.ty = Math.min(window.innerHeight - (float.current?.offsetHeight ?? 0) - 16, Math.max(16, b.top));
+              p.fx = p.tx;
+              p.fy = p.ty;
+              setActive(i);
+              start();
+            }}
+            onBlur={leave}
+          >
+            {content}
+          </a>
+        ) : (
+          <div className={rowClass}>{content}</div>
+        )}
+      </li>
+    );
+  };
+  // Hierarchy by space and scale, no rules or cards (Iury, 2026-11-16): live work
+  // first and largest; what is being explored, smaller, in columns; then the
+  // experiment that ended. One index across groups, so hover and the float agree.
+  const indexed = rows.map((row, i) => ({ row, i }));
+  const groups = [
+    { key: "main" as const, items: indexed.filter((r) => r.row.tier === "main") },
+    { key: "exploring" as const, items: indexed.filter((r) => r.row.tier === "exploring") },
+    { key: "closed" as const, items: indexed.filter((r) => r.row.tier === "closed") },
+  ].filter((g) => g.items.length > 0);
+  const listProps = {
+    "data-active": active !== null ? "" : undefined,
+    onPointerMove: (e: ReactPointerEvent) => {
+      if (e.pointerType !== "mouse" || active === null) return;
+      target(e.clientX, e.clientY);
+      start();
+    },
+    onPointerLeave: leave,
+  };
+
   return (
     <div className="relative">
-      <ul
-        aria-label={label}
-        data-active={active !== null ? "" : undefined}
-        className="group/list flex flex-col"
-        onPointerMove={(e) => {
-          if (e.pointerType !== "mouse" || active === null) return;
-          target(e.clientX, e.clientY);
-          start();
-        }}
-        onPointerLeave={leave}
-      >
-        {rows.map((row, i) => {
-          const content = (
-            <>
-              <span className="flex min-w-0 flex-col gap-[clamp(0.5rem,0.8vw,0.875rem)]">
-                {/* Touch: a real cover sits above the title (hidden where hover exists).
-                    Posters are left out here: four "image coming soon" frames were
-                    screens of scrolling with nothing new to see. */}
-                {row.hasCover && <span className="relative hidden aspect-[4/3] w-full max-w-[520px] [@media(hover:none)]:block">{row.image}</span>}
-                <span
-                  lang={row.nameLang}
-                  onPointerEnter={(e) => e.pointerType === "mouse" && enter(i, e.clientX, e.clientY)}
-                  onPointerLeave={(e) => e.pointerType === "mouse" && leave()}
-                  className="max-w-full self-start font-display text-[clamp(2rem,1.1rem+5.2vw,7rem)] leading-[0.94] font-bold tracking-[-0.035em] text-balance hyphens-none"
-                >
-                  {row.name}
-                  {row.external && <span className="sr-only"> ({row.externalLabel})</span>}
-                </span>
-                <span id={`project-desc-${row.slug}`} className="flex flex-col gap-[clamp(0.5rem,0.8vw,0.875rem)]">
-                  <span className="text-caption leading-[1.4] text-gray-600">{row.meta}</span>
-                  {row.summary && <span className="max-w-[56ch] text-ui leading-snug text-pretty text-[#3f3d39]">{row.summary}</span>}
-                </span>
-                {/* The row's action, written out: only rows that lead somewhere have one. */}
-                {row.action && (
-                  <span className="mt-1 flex items-center gap-2 self-start font-display text-[1.0625rem] font-bold tracking-[-0.01em] underline decoration-1 underline-offset-[0.3em]">
-                    {row.action} <span aria-hidden="true">{row.external ? "↗" : "→"}</span>
-                  </span>
-                )}
-              </span>
-            </>
-          );
-          const rowClass = `block py-[clamp(1rem,2vw,1.75rem)] ${row.site ? "pr-14 md:pr-16" : ""} transition-opacity duration-(--duration-base) ease-(--ease-out-soft) ${
-            active !== null && active !== i ? "opacity-25" : "opacity-100"
-          }`;
-          return (
-            <li key={row.slug} className="relative">
-              {/* Straight to the product's site, beside the row (a link can't sit inside the row's link). */}
-              {row.site && (
-                <a
-                  href={row.site.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={row.site.label}
-                  title={row.site.label}
-                  data-cursor-label={row.cursorSite}
-                  className="absolute top-[clamp(1rem,2vw,1.75rem)] right-0 z-10 flex size-11 items-center justify-center rounded-full border border-ink/15 bg-paper text-ink transition-colors duration-(--duration-fast) hover:border-ink hover:bg-ink hover:text-paper focus-visible:outline-ink md:size-12"
-                >
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M7 17L17 7M9 7h8v8" />
-                  </svg>
-                </a>
-              )}
-              {row.href ? (
-                <a
-                  href={row.href}
-                  data-cursor-label={row.cursorLabel}
-                  // A short name ("Koinonia. Ler o estudo de caso"); status, tags and
-                  // summary stay readable as the link's description.
-                  aria-label={`${row.name}${row.external ? ` (${row.externalLabel})` : ""}. ${row.action ?? ""}`.replace(/\.\s*$/, "")}
-                  aria-describedby={`project-desc-${row.slug}`}
-                  target={row.external ? "_blank" : undefined}
-                  rel={row.external ? "noopener noreferrer" : undefined}
-                  className={rowClass}
-                  onFocus={(e) => {
-                    const p = pos.current;
-                    if (!p.fine) return;
-                    // Keyboard: anchor the image to the right of the line.
-                    const b = e.currentTarget.getBoundingClientRect();
-                    const w = float.current?.offsetWidth ?? 0;
-                    p.tx = Math.max(16, b.right - w);
-                    p.ty = Math.min(window.innerHeight - (float.current?.offsetHeight ?? 0) - 16, Math.max(16, b.top));
-                    p.fx = p.tx;
-                    p.fy = p.ty;
-                    setActive(i);
-                    start();
-                  }}
-                  onBlur={leave}
-                >
-                  {content}
-                </a>
-              ) : (
-                <div className={rowClass}>{content}</div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      {groups.map((g) =>
+        g.key === "main" ? (
+          <ul key={g.key} aria-label={label} className="group/list flex flex-col" {...listProps}>
+            {g.items.map(({ row, i }) => renderRow(row, i))}
+          </ul>
+        ) : (
+          <div key={g.key} className="flex flex-col gap-2 pt-[clamp(3rem,6vw,5.5rem)]">
+            <h3 id={`projects-${g.key}`} className="font-display text-title font-bold tracking-[-0.01em]">
+              {groupLabels[g.key]}
+            </h3>
+            <ul aria-labelledby={`projects-${g.key}`} className="grid grid-cols-1 gap-x-10 md:grid-cols-2 lg:grid-cols-3" {...listProps}>
+              {g.items.map(({ row, i }) => renderRow(row, i))}
+            </ul>
+          </div>
+        ),
+      )}
 
       {/* The floating preview: decorative, fine pointers only. */}
       <div

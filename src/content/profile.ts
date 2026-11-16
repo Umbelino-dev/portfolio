@@ -7,8 +7,8 @@ import type { Localized } from "./types";
 
 export const site = {
   name: "Iury Umbelino",
-  /** Public origin, used for canonical/hreflang/sitemap. Defaults to the live Worker; set NEXT_PUBLIC_SITE_URL at build time for a custom domain. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio.iuryumbelino1.workers.dev",
+  /** Public origin, used for canonical/hreflang/OG/sitemap/JSON-LD. Defaults to the custom domain (Iury, 2026-11-16); NEXT_PUBLIC_SITE_URL at build time overrides it. */
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://umbelino.dev",
 } as const;
 
 export interface ContactLink {
@@ -26,6 +26,16 @@ export const contacts: ContactLink[] = [
   { kind: "github", label: "@Umbelino-dev", href: "https://github.com/Umbelino-dev", publish: true },
   // Instagram: confirmed by Iury for publication (2026-11-13).
   { kind: "instagram", label: "@umbelino.zs", href: "https://instagram.com/umbelino.zs", publish: true },
+];
+
+/**
+ * Public code, linked from the Profile (Iury, 2026-11-16). Only repositories that are
+ * public and checked on GitHub (Umbelino-dev/portfolio: public, 2026-11-16). Koinonia's
+ * repository is private: it comes in only when Iury confirms it was published. AutomIA's
+ * code is not with Iury, so it never appears here.
+ */
+export const publicCode: { label: Localized; href: string }[] = [
+  { label: { pt: "Este portfólio", en: "This portfolio" }, href: "https://github.com/Umbelino-dev/portfolio" },
 ];
 
 export interface Education {

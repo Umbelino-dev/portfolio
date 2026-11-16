@@ -5,6 +5,7 @@ out/
 *.tsbuildinfo
 .env*
 !.env.example
+.dev.vars*
 .DS_Store
 test-results/
 playwright-report/

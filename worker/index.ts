@@ -8,7 +8,7 @@
  * it never reaches the browser. Any failure answers with an error code and the
  * client falls back to the scripted assistant.
  */
-import { checkReply, destinationFits, extractGo, isPersonalTopic } from "./guard";
+import { checkReply, destinationFits, extractGo, isPersonalTopic, sameOrigin } from "./guard";
 import { video } from "./media";
 import { KNOWLEDGE, PROJECT_SLUGS } from "./knowledge.generated";
 
@@ -164,9 +164,9 @@ interface GeminiResponse {
 async function chat(request: Request, env: Env, ctx: Ctx): Promise<Response> {
   if (request.method !== "POST") return json({ error: "method" }, 405);
 
-  // Same-origin only: the page and this Worker share a host.
-  const origin = request.headers.get("origin");
-  if (origin && origin !== new URL(request.url).origin) return json({ error: "origin" }, 403);
+  // Same-origin only: the page and this Worker share a host (umbelino.dev, or the
+  // workers.dev address during the transition: each host serves its own pages).
+  if (!sameOrigin(request.headers.get("origin"), request.url)) return json({ error: "origin" }, 403);
 
   let body: { messages?: unknown; page?: unknown };
   try {

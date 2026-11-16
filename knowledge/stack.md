@@ -14,7 +14,11 @@ Estuda (faculdade):
 - Segurança da Informação: proteção de dados e controle de acessos, aplicados na gestão de permissões.
 - Node.js: estudado.
 
-Usou no Koinonia: TanStack Start, React 19, Supabase, Tailwind CSS v4, Vitest. A IA escreveu a maior parte do código; o Iury dirigiu o processo.
+Usou no Koinonia: TanStack Start, React 19, TanStack Query, Supabase, Tailwind CSS v4, Vitest, GitHub Actions e Cloudflare Workers. A IA escreveu a maior parte do código; o Iury dirigiu o processo.
+
+Site da SOU Studio (soustudio.com.br): Next.js 16, React 19, TypeScript e CSS Modules.
+
+Código público: o repositório deste portfólio, https://github.com/Umbelino-dev/portfolio. O do Koinonia é privado.
 
 Ferramentas do dia a dia: Visual Studio Code, GitHub, Claude Code, ChatGPT e Windows. Para design, Figma e Blender. Também usa o Roblox Studio.
 

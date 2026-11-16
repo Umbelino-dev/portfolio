@@ -27,6 +27,7 @@ export async function Projects() {
     const live = caseHref ? undefined : p.links?.[0];
     return {
       slug: p.slug,
+      tier: p.tier ?? "main",
       name: p.name,
       nameLang: p.nameLang && p.nameLang !== locale ? p.nameLang : undefined,
       href: caseHref ?? live?.href,
@@ -45,12 +46,7 @@ export async function Projects() {
         </span>
       ),
       image: (
-        <ProjectImage
-          project={p}
-          position={i}
-          locale={locale}
-          labels={{ pending: t("pending") }}
-        />
+<ProjectImage project={p} position={i} locale={locale} />
       ),
     };
   });
@@ -68,7 +64,7 @@ export async function Projects() {
           <SectionTitle id="projects-title">{t("label")}</SectionTitle>
           <p className="max-w-[34ch] text-[max(0.9375rem,13px)] leading-normal text-gray-600 md:self-end md:mr-[8.33%]">{t("note")}</p>
         </div>
-        <ProjectList rows={rows} label={t("listLabel")} />
+        <ProjectList rows={rows} label={t("listLabel")} groupLabels={{ exploring: t("exploring"), closed: t("closed") }} />
         {/* Second part: how the work is made (Approach lives inside Projects). */}
         <Approach />
       </div>

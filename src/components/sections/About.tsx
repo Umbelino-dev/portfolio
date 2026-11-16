@@ -1,5 +1,5 @@
 import { getLocale, getTranslations } from "next-intl/server";
-import { contacts, education, educationEarlier, experience, plain, skills, type Education } from "@/content/profile";
+import { contacts, education, publicCode, educationEarlier, experience, plain, skills, type Education } from "@/content/profile";
 import { gallery } from "@/content/gallery";
 import type { Locale } from "@/i18n/routing";
 import { Emphasis } from "@/components/layout/Emphasis";
@@ -139,6 +139,23 @@ export async function About() {
             <h3 className={subhead}>{t("skills")}</h3>
             <p className="text-note text-gray-600">{t("skillsHint")}</p>
             <SkillPills skills={skills.map((k) => ({ name: k.name[locale], note: k.note[locale] }))} />
+            {publicCode.length > 0 && (
+              <p className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-note text-gray-600">
+                {ta("publicCode")}
+                {publicCode.map((r) => (
+                  <a
+                    key={r.href}
+                    href={r.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center font-display font-bold text-ink underline decoration-1 underline-offset-[0.3em] hover:text-gray-600"
+                  >
+                    {r.label[locale]} <span aria-hidden="true">&nbsp;↗</span>
+                    <span className="sr-only"> (GitHub, {ta("newTab")})</span>
+                  </a>
+                ))}
+              </p>
+            )}
           </div>
         </div>
       </div>

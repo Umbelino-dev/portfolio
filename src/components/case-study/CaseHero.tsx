@@ -24,6 +24,12 @@ export async function CaseHero({
   const ts = await getTranslations("status");
   const tt = await getTranslations("tags");
   const link = project.links?.[0];
+  const usage = caseStudy.usage?.confirmed && caseStudy.usage.items.length > 0 ? caseStudy.usage : undefined;
+  const asOf =
+    usage &&
+    new Intl.DateTimeFormat(locale === "pt" ? "pt-BR" : "en", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(
+      new Date(`${usage.asOf}T12:00:00Z`),
+    );
   const fact = (key: string, value: React.ReactNode) => (
     <div className="flex flex-col gap-1">
       <dt className="text-note text-gray-600">{key}</dt>
@@ -62,7 +68,8 @@ export async function CaseHero({
         )}
       </div>
 
-      <dl className="col-span-4 grid grid-cols-2 content-start gap-x-6 gap-y-6 md:col-span-12 md:grid-cols-3 lg:col-span-4 lg:col-start-9 lg:grid-cols-2 lg:pt-12">
+      <div className="col-span-4 flex flex-col gap-10 md:col-span-12 lg:col-span-4 lg:col-start-9 lg:pt-12">
+      <dl className="grid grid-cols-2 content-start gap-x-6 gap-y-6 md:grid-cols-3 lg:grid-cols-2">
         {fact(t("status"), <StatusMark status={project.status} label={ts(project.status)} className="text-ink" />)}
         {project.year && fact(t("year"), project.year)}
         {project.role && <div className="col-span-2">{fact(t("role"), project.role[locale])}</div>}
@@ -70,6 +77,30 @@ export async function CaseHero({
         {caseStudy.builtWith && fact(t("builtWith"), caseStudy.builtWith.join(", "))}
         {fact(t("tags"), project.tags.map((tag) => tt(tag)).join(", "))}
       </dl>
+
+      {/* Usage numbers: aggregates only, always with their date and source (metrics policy). */}
+      {usage && (
+        <section aria-labelledby="usage-title" className="flex flex-col gap-4">
+          <h2 id="usage-title" className="text-note text-gray-600">
+            {t("usage")}
+          </h2>
+          <dl className="grid grid-cols-2 gap-x-6 gap-y-5">
+            {usage.items.map((m) => (
+              <div key={m.label.en} className="flex flex-col gap-1">
+                <dt className="text-ui leading-snug font-medium">{m.label[locale]}</dt>
+                {/* The number reads first on screen; the label stays its term for assistive tech. */}
+                <dd className="order-first font-display text-[clamp(2rem,1.6rem+1.4vw,2.75rem)] leading-none font-black tracking-[-0.03em]">{m.value[locale]}</dd>
+                {m.detail && <dd className="text-note text-gray-600">{m.detail[locale]}</dd>}
+              </div>
+            ))}
+          </dl>
+          <p className="text-note text-gray-600">
+            {usage.scope && <>{usage.scope[locale]} </>}
+            {t("usageSource", { date: asOf ?? "", source: usage.source[locale] })}
+          </p>
+        </section>
+      )}
+      </div>
     </header>
   );
 }
