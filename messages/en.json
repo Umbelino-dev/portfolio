@@ -41,7 +41,7 @@
     "label": "Profile",
     "lead": "Most of what I make starts as a question I can't let go of. This is where I show what I found.",
     "gallery": "Photos",
-    "galleryShow": "Show {caption}",
+    "galleryTitle": "Where I learn outside work",
     "galleryMore": "Learn more",
     "galleryHint": "Click to learn more",
     "galleryPending": "The story behind this photo is coming soon.",
@@ -51,11 +51,13 @@
     "galleryTakeaways": "What it added",
     "galleryProfile": "View profile on LinkedIn",
     "galleryPause": "Pause photos",
+    "galleryPlay": "Play photos",
     "galleryPrev": "Previous photo",
     "galleryNext": "Next photo"
   },
   "experience": {
     "title": "Where curiosity becomes routine.",
+    "roleSummary": "I look after internal systems in IT at Giassi's head office. I work with data on Oracle, rules and automations in DOX, and support for the people who use them every day.",
     "highlights": "What I do",
     "path": "Path",
     "stack": "Daily tools",

@@ -41,7 +41,7 @@
     "label": "Perfil",
     "lead": "Quase tudo que faço começa com uma pergunta que não me larga. Aqui eu mostro o que encontrei.",
     "gallery": "Fotos",
-    "galleryShow": "Mostrar {caption}",
+    "galleryTitle": "Onde aprendo fora do trabalho",
     "galleryMore": "Saber mais",
     "galleryHint": "Clique para saber mais",
     "galleryPending": "A história desta foto entra em breve.",
@@ -51,11 +51,13 @@
     "galleryTakeaways": "O que agregou",
     "galleryProfile": "Ver perfil no LinkedIn",
     "galleryPause": "Pausar fotos",
+    "galleryPlay": "Reproduzir fotos",
     "galleryPrev": "Foto anterior",
     "galleryNext": "Próxima foto"
   },
   "experience": {
     "title": "Onde a curiosidade vira rotina.",
+    "roleSummary": "Cuido dos sistemas internos na TI da Matriz do Giassi. Trabalho com dados em Oracle, regras e automações no DOX e suporte a quem usa esses sistemas no dia a dia.",
     "highlights": "O que faço",
     "path": "Trajetória",
     "stack": "Uso no dia a dia",

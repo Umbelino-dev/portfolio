@@ -14,7 +14,7 @@ export interface DeckPhoto {
   summary?: string;
   /** Shown when the card is opened. */
   story?: string;
-  linkedin?: { url: string; embed?: string; also?: { label: string; url: string } };
+  linkedin?: { url: string; embed?: string; also?: { label: string; url: string }[] };
   /** What the moment added (short points). */
   takeaways?: string[];
   /** CSS object-position for the crop. */
@@ -23,7 +23,6 @@ export interface DeckPhoto {
 
 export interface DeckLabels {
   deck: string;
-  show: string; // "Mostrar {caption}"
   more: string; // "Saber mais"
   hint: string; // "Clique para saber mais"
   pending: string; // "A história desta foto entra em breve."
@@ -33,7 +32,8 @@ export interface DeckLabels {
   profile: string; // "Ver perfil no LinkedIn"
   profileUrl: string; // the LinkedIn profile, when a photo has no post
   close: string;
-  pause: string; // "Pausar"
+  pause: string; // "Pausar fotos"
+  play: string; // "Reproduzir fotos"
   prev: string; // "Foto anterior"
   next: string; // "Próxima foto"
 }
@@ -98,8 +98,8 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
   const [shownIdx, setShownIdx] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [opened, setOpened] = useState<number | null>(null);
-  // Auto-dealing can be paused (WCAG 2.2.2) and stops for good once the visitor
-  // deals a card themselves: from then on the deck is theirs.
+  // Auto-dealing can be paused and resumed (WCAG 2.2.2); a deal by the visitor
+  // pauses it, and the play button brings it back.
   const [playing, setPlaying] = useState(true);
   const first = useRef(true);
   const paused = useRef(false);
@@ -301,6 +301,9 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
   };
 
   const shown = shownIdx !== null ? cards[shownIdx] : undefined;
+  /** The three round controls under the deck: quiet until hovered. */
+  const ctrl =
+    "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-ink/12 text-ink/70 transition-colors duration-(--duration-fast) hover:border-ink/40 hover:bg-ink/[0.04] hover:text-ink focus-visible:outline-ink";
   const story = opened !== null ? photos[opened] : undefined;
 
   return (
@@ -314,14 +317,14 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
       onPointerLeave={() => (paused.current = false)}
       onFocus={() => (paused.current = true)}
       onBlur={() => (paused.current = false)}
-      className="relative overflow-hidden py-[clamp(2.5rem,5vw,4.5rem)]"
+      className="relative overflow-hidden py-[clamp(2.5rem,5vw,4.5rem)] lg:py-[clamp(1.5rem,4vh,3.5rem)]"
     >
       <div
         ref={stage}
         onPointerDown={onDown}
         onPointerUp={onUp}
         onPointerCancel={() => (drag.current = null)}
-        className="relative mx-auto h-[calc(var(--card-w)*4/3*1.12)] w-(--card-w) touch-pan-y select-none [--card-w:clamp(15rem,64vw,26rem)] md:[--card-w:clamp(17rem,27vw,26rem)]"
+        className="relative mx-auto h-[calc(var(--card-w)*4/3*1.12)] w-(--card-w) touch-pan-y select-none [--card-w:clamp(15rem,64vw,26rem)] md:[--card-w:clamp(15rem,min(27vw,calc((100svh-20rem)*0.67)),26rem)]"
       >
         {cards.map((p, i) => (
           <DeckCard
@@ -339,58 +342,44 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
         ))}
       </div>
 
-      {/* The captions are the index: the one in front is ink. The arrows frame
-          them: the same deal as ← → on the deck, for anyone who does not swipe. */}
-      <div className="mt-[clamp(1.5rem,3vw,2.5rem)] flex flex-wrap items-center justify-center gap-x-8 gap-y-2 px-(--page-margin)">
-        <div className="flex items-center gap-x-4">
-        <button
-          type="button"
-          onClick={() => deal(front - 1)}
-          aria-label={labels.prev}
-          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-ink/12 font-display text-[1.125rem] text-ink transition-colors duration-(--duration-fast) hover:border-ink/40 hover:bg-ink/[0.04] focus-visible:outline-ink"
-        >
-          <span aria-hidden="true">←</span>
-        </button>
-        <ul className="flex flex-wrap justify-center gap-x-6">
-          {photos.map((p, i) => {
-            const active = front % photos.length === i;
-            return (
-              <li key={i}>
-                <button
-                  type="button"
-                  onClick={() => deal(i)}
-                  // Pointer shortcut only: keyboard users reach the same cards (and
-                  // deal with ← →) without four extra tab stops.
-                  tabIndex={-1}
-                  aria-current={active ? "true" : undefined}
-                  aria-label={labels.show.replace("{caption}", p.caption)}
-                  className={`min-h-11 font-display text-[1rem] font-bold tracking-[-0.01em] transition-colors duration-(--duration-base) hover:text-ink ${active ? "text-ink" : "text-gray-600"}`}
-                >
-                  {p.caption}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-        <button
-          type="button"
-          onClick={() => deal(front + 1)}
-          aria-label={labels.next}
-          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-ink/12 font-display text-[1.125rem] text-ink transition-colors duration-(--duration-fast) hover:border-ink/40 hover:bg-ink/[0.04] focus-visible:outline-ink"
-        >
-          <span aria-hidden="true">→</span>
-        </button>
-        </div>
-        {playing && (
+      {/* Under the deck: the front photo's name, and right under it one control,
+          ← | pause/play | → (Iury, 2026-11-16). The arrows deal (and pause the
+          auto-deal); the middle button pauses or resumes it. Under reduced motion
+          there is no auto-deal, so the middle button is hidden. */}
+      <div className="mt-[clamp(1.5rem,3vw,2.5rem)] flex flex-col items-center gap-3 px-(--page-margin)">
+        <p aria-live={playing ? "off" : "polite"} className="font-display text-title font-bold tracking-[-0.01em]">
+          {photos[front % photos.length]?.caption}
+        </p>
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => deal(front - 1)} aria-label={labels.prev} className={ctrl}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
           <button
             type="button"
-            onClick={() => setPlaying(false)}
-            // No auto-dealing with reduced motion, so nothing to pause.
-            className="min-h-11 font-display text-[1rem] font-bold tracking-[-0.01em] text-gray-600 underline decoration-1 underline-offset-[0.3em] transition-colors duration-(--duration-fast) hover:text-ink motion-reduce:hidden"
+            onClick={() => setPlaying((v) => !v)}
+            aria-label={playing ? labels.pause : labels.play}
+            aria-pressed={!playing}
+            className={`${ctrl} motion-reduce:hidden`}
           >
-            {labels.pause}
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="currentColor">
+              {playing ? (
+                <>
+                  <rect x="7" y="5.5" width="3" height="13" rx="1" />
+                  <rect x="14" y="5.5" width="3" height="13" rx="1" />
+                </>
+              ) : (
+                <path d="M8.5 5.8v12.4a.8.8 0 0 0 1.2.7l9.6-6.2a.8.8 0 0 0 0-1.4L9.7 5.1a.8.8 0 0 0-1.2.7z" />
+              )}
+            </svg>
           </button>
-        )}
+          <button type="button" onClick={() => deal(front + 1)} aria-label={labels.next} className={ctrl}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* The box that rises from the pointer (fine pointers only; decorative: the
@@ -482,16 +471,17 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
               >
                 {story.linkedin?.url ? labels.linkedin : labels.profile} <span aria-hidden="true">↗</span>
               </a>
-              {story.linkedin?.also && (
+              {story.linkedin?.also?.map((post) => (
                 <a
-                  href={story.linkedin.also.url}
+                  key={post.url}
+                  href={post.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="-mt-2 flex min-h-11 shrink-0 items-center gap-2 self-start font-display text-[1rem] font-bold underline decoration-1 underline-offset-[0.3em] transition-colors duration-(--duration-fast) hover:text-gray-600"
                 >
-                  {story.linkedin.also.label} <span aria-hidden="true">↗</span>
+                  {post.label} <span aria-hidden="true">↗</span>
                 </a>
-              )}
+              ))}
             </div>
           </div>
         )}

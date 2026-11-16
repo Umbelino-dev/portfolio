@@ -97,6 +97,17 @@
       font-size: 75%;
     }
   }
+  /*
+   * Scroll snap (Iury, 2026-11-16): the two Profile screens are snap points on
+   * desktop. Proximity, not mandatory: with mandatory every scroll would have to
+   * end on a snap point, and the long sections without one (Projects, the career
+   * path, Contact) could not be read mid-way.
+   */
+  @media (min-width: 64rem) {
+    html {
+      scroll-snap-type: y proximity;
+    }
+  }
   html {
     background: var(--color-ink);
     color: var(--color-paper);
