@@ -19,11 +19,17 @@ const LEAK_MARKERS = ["<conteudo>", "</conteudo>", "REGRAS", "SYSTEM_PROMPT", "s
 
 const clean = (t: string) => t.toLowerCase().replace(/[.,;:!?)\]"']+$/g, "");
 
-export type GuardResult = { ok: true } | { ok: false; reason: "too_long" | "leak" | "unknown_contact" };
+export type GuardResult = { ok: true } | { ok: false; reason: "too_long" | "leak" | "unknown_contact" | "invented" };
+
+// Patterns that mark an invented family anecdote or a page that does not exist.
+const INVENTED =
+  /\b(la em casa|a gente) (sempre|costuma|brinca|fala|diz|adora|conta|ri)\b|secao (de|sobre) (vida pessoal|familia|hobbies|curiosidades|gatos)|\b(reservado|timido|introvertido)\b/;
 
 export function checkReply(reply: string, knowledge: string): GuardResult {
   if (reply.length > MAX_REPLY_CHARS) return { ok: false, reason: "too_long" };
   if (LEAK_MARKERS.some((m) => reply.includes(m))) return { ok: false, reason: "leak" };
+
+  if (INVENTED.test(reply.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""))) return { ok: false, reason: "invented" };
 
   const known = knowledge.toLowerCase();
   const emails = reply.match(EMAIL) ?? [];
