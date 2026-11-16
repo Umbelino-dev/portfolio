@@ -9,7 +9,14 @@
 import type { Locale } from "@/i18n/routing";
 
 /** Project stage — encoded by shape in the UI (StatusMark), never by colour. */
-export type ProjectStatus = "concept" | "experiment" | "prototype" | "in-development" | "live";
+export type ProjectStatus = "concept" | "experiment" | "prototype" | "in-development" | "validating" | "live" | "evolving" | "in-use";
+
+/**
+ * Where a project stands on the five-step approach (Approach section): 0 observe
+ * (problem discovery), 1 understand (problem validation), 2 experiment (solution
+ * validation), 3 build, 4 improve (iteration). Only what is true today.
+ */
+export type ProjectStage = 0 | 1 | 2 | 3 | 4;
 
 /** A string per locale. */
 export type Localized<T = string> = Record<Locale, T>;
@@ -37,7 +44,9 @@ export interface CaseStudyStep {
 
 export interface CaseStudyChapter {
   /** Stable id, used for anchors. */
-  id: "problem" | "build" | "audit" | "product" | "learned" | "results";
+  id: "problem" | "build" | "audit" | "product" | "learned" | "results" | "idea" | "stage" | "use" | "origin";
+  /** Which part of the project page it belongs to: "Sobre o projeto" or "Processo e desenvolvimento". */
+  part: "about" | "process";
   label: Localized; // "O problema" — numbered by position
   title: Localized; // display H2, max ~15ch
   /** Words of the title to mark with the `highlight` utility (light surface accent). */
@@ -55,6 +64,8 @@ export interface CaseStudy {
   /** Tools the product was built with (e.g. the AI builder) — shown next to the stack. */
   builtWith?: string[];
   cover?: MediaSlot;
+  /** "Acesso ao projeto" when there is no public link: says why, never a dead button. */
+  access?: Localized;
   /** Rendered in order; a chapter without body, steps or figures is skipped. */
   chapters: CaseStudyChapter[];
   source: string;
@@ -80,6 +91,9 @@ export interface Project {
   /** Language of `name` when it differs from the page (most names are Portuguese). */
   nameLang?: "pt" | "en";
   status: ProjectStatus;
+  /** Its current step on the approach, and one line saying what that means for it. */
+  stage: ProjectStage;
+  stageNote: Localized;
   year?: number;
   tags: TagKey[];
   summary: Localized;

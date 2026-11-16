@@ -2,11 +2,14 @@ import { getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import type { CaseStudy, Project } from "@/content/types";
 import { StatusMark } from "@/components/layout/StatusMark";
+import { button } from "@/components/layout/button";
 
 /**
- * Case-study hero: a line in serif saying what this is, the name as h1 (≤14ch,
- * balanced), the facts (status, year, role, tags, stack) as a quiet grid with
- * serif field names, then the lead. No codes, counters or rules.
+ * 1 · Apresentação (Iury, 2026-11-16: every project page has the same four parts).
+ * Left: what it is ("Projeto"), the name as h1 at the home's headline size, the
+ * lead and, when there is one, the button to the project. Right: the facts as a
+ * quiet list (status, year, role, stack, tools, tags). Same type scale and grid
+ * as the home, so a project page never looks like another site.
  */
 export async function CaseHero({
   project,
@@ -20,59 +23,43 @@ export async function CaseHero({
   const t = await getTranslations("caseStudy");
   const ts = await getTranslations("status");
   const tt = await getTranslations("tags");
-  const key = "text-note text-[1.0625rem] text-gray-600";
-  const value = "text-[max(0.9375rem,13px)] font-medium";
+  const link = project.links?.[0];
+  const fact = (key: string, value: React.ReactNode) => (
+    <div className="flex flex-col gap-1">
+      <dt className="text-note text-gray-600">{key}</dt>
+      <dd className="text-ui leading-snug font-medium">{value}</dd>
+    </div>
+  );
 
   return (
-    <header className="flex flex-col gap-[clamp(2rem,4vw,4rem)] px-(--page-margin) pt-[clamp(7rem,12vw,12.5rem)] pb-[clamp(2.5rem,4vw,4rem)] max-md:pr-12">
-      <p className="text-note text-[1.375rem] text-[#3f3d39]">{t("label")}</p>
-
-      <h1
-        lang={project.nameLang && project.nameLang !== locale ? project.nameLang : undefined}
-        className="max-w-[14ch] font-display text-[clamp(2.75rem,0.6rem+11.5vw,13.125rem)] leading-[0.86] font-bold tracking-[-0.05em] text-balance hyphens-auto [overflow-wrap:anywhere]"
-      >
-        {project.name}
-      </h1>
-
-      <div className="flex flex-col gap-[clamp(2rem,3vw,3rem)]">
-        <dl className="grid grid-cols-2 gap-x-[clamp(1rem,2vw,2rem)] gap-y-6 md:grid-cols-[repeat(auto-fit,minmax(10rem,1fr))]">
-          <div className="flex flex-col gap-1">
-            <dt className={key}>{t("status")}</dt>
-            <dd className={value}>
-              <StatusMark status={project.status} label={ts(project.status)} />
-            </dd>
-          </div>
-          {project.year && (
-            <div className="flex flex-col gap-1">
-              <dt className={key}>{t("year")}</dt>
-              <dd className={value}>{project.year}</dd>
-            </div>
-          )}
-          {project.role && (
-            <div className="col-span-2 flex flex-col gap-1 md:col-span-1">
-              <dt className={key}>{t("role")}</dt>
-              <dd className={`${value} max-w-[34ch]`}>{project.role[locale]}</dd>
-            </div>
-          )}
-          <div className="flex flex-col gap-1">
-            <dt className={key}>{t("tags")}</dt>
-            <dd className={value}>{project.tags.map((tag) => tt(tag)).join(", ")}</dd>
-          </div>
-          {project.stack && (
-            <div className="col-span-2 flex flex-col gap-1 md:col-span-1">
-              <dt className={key}>{t("stack")}</dt>
-              <dd className={value}>{project.stack.join(", ")}</dd>
-            </div>
-          )}
-          {caseStudy.builtWith && (
-            <div className="flex flex-col gap-1">
-              <dt className={key}>{t("builtWith")}</dt>
-              <dd className={value}>{caseStudy.builtWith.join(", ")}</dd>
-            </div>
-          )}
-        </dl>
-        {caseStudy.lead && <p className="max-w-[52ch] text-body text-pretty text-[#3f3d39] md:text-lead">{caseStudy.lead[locale]}</p>}
+    <header className="page-grid w-full gap-y-10 pt-[clamp(7rem,12vh,9.5rem)] pb-[clamp(2.5rem,5vw,4.5rem)] max-md:pr-12">
+      <div className="col-span-4 flex flex-col gap-5 md:col-span-12 lg:col-span-7">
+        <p className="text-note text-gray-600">{t("label")}</p>
+        <h1
+          lang={project.nameLang && project.nameLang !== locale ? project.nameLang : undefined}
+          className="font-display text-headline-l font-bold tracking-[-0.03em] text-balance [overflow-wrap:anywhere]"
+        >
+          {project.name}
+        </h1>
+        {(caseStudy.lead ?? project.summary)[locale] && (
+          <p className="max-w-[48ch] text-lead leading-snug text-pretty text-[#3f3d39]">{(caseStudy.lead ?? project.summary)[locale]}</p>
+        )}
+        {link && (
+          <a href={link.href} target="_blank" rel="noopener noreferrer" className={`${button.ink} mt-2`}>
+            {link.label[locale]} <span aria-hidden="true">↗</span>
+            <span className="sr-only"> ({t("newTab")})</span>
+          </a>
+        )}
       </div>
+
+      <dl className="col-span-4 grid grid-cols-2 content-start gap-x-6 gap-y-6 md:col-span-12 md:grid-cols-3 lg:col-span-4 lg:col-start-9 lg:grid-cols-2 lg:pt-12">
+        {fact(t("status"), <StatusMark status={project.status} label={ts(project.status)} className="text-ink" />)}
+        {project.year && fact(t("year"), project.year)}
+        {project.role && <div className="col-span-2">{fact(t("role"), project.role[locale])}</div>}
+        {project.stack && <div className="col-span-2">{fact(t("stack"), project.stack.join(", "))}</div>}
+        {caseStudy.builtWith && fact(t("builtWith"), caseStudy.builtWith.join(", "))}
+        {fact(t("tags"), project.tags.map((tag) => tt(tag)).join(", "))}
+      </dl>
     </header>
   );
 }

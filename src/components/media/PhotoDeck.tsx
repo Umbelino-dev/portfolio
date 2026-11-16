@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { memo, useCallback, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type RefObject } from "react";
 import { gsap, MQ, useGSAP } from "@/lib/gsap";
+import { button } from "@/components/layout/button";
 
 export interface DeckPhoto {
   src: string;
@@ -14,7 +15,7 @@ export interface DeckPhoto {
   summary?: string;
   /** Shown when the card is opened. */
   story?: string;
-  linkedin?: { url: string; embed?: string; also?: { label: string; url: string } };
+  linkedin?: { url: string; embed?: string; also?: { label: string; url: string }[] };
   /** What the moment added (short points). */
   takeaways?: string[];
   /** CSS object-position for the crop. */
@@ -33,13 +34,12 @@ export interface DeckLabels {
   profile: string; // "Ver perfil no LinkedIn"
   profileUrl: string; // the LinkedIn profile, when a photo has no post
   close: string;
-  pause: string; // "Pausar"
+  pause: string; // "Pausar fotos"
+  play: string; // "Reproduzir fotos"
   prev: string; // "Foto anterior"
   next: string; // "Próxima foto"
 }
 
-/** The deck always shows at least this many cards (photos repeat until then). */
-const MIN_CARDS = 4;
 /** Seconds a card stays in front before the next one is dealt. */
 const HOLD = 3.4;
 
@@ -98,15 +98,15 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
   const [shownIdx, setShownIdx] = useState<number | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
   const [opened, setOpened] = useState<number | null>(null);
-  // Auto-dealing can be paused (WCAG 2.2.2) and stops for good once the visitor
-  // deals a card themselves: from then on the deck is theirs.
+  // Auto-dealing can be paused and resumed (WCAG 2.2.2); a deal by the visitor
+  // pauses it, and the play button brings it back.
   const [playing, setPlaying] = useState(true);
   const first = useRef(true);
   const paused = useRef(false);
   const visible = useRef(false);
 
-  const reps = Math.max(1, Math.ceil(MIN_CARDS / Math.max(1, photos.length)));
-  const cards = Array.from({ length: reps }, () => photos).flat();
+  // Each photo appears once (Iury, 2026-11-16): no repeated cards.
+  const cards = photos;
   const n = cards.length;
   const offset = useCallback(
     (i: number, f: number) => {
@@ -126,7 +126,10 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
     [go],
   );
 
-  // Lay the cards out for the current front card.
+  // Lay the cards out for the current front card. A card that wraps round the
+  // deck (the one leaving one side for the other) travels behind the front card,
+  // smaller and dimmer at the middle of its path, so the deck reads as one turn.
+  const prevFront = useRef(front);
   useGSAP(
     () => {
       const el = stage.current;
@@ -135,38 +138,60 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
       const reduced = window.matchMedia(MQ.reduced).matches;
       const instant = first.current || reduced;
       first.current = false;
+      const from = prevFront.current;
+      prevFront.current = front;
       items.forEach((card, i) => {
         const p = pose(offset(i, front), n);
+        const before = offset(i, from);
+        const after = offset(i, front);
         const w = card.offsetWidth;
+        const to = { x: p.x * w, y: p.y * w, scale: p.scale, rotation: p.rotation, opacity: p.opacity };
+        const wraps = !instant && Math.sign(before) !== 0 && Math.sign(after) !== 0 && Math.sign(before) !== Math.sign(after);
+        if (instant) {
+          gsap.set(card, { ...to, zIndex: p.z });
+          return;
+        }
+        if (wraps) {
+          // Behind everything for the whole trip; its final layer only at the end.
+          gsap.set(card, { zIndex: 1 });
+          gsap.to(card, {
+            keyframes: [
+              { x: 0, y: -0.02 * w, scale: Math.min(p.scale, 0.62), rotation: 0, opacity: 0.55, duration: 0.47, ease: "power2.in" },
+              { ...to, duration: 0.48, ease: "power2.out" },
+            ],
+            overwrite: "auto",
+            onComplete: () => void gsap.set(card, { zIndex: p.z }),
+          });
+          return;
+        }
         gsap.set(card, { zIndex: p.z });
-        gsap.to(card, {
-          x: p.x * w,
-          y: p.y * w,
-          scale: p.scale,
-          rotation: p.rotation,
-          opacity: p.opacity,
-          duration: instant ? 0 : 0.95,
-          ease: "power3.inOut",
-          overwrite: "auto",
-        });
+        gsap.to(card, { ...to, duration: 0.95, ease: "power3.inOut", overwrite: "auto" });
       });
     },
     { scope: stage, dependencies: [front, n], revertOnUpdate: false },
   );
 
-  // Re-place on resize (poses are fractions of the card's width).
+  // Re-place on resize (poses are fractions of the card's width). Created once:
+  // a ResizeObserver reports on observe(), and when this effect was re-created on
+  // every deal that first report snapped every card to its end pose in the first
+  // frame of the tween, then the tween pulled it back: the one-frame "zoom"
+  // (Iury, 2026-11-16). Now it acts only when the card width really changes.
   useEffect(() => {
     const el = stage.current;
     if (!el) return;
+    let width = el.offsetWidth;
     const ro = new ResizeObserver(() => {
+      if (el.offsetWidth === width) return;
+      width = el.offsetWidth;
       gsap.utils.toArray<HTMLElement>("[data-deck-card]", el).forEach((card, i) => {
-        const p = pose(offset(i, front), n);
-        gsap.set(card, { x: p.x * card.offsetWidth, y: p.y * card.offsetWidth });
+        const p = pose(offset(i, frontRef.current), n);
+        gsap.killTweensOf(card);
+        gsap.set(card, { x: p.x * card.offsetWidth, y: p.y * card.offsetWidth, scale: p.scale, rotation: p.rotation, opacity: p.opacity, zIndex: p.z });
       });
     });
     ro.observe(el);
     return () => ro.disconnect();
-  }, [front, n, offset]);
+  }, [n, offset]);
 
   // Auto-deal: only while visible, motion allowed, not hovered, no card open, tab shown.
   useEffect(() => {
@@ -301,6 +326,9 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
   };
 
   const shown = shownIdx !== null ? cards[shownIdx] : undefined;
+  /** The three round controls under the deck: quiet until hovered. */
+  const ctrl =
+    "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full border border-ink/12 text-ink/70 transition-colors duration-(--duration-fast) hover:border-ink/40 hover:bg-ink/[0.04] hover:text-ink focus-visible:outline-ink";
   const story = opened !== null ? photos[opened] : undefined;
 
   return (
@@ -314,21 +342,20 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
       onPointerLeave={() => (paused.current = false)}
       onFocus={() => (paused.current = true)}
       onBlur={() => (paused.current = false)}
-      className="relative overflow-hidden py-[clamp(2.5rem,5vw,4.5rem)]"
+      className="relative overflow-hidden py-[clamp(2.5rem,5vw,4.5rem)] lg:py-[clamp(1.5rem,4vh,3.5rem)]"
     >
       <div
         ref={stage}
         onPointerDown={onDown}
         onPointerUp={onUp}
         onPointerCancel={() => (drag.current = null)}
-        className="relative mx-auto h-[calc(var(--card-w)*4/3*1.12)] w-(--card-w) touch-pan-y select-none [--card-w:clamp(15rem,64vw,26rem)] md:[--card-w:clamp(17rem,27vw,26rem)]"
+        className="relative mx-auto h-[calc(var(--card-w)*4/3*1.12)] w-(--card-w) touch-pan-y select-none [--card-w:clamp(15rem,64vw,26rem)] md:[--card-w:clamp(15rem,min(27vw,calc((100svh-20rem)*0.67)),26rem)]"
       >
         {cards.map((p, i) => (
           <DeckCard
             key={i}
             p={p}
             i={i}
-            copy={i >= photos.length}
             more={labels.more}
             dragRef={drag}
             onOpen={open}
@@ -339,58 +366,64 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
         ))}
       </div>
 
-      {/* The captions are the index: the one in front is ink. The arrows frame
-          them: the same deal as ← → on the deck, for anyone who does not swipe. */}
-      <div className="mt-[clamp(1.5rem,3vw,2.5rem)] flex flex-wrap items-center justify-center gap-x-8 gap-y-2 px-(--page-margin)">
-        <div className="flex items-center gap-x-4">
-        <button
-          type="button"
-          onClick={() => deal(front - 1)}
-          aria-label={labels.prev}
-          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-ink/12 font-display text-[1.125rem] text-ink transition-colors duration-(--duration-fast) hover:border-ink/40 hover:bg-ink/[0.04] focus-visible:outline-ink"
-        >
-          <span aria-hidden="true">←</span>
-        </button>
-        <ul className="flex flex-wrap justify-center gap-x-6">
+      {/* Under the deck: the photos' names, and right under them one control,
+          ← | pause/play | → (Iury, 2026-11-16). The arrows deal (and pause the
+          auto-deal); the middle button pauses or resumes it. Under reduced motion
+          there is no auto-deal, so the middle button is hidden. */}
+      <div className="mt-[clamp(1.5rem,3vw,2.5rem)] flex flex-col items-center gap-3 px-(--page-margin)">
+        {/* The names are the index: one per photo, side by side. The one in front
+            is ink on the lime highlighter; any name brings its photo forward. They
+            follow `front`, so they stay in step with clicks, arrows and auto-play. */}
+        <ul className="flex flex-wrap justify-center gap-x-6 gap-y-1">
           {photos.map((p, i) => {
-            const active = front % photos.length === i;
+            const active = front === i;
             return (
-              <li key={i}>
+              <li key={p.src}>
                 <button
                   type="button"
                   onClick={() => deal(i)}
-                  // Pointer shortcut only: keyboard users reach the same cards (and
-                  // deal with ← →) without four extra tab stops.
-                  tabIndex={-1}
                   aria-current={active ? "true" : undefined}
                   aria-label={labels.show.replace("{caption}", p.caption)}
-                  className={`min-h-11 font-display text-[1rem] font-bold tracking-[-0.01em] transition-colors duration-(--duration-base) hover:text-ink ${active ? "text-ink" : "text-gray-600"}`}
+                  className={`min-h-11 cursor-pointer font-display text-[max(1.0625rem,14px)] font-bold tracking-[-0.01em] transition-colors duration-(--duration-base) ease-(--ease-out-soft) ${
+                    active ? "text-ink" : "text-gray-600 hover:text-ink"
+                  }`}
                 >
-                  {p.caption}
+                  <span className={active ? "highlight" : ""}>{p.caption}</span>
                 </button>
               </li>
             );
           })}
         </ul>
-        <button
-          type="button"
-          onClick={() => deal(front + 1)}
-          aria-label={labels.next}
-          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-ink/12 font-display text-[1.125rem] text-ink transition-colors duration-(--duration-fast) hover:border-ink/40 hover:bg-ink/[0.04] focus-visible:outline-ink"
-        >
-          <span aria-hidden="true">→</span>
-        </button>
-        </div>
-        {playing && (
+        <div className="flex items-center gap-2">
+          <button type="button" onClick={() => deal(front - 1)} aria-label={labels.prev} className={ctrl}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 5l-7 7 7 7" />
+            </svg>
+          </button>
           <button
             type="button"
-            onClick={() => setPlaying(false)}
-            // No auto-dealing with reduced motion, so nothing to pause.
-            className="min-h-11 font-display text-[1rem] font-bold tracking-[-0.01em] text-gray-600 underline decoration-1 underline-offset-[0.3em] transition-colors duration-(--duration-fast) hover:text-ink motion-reduce:hidden"
+            onClick={() => setPlaying((v) => !v)}
+            aria-label={playing ? labels.pause : labels.play}
+            aria-pressed={!playing}
+            className={`${ctrl} motion-reduce:hidden`}
           >
-            {labels.pause}
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="currentColor">
+              {playing ? (
+                <>
+                  <rect x="7" y="5.5" width="3" height="13" rx="1" />
+                  <rect x="14" y="5.5" width="3" height="13" rx="1" />
+                </>
+              ) : (
+                <path d="M8.5 5.8v12.4a.8.8 0 0 0 1.2.7l9.6-6.2a.8.8 0 0 0 0-1.4L9.7 5.1a.8.8 0 0 0-1.2.7z" />
+              )}
+            </svg>
           </button>
-        )}
+          <button type="button" onClick={() => deal(front + 1)} aria-label={labels.next} className={ctrl}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* The box that rises from the pointer (fine pointers only; decorative: the
@@ -478,20 +511,21 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
                 href={story.linkedin?.url ?? labels.profileUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 flex min-h-12 shrink-0 items-center gap-2.5 self-start bg-ink px-5 py-3 font-display text-[1rem] font-bold text-paper transition-colors duration-(--duration-fast) hover:bg-[#2a2a2a]"
+                className={`${button.ink} mt-1 shrink-0`}
               >
                 {story.linkedin?.url ? labels.linkedin : labels.profile} <span aria-hidden="true">↗</span>
               </a>
-              {story.linkedin?.also && (
+              {story.linkedin?.also?.map((post) => (
                 <a
-                  href={story.linkedin.also.url}
+                  key={post.url}
+                  href={post.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="-mt-2 flex min-h-11 shrink-0 items-center gap-2 self-start font-display text-[1rem] font-bold underline decoration-1 underline-offset-[0.3em] transition-colors duration-(--duration-fast) hover:text-gray-600"
                 >
-                  {story.linkedin.also.label} <span aria-hidden="true">↗</span>
+                  {post.label} <span aria-hidden="true">↗</span>
                 </a>
-              )}
+              ))}
             </div>
           </div>
         )}
@@ -509,7 +543,6 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
 const DeckCard = memo(function DeckCard({
   p,
   i,
-  copy,
   more,
   dragRef,
   onOpen,
@@ -519,7 +552,6 @@ const DeckCard = memo(function DeckCard({
 }: {
   p: DeckPhoto;
   i: number;
-  copy: boolean;
   more: string;
   dragRef: RefObject<{ x: number; id: number; moved: boolean; type: string } | null>;
   onOpen: (i: number, el: HTMLElement, touch: boolean) => void;
@@ -531,8 +563,6 @@ const DeckCard = memo(function DeckCard({
     <figure data-deck-card className="absolute inset-x-0 top-0 aspect-[3/4] will-change-transform">
       <button
         type="button"
-        tabIndex={copy ? -1 : 0}
-        aria-hidden={copy || undefined}
         aria-label={`${more}: ${p.caption}`}
         onClick={(e) => {
           // A swipe that ended on a card is not a click.
@@ -554,7 +584,7 @@ const DeckCard = memo(function DeckCard({
         <span className="relative block h-full overflow-hidden rounded-[clamp(1.25rem,2vw,1.875rem)] bg-ink-800 shadow-[0_22px_36px_-22px_rgba(16,16,16,0.55)] transition-[translate] duration-(--duration-base) ease-(--ease-out-soft) [will-change:translate] [@media(hover:hover)]:group-hover/card:-translate-y-4 group-focus-visible/card:-translate-y-4">
           <Image
             src={p.src}
-            alt={copy ? "" : p.alt}
+            alt={p.alt}
             width={p.width}
             height={p.height}
             draggable={false}

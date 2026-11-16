@@ -1,4 +1,6 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { projects } from "@/content/projects";
+import type { Locale } from "@/i18n/routing";
 import { SectionTitle } from "@/components/layout/SectionTitle";
 import { ApproachSteps, type ApproachStep } from "./ApproachSteps";
 
@@ -8,11 +10,15 @@ import { ApproachSteps, type ApproachStep } from "./ApproachSteps";
  * surface change): an h3 inside #projects with its own anchor, `#approach`.
  * The five steps are one interactive flow (ApproachSteps): a line that fills to
  * the active step, an arc from the last step back to the first, and each step's
- * techniques (Iury's own list).
+ * techniques (Iury's own list), each step named by its product-discovery phase
+ * (problem discovery → problem validation → solution validation → development →
+ * iteration), and the projects that are at that step today (`stage` in
+ * projects.ts), so the method reads as it really runs (Iury, 2026-11-16).
  */
 export async function Approach() {
   const t = await getTranslations("approach");
   const steps = t.raw("steps") as ApproachStep[];
+  const locale = (await getLocale()) as Locale;
 
   return (
     <div id="approach" aria-labelledby="approach-title" role="region" className="scroll-mt-24 pt-(--section-space)">
@@ -34,7 +40,10 @@ export async function Approach() {
           restart: t("restart"),
           loop: t("loop"),
           techniques: t("techniques"),
+          projects: t("projects"),
+          none: t("none"),
         }}
+        projects={projects.map((p) => ({ stage: p.stage, name: p.name, href: `/projects/${p.slug}`, note: p.stageNote[locale] }))}
       />
     </div>
   );

@@ -10,15 +10,19 @@ export async function assistantProps(kind: "home" | "case", slug?: string) {
     assistant: { ui: Record<string, string>; home: AssistantScript; cases: Record<string, AssistantScript> };
   };
   const ui = assistant.ui;
-  const script: AssistantScript = (kind === "case" && slug && assistant.cases[slug]) || assistant.home;
+  const caseScript = kind === "case" && slug ? assistant.cases[slug] : undefined;
+  const script: AssistantScript = caseScript ?? assistant.home;
+  // "Ask about this project" only where the cat has a script for this project;
+  // elsewhere it is the general assistant and says so.
+  const onCase = Boolean(caseScript);
   const assistantUI: AssistantUI = {
     title: ui.title ?? "",
-    subtitle: (kind === "case" ? ui.subtitleCase : ui.subtitle) ?? "",
-    open: (kind === "case" ? ui.openCase : ui.open) ?? "",
+    subtitle: (onCase ? ui.subtitleCase : ui.subtitle) ?? "",
+    open: (onCase ? ui.openCase : ui.open) ?? "",
     hint: ui.hint ?? "",
     close: ui.close ?? "",
     handle: ui.handle ?? "",
-    placeholder: (kind === "case" ? ui.placeholderCase : ui.placeholder) ?? "",
+    placeholder: (onCase ? ui.placeholderCase : ui.placeholder) ?? "",
     send: ui.send ?? "",
     thinking: ui.thinking ?? "",
     you: ui.you ?? "",

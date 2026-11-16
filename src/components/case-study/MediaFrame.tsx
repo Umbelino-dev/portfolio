@@ -22,7 +22,8 @@ const TONE = {
 } as const;
 
 /**
- * A case-study image: the real one when `slot.image` exists, otherwise a quiet
+ * A project-page image, rounded like the site's other pictures (1.25rem). The
+ * real one when `slot.image` exists, otherwise a quiet
  * tone with one serif line saying what will be shown there (the slot's own name)
  * and that it is still to come. Captions live outside, in <figcaption>.
  */
@@ -44,7 +45,7 @@ export function MediaFrame({
 }) {
   const t = TONE[tone];
   return (
-    <div className={`relative w-full overflow-hidden ${MOBILE[slot.aspect]} ${DESKTOP[slot.aspect]} ${t.bg}`}>
+    <div className={`relative w-full overflow-hidden rounded-[1.25rem] ${MOBILE[slot.aspect]} ${DESKTOP[slot.aspect]} ${t.bg}`}>
       {slot.image ? (
         <Image
           src={slot.image.src}

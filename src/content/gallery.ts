@@ -1,16 +1,21 @@
 import type { Localized } from "./types";
-import { portrait } from "./portrait";
 
 /**
- * Photos for the About carousel (PhotoLoop). Real photos of Iury only.
+ * Photos for the Profile photo deck (PhotoDeck). Real photos of Iury only.
  * To add one: put the source in assets/media/, add it to scripts/images.mjs,
  * run `npm run images`, then add an entry here with its width/height and an alt
  * text that describes only what is in the picture. Photos with other people:
  * only with their consent. `summary`, `story`, `takeaways` and `linkedin` stay
  * undefined until there is a source: the card then says its story is coming, never
- * invents one. Post links per Iury (2026-11-12): CRIO Conecta last day dDd-BCfN,
- * second day dQYGyAR3; Startup Weekend dqdj2qYm. The event takeaways were drafted from Iury's own posts (2026-11-12)
- * and await his review; the academic side is not in the posts, so it is not here.
+ * invents one.
+ *
+ * Iury, 2026-11-16: the portrait left the deck (it stays in the hero). The two
+ * Startup Weekend photos share one post but say different things: "O time do
+ * AutonomIA" is about the team (everyone met there), "Startup Weekend" is about
+ * the event. CRIO Conecta ran three days (27–29 Oct 2026), one post per day; the
+ * photo (Iury with Miguel Cordova) is from day two. Stories and takeaways are
+ * drawn from Iury's posts and words, never copied; the people listed in the
+ * day-three post are left out (third parties).
  */
 export interface GalleryPhoto {
   src: string;
@@ -31,8 +36,8 @@ export interface GalleryPhoto {
   linkedin?: {
     url: string;
     embed?: string;
-    /** Another post about the same moment (e.g. a second day), shown as a text link. */
-    also?: { label: Localized; url: string };
+    /** Other posts about the same moment (e.g. other days), shown as text links. */
+    also?: { label: Localized; url: string }[];
   };
   /**
    * What the moment added to Iury, professionally and academically: short points,
@@ -55,57 +60,66 @@ export const gallery: GalleryPhoto[] = [
     },
     caption: { pt: "O time do AutonomIA", en: "The AutonomIA team" },
     summary: {
-      pt: "Startup Weekend: um time que nunca tinha se visto, um sábado das 8h às 22h e o pitch do AutonomIA.",
-      en: "Startup Weekend: a team of strangers, a Saturday from 8 am to 10 pm and the AutonomIA pitch.",
+      pt: "Um time que se conheceu no próprio Startup Weekend. Ninguém se conhecia antes, e juntos criamos o AutonomIA.",
+      en: "A team that met at Startup Weekend itself. None of us knew each other before, and together we created AutonomIA.",
     },
     story: {
-      pt: "No Startup Weekend, o time criou o AutonomIA, um organizador de tarefas com IA que lembra você pelo WhatsApp. O pitch ficou comigo.",
-      en: "At Startup Weekend, the team created AutonomIA, an AI task organiser that reminds you over WhatsApp. I gave the pitch.",
+      pt: "Conheci todo o time no evento. Juntos, criamos o AutonomIA, um organizador de tarefas com IA que lembra você pelo WhatsApp. O pitch ficou comigo.",
+      en: "I met the whole team at the event. Together we created AutonomIA, an AI task organiser that reminds you over WhatsApp. I gave the pitch.",
     },
     linkedin: { url: "https://lnkd.in/p/dqdj2qYm" },
     takeaways: {
       pt: [
-        "Validar o problema vem antes de construir a solução: é preciso provar que outras pessoas sentem a mesma dor, não só eu.",
         "Trabalhar em um time formado na hora, com gente que eu nunca tinha visto, num sábado das 8h às 22h.",
+        "Sair do zero até o pitch do AutonomIA com pessoas que conheci ali mesmo.",
       ],
       en: [
-        "Validating the problem comes before building the solution: you have to prove other people feel the same pain, not just you.",
         "Working in a team formed on the spot, with people I had never met, on a Saturday from 8 am to 10 pm.",
+        "Going from nothing to the AutonomIA pitch with people I met right there.",
       ],
     },
   },
   {
     src: "/media/crio-conecta.webp",
     width: 480,
-    height: 852,
-    focus: "50% 35%",
+    height: 640,
+    focus: "50% 30%",
     alt: {
-      pt: "Selfie de Iury sorrindo ao lado de um homem de terno que faz sinal de positivo, num auditório.",
-      en: "Selfie of Iury smiling next to a man in a suit giving a thumbs up, in an auditorium.",
+      pt: "Iury sorrindo ao lado de Miguel Cordova, de terno e gravata, e apontando para ele, diante do painel do CRIO Conecta com as datas 27, 28 e 29 de outubro.",
+      en: "Iury smiling next to Miguel Cordova, in a suit and tie, pointing at him, in front of the CRIO Conecta screen showing 27, 28 and 29 October.",
     },
     caption: { pt: "CRIO Conecta", en: "CRIO Conecta" },
     summary: {
-      pt: "IA nas empresas, com cases reais. O que mais marcou foram as conversas com quem está na linha de frente.",
-      en: "AI in companies, with real cases. What stayed with me were the conversations with people on the front line.",
+      pt: "Três dias sobre IA nas empresas. O que ficou: usar IA com estratégia e saber mostrar o valor do próprio trabalho.",
+      en: "Three days on AI in companies. What stayed: using AI strategically and knowing how to show the value of your own work.",
     },
     story: {
-      pt: "No último dia do CRIO Conecta, em 29 de outubro de 2026, o tema foi a Inteligência Artificial nas empresas.",
-      en: "On the last day of CRIO Conecta, 29 October 2026, the theme was Artificial Intelligence in companies.",
+      pt: "O CRIO Conecta teve três dias, de 27 a 29 de outubro de 2026. A foto é do segundo dia, com Miguel Cordova, um dos palestrantes internacionais da programação feita em parceria com a UNESC.",
+      en: "CRIO Conecta ran for three days, 27 to 29 October 2026. The photo is from day two, with Miguel Cordova, one of the international speakers in the programme run with UNESC.",
     },
     linkedin: {
-      url: "https://lnkd.in/p/dDd-BCfN",
-      also: { label: { pt: "Ver o post do segundo dia", en: "View the day-two post" }, url: "https://lnkd.in/p/dQYGyAR3" },
+      url: "https://www.linkedin.com/feed/update/urn:li:activity:7521405561553182720/",
+      also: [
+        {
+          label: { pt: "Post do primeiro dia", en: "Day-one post" },
+          url: "https://www.linkedin.com/feed/update/urn:li:activity:7521042926051799040/",
+        },
+        {
+          label: { pt: "Post do último dia", en: "Last-day post" },
+          url: "https://www.linkedin.com/feed/update/urn:li:activity:7521932874430918656/",
+        },
+      ],
     },
     takeaways: {
       pt: [
-        "Ver a Inteligência Artificial aplicada em empresas, com casos reais, e não só como promessa.",
-        "Conversar com profissionais da linha de frente antes, durante e depois das palestras. É o tipo de troca que faz diferença para quem está começando na tecnologia.",
-        "Sair com vontade de colocar em prática o que vi.",
+        "Primeiro dia, na palestra de Saionara Ugioni: não basta fazer bem feito. É preciso saber comunicar o valor do próprio trabalho e dos resultados.",
+        "Segundo dia: saber usar IA com estratégia, para resolver problemas e gerar valor, vai ser cada vez mais importante em tecnologia. Conhecer as ferramentas não basta.",
+        "Último dia: IA aplicada em empresas, com casos reais, e conversas com quem está na linha de frente antes, durante e depois das palestras.",
       ],
       en: [
-        "Seeing Artificial Intelligence applied in companies, with real cases, not just as a promise.",
-        "Talking with people on the front line before, during and after the talks. It is the kind of exchange that matters to someone starting out in tech.",
-        "Leaving eager to put what I saw into practice.",
+        "Day one, at Saionara Ugioni's talk: doing good work is not enough. You also need to communicate the value of your work and its results.",
+        "Day two: using AI strategically, to solve problems and create value, will matter more and more in tech. Knowing the tools is not enough.",
+        "Last day: AI applied in companies, with real cases, and conversations with people on the front line before, during and after the talks.",
       ],
     },
   },
@@ -130,20 +144,15 @@ export const gallery: GalleryPhoto[] = [
     linkedin: { url: "https://lnkd.in/p/dqdj2qYm" },
     takeaways: {
       pt: [
+        "Validar o problema vem antes de construir a solução: é preciso provar que outras pessoas sentem a mesma dor, não só eu.",
         "Apresentar sem o cenário ideal me ensinou mais do que um pitch perfeito ensinaria.",
         "Saí mais seguro para apresentar projetos e sabendo exatamente onde preciso melhorar.",
       ],
       en: [
+        "Validating the problem comes before building the solution: you have to prove other people feel the same pain, not just you.",
         "Presenting without the ideal setting taught me more than a perfect pitch would have.",
         "I left more confident presenting projects and knowing exactly where I need to improve.",
       ],
     },
   },
-  {
-    src: portrait.base.src ?? "",
-    width: portrait.base.width,
-    height: portrait.base.height,
-    alt: portrait.base.alt,
-    caption: { pt: "Retrato", en: "Portrait" },
-  },
-].filter((p) => p.src);
+];

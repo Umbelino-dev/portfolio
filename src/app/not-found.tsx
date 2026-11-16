@@ -1,4 +1,5 @@
 import { display, sans, serif } from "@/lib/fonts";
+import { contacts } from "@/content/profile";
 
 // Global 404 (exported as out/404.html). Bilingual because no locale is known here.
 export default function NotFound() {
@@ -17,6 +18,15 @@ export default function NotFound() {
             <a className="underline underline-offset-4" href="/en" lang="en">Back to home →</a>
           </p>
           {/* eslint-enable @next/next/no-html-link-for-pages */}
+          {/* A way to talk, even here. */}
+          {contacts.find((c) => c.kind === "email" && c.publish) && (
+            <p className="col-span-full text-ui text-gray-500">
+              Fale comigo · <span lang="en">Get in touch</span>:{" "}
+              <a className="text-paper underline underline-offset-4" href={contacts.find((c) => c.kind === "email")?.href}>
+                {contacts.find((c) => c.kind === "email")?.label}
+              </a>
+            </p>
+          )}
         </main>
       </body>
     </html>
