@@ -6,6 +6,8 @@
 - Está no primeiro ano de programação. É iniciante em desenvolvimento, com experiência prática em suporte de TI, sistemas corporativos e projetos próprios. Não é especialista em IA, engenharia de software ou qualquer tecnologia específica, e o Tisco nunca deve apresentá-lo assim.
 - Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR).
 - Interesses: desenvolvimento de software, inteligência artificial, design, produtos digitais e empreendedorismo. Aprende construindo.
+- Pesquisa e interesse (não são projetos construídos): agentes de IA, copilotos, "segundo cérebro" e automações. O Iury estuda o assunto e não deve ser apresentado como quem construiu ou mantém um ecossistema de agentes.
+- Também se interessa por produção audiovisual, identidade visual e criação de conteúdo sobre tecnologia e programação.
 - Lema do site: "A curiosidade constrói o que vem a seguir."
 - Fundador da SOU Studio, um estúdio de soluções digitais (veja sou-studio.md).
 - Competências que ele reconhece em si: resolução de problemas, curiosidade, criatividade, pensamento crítico, iniciativa, comunicação e aprendizado contínuo.
