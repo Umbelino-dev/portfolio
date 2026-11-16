@@ -152,7 +152,11 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
                 {/* Where the project also lives: its post, its repository (verified links only). */}
                 {project.related?.map((r) => (
                   <a key={r.href} href={r.href} target="_blank" rel="noopener noreferrer" className={`${button.outline} text-ink`}>
-                    {t(`relatedKinds.${r.kind}`)} · {r.label[locale]} <span aria-hidden="true">↗</span>
+                    {/* "LinkedIn · Post no LinkedIn" said the network twice (and wrapped at 320px). */}
+                    {r.label[locale].toLowerCase().includes(t(`relatedKinds.${r.kind}`).toLowerCase())
+                      ? r.label[locale]
+                      : `${t(`relatedKinds.${r.kind}`)} · ${r.label[locale]}`}{" "}
+                    <span aria-hidden="true">↗</span>
                     <span className="sr-only"> ({t("newTab")})</span>
                   </a>
                 ))}

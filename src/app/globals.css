@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/*
+ * Short screens: phones held sideways and small laptop windows (Iury, 2026-11-16
+ * responsive pass). The desktop hero is a full-height poster sized by the
+ * viewport's height; below this height it reads as a normal, content-tall block.
+ */
+@custom-variant short (@media (max-height: 34rem));
+/*
+ * Desktop with a mouse and room to spare: the only place the nav's wordmark stays
+ * bare text (Iury, 2026-11-13). Touch screens and short windows give it the glass
+ * pill, since their content scrolls under it far more often.
+ */
+@custom-variant bare (@media (min-width: 48rem) and (hover: hover) and (pointer: fine) and (min-height: 34.0625rem));
+
 
 /*
  * Design tokens — source: Claude Design "Direção Criativa R01" (02 — Design system).
@@ -95,6 +108,17 @@
   @media (min-width: 64rem) and (hover: hover) and (pointer: fine) {
     html {
       font-size: 75%;
+    }
+  }
+  /*
+   * Large monitors (2026-11-16 responsive pass): past 1440px the scale grows with
+   * the window (75% at 1440 → ~106% at 2560), so a 1920 or 2560 screen shows the
+   * same composition larger instead of a 1080px column in a sea of space. In %,
+   * so a reader's own browser font size still counts.
+   */
+  @media (min-width: 90rem) and (hover: hover) and (pointer: fine) {
+    html {
+      font-size: clamp(75%, calc(0.4464vw + 34.82%), 110%);
     }
   }
   /*

@@ -357,7 +357,10 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
       // block as a name was ~30 words for a screen reader.
       aria-label={`${s.role}, ${s.period}`}
       aria-describedby={`${uid}-sum-${always ? "v" : "h"}-${i}`}
-      className={`group/step relative flex w-full cursor-pointer flex-col items-start gap-2 text-left transition-opacity ${ease} focus-visible:outline-ink ${quiet(i) ? "opacity-40" : ""}`}
+      className={`group/step relative flex w-full cursor-pointer flex-col items-start gap-2 text-left transition-opacity ${ease} focus-visible:outline-ink ${quiet(i) ? "opacity-40" : ""} ${
+        // Tablet: two columns per step, the role on the left, what it held on the right.
+        always ? "md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:content-start md:items-start md:gap-x-12 md:gap-y-2" : ""
+      }`}
     >
       <span className="text-note text-gray-600">
         {s.current ? (
@@ -370,13 +373,13 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
       </span>
       <span className="font-display text-[clamp(1.375rem,1.1rem+0.9vw,2rem)] leading-[1.05] font-bold tracking-[-0.025em] text-balance">{s.role}</span>
       <span className="text-caption font-medium">{s.org}</span>
-      <span id={`${uid}-sum-${always ? "v" : "h"}-${i}`} className="max-w-[30ch] text-ui leading-snug text-pretty text-gray-600">{s.summary}</span>
+      <span id={`${uid}-sum-${always ? "v" : "h"}-${i}`} className={`max-w-[30ch] text-ui leading-snug text-pretty text-gray-600 ${always ? "md:col-start-2 md:row-start-1 md:max-w-[40ch]" : ""}`}>{s.summary}</span>
       {/* More: on the line it unrolls in the free space above the role (no layout,
           nothing moves); on small screens it is part of the step. */}
       <span
         className={`flex flex-col gap-1 text-caption text-ink transition-[clip-path,opacity] ${ease} ${
           always
-            ? ""
+            ? "md:col-start-2 md:row-start-2"
             : "absolute bottom-full left-0 mb-4 opacity-0 [clip-path:inset(100%_0_0_0)] group-hover/step:opacity-100 group-hover/step:[clip-path:inset(0)] group-focus-visible/step:opacity-100 group-focus-visible/step:[clip-path:inset(0)] [@media(hover:none)]:opacity-100 [@media(hover:none)]:[clip-path:none]"
         }`}
       >
@@ -386,7 +389,7 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
         {/* The current role's period already says "since…". */}
         {!s.current && <span className="text-note text-gray-600">{cap(s.duration)}</span>}
       </span>
-      <span className="mt-1 font-display text-[1rem] font-bold tracking-[-0.01em] underline decoration-1 underline-offset-[0.3em]">
+      <span className={`mt-1 font-display text-[1rem] font-bold tracking-[-0.01em] underline decoration-1 underline-offset-[0.3em] ${always ? "md:col-start-2 md:row-start-3" : ""}`}>
         {open === i ? labels.close : labels.seeMore}
       </span>
     </button>

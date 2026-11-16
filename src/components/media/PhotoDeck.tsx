@@ -374,7 +374,9 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
         {/* The names are the index: one per photo, side by side. The one in front
             is ink on the lime highlighter; any name brings its photo forward. They
             follow `front`, so they stay in step with clicks, arrows and auto-play. */}
-        <ul className="grid w-full max-w-[42rem] gap-x-4 text-center" style={{ gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))` }}>
+        {/* Under 480px the names wrap as whole words (a centred row) instead of three
+            narrow columns that broke "Startup / Weekend" and the highlight. */}
+        <ul className="flex w-full max-w-[42rem] flex-wrap justify-center gap-x-6 text-center min-[30rem]:grid min-[30rem]:gap-x-4" style={{ gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))` }}>
           {photos.map((p, i) => {
             const active = front === i;
             return (
@@ -384,7 +386,7 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
                   onClick={() => deal(i)}
                   aria-current={active ? "true" : undefined}
                   aria-label={labels.show.replace("{caption}", p.caption)}
-                  className={`min-h-11 cursor-pointer font-display text-[max(1.0625rem,14px)] font-bold tracking-[-0.01em] transition-colors duration-(--duration-base) ease-(--ease-out-soft) ${
+                  className={`min-h-11 cursor-pointer font-display text-[max(1.0625rem,14px)] font-bold max-[30rem]:whitespace-nowrap tracking-[-0.01em] transition-colors duration-(--duration-base) ease-(--ease-out-soft) ${
                     active ? "text-ink" : "text-gray-600 hover:text-ink"
                   }`}
                 >

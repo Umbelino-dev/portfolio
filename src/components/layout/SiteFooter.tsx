@@ -29,7 +29,7 @@ export async function SiteFooter({ topHref = "#main", withContact = true }: { to
   ];
   const head = "pb-1 text-note text-gray-500";
   const item =
-    "flex min-h-10 w-fit items-center font-display text-[max(1rem,14px)] font-medium tracking-[-0.01em] text-paper-300 transition-colors duration-(--duration-fast) hover:text-signal";
+    "flex min-h-10 pointer-coarse:min-h-11 pointer-coarse:min-w-11 w-fit items-center font-display text-[max(1rem,14px)] font-medium tracking-[-0.01em] text-paper-300 transition-colors duration-(--duration-fast) hover:text-signal";
 
   return (
     <footer data-surface="dark" id={withContact ? "contact" : undefined} className="bg-ink pt-[clamp(3.5rem,6vw,5.5rem)] pb-6 text-paper">

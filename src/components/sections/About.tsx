@@ -122,7 +122,7 @@ export async function About() {
           </div>
 
           {/* Bottom left: education (earlier courses behind a native disclosure). */}
-          <div className="col-span-4 flex flex-col gap-3 md:col-span-12 lg:col-span-6">
+          <div className="col-span-4 flex flex-col gap-3 md:col-span-6 lg:col-span-6">
             <h3 className={subhead}>{t("education")}</h3>
             <ul className="flex flex-col gap-4">{education.map(course)}</ul>
             <details className="group mt-1">
@@ -135,7 +135,7 @@ export async function About() {
           </div>
 
           {/* Bottom right: skills, as interactive pills. */}
-          <div className="col-span-4 flex flex-col gap-3 md:col-span-12 lg:col-span-5 lg:col-start-8">
+          <div className="col-span-4 flex flex-col gap-3 md:col-span-6 lg:col-span-5 lg:col-start-8">
             <h3 className={subhead}>{t("skills")}</h3>
             <p className="text-note text-gray-600">{t("skillsHint")}</p>
             <SkillPills skills={skills.map((k) => ({ name: k.name[locale], note: k.note[locale] }))} />

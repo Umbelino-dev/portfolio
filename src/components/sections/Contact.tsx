@@ -50,7 +50,7 @@ export async function Contact() {
           </div>
 
           {/* The assistant, with the cat as its face: an invitation to a conversation. */}
-          <div className="flex max-w-[34rem] items-center gap-5 rounded-[1.5rem] border border-paper/12 bg-ink-800 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+          <div className="flex max-w-[34rem] flex-col items-start gap-4 rounded-[1.5rem] border border-paper/12 bg-ink-800 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] min-[26rem]:flex-row min-[26rem]:items-center min-[26rem]:gap-5">
             <span aria-hidden="true" className="flex size-16 shrink-0 items-end justify-center rounded-full border border-ink/14 bg-paper pb-2">
               <CatFigure className="w-11 overflow-visible" />
             </span>
@@ -59,7 +59,7 @@ export async function Contact() {
                 <p className="font-display text-title font-black tracking-[-0.01em]">{t("catTitle")}</p>
                 <p className="text-ui leading-snug text-pretty text-paper-300">{t("catText")}</p>
               </div>
-              <AskCatButton label={t("catCta")} className={`${button.outline} min-h-11 px-5 text-paper`} />
+              <AskCatButton label={t("catCta")} className={`${button.outline} min-h-11 px-5 whitespace-nowrap text-paper`} />
             </div>
           </div>
         </div>

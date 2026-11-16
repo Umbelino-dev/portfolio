@@ -117,14 +117,14 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
   const transition = "transition-[color,background-color,border-color,box-shadow] duration-(--duration-base) ease-(--ease-out-soft)";
   const focusRing = light ? "focus-visible:outline-ink" : "focus-visible:outline-signal";
 
-  // Below md the page scrolls under the name: once past the hero it gets the same
-  // glass pill as the other floating controls, so it never sits on top of text.
-  // From md up it is bare text: the whole backdrop-filter goes (brightness and
+  // Once past the hero the name gets the same glass pill as the other floating
+  // controls, so it never sits on top of text. Only on a mouse-driven desktop
+  // with room (the `bare` variant, globals.css) is it bare text: the whole backdrop-filter goes (brightness and
   // saturate too, not only the blur) and the dark gradient image, or the box
   // tints the page behind it.
   const overContent = variant === "case" || active !== "hero";
-  const brand = `flex min-h-11 items-center whitespace-nowrap font-display text-[1.0625rem] font-bold tracking-[-0.01em] ${focusRing} ${
-    overContent ? `max-md:-ml-3 max-md:rounded-pill max-md:border max-md:px-3 ${glass} ${glassBlur} md:border-transparent md:bg-transparent md:bg-none md:shadow-none md:backdrop-filter-none` : ""
+  const brand = `flex min-h-11 min-w-11 items-center whitespace-nowrap font-display text-[1.0625rem] font-bold tracking-[-0.01em] ${focusRing} ${
+    overContent ? `-ml-3 rounded-pill border px-3 ${glass} ${glassBlur} bare:ml-0 bare:border-transparent bare:bg-transparent bare:bg-none bare:px-0 bare:shadow-none bare:backdrop-filter-none` : ""
   }`;
 
   const link = (id: ItemId, key: (typeof ITEMS)[number]["key"], extra = "") => (
@@ -145,15 +145,19 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
     <div className="pointer-events-none sticky top-0 z-40 h-0">
       <nav
         aria-label={t("label")}
-        className={`pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-6 [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&>div]:pointer-events-auto px-(--page-margin) py-3 md:py-5 ${transition} ${light ? "text-ink" : "text-paper"}`}
+        className={`pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between gap-3 sm:gap-6 [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&>div]:pointer-events-auto px-(--page-margin) py-3 md:py-5 ${transition} ${light ? "text-ink" : "text-paper"}`}
       >
         {variant === "home" ? (
           <a href="#hero" aria-label={t("home")} className={brand}>
-            {site.name}
+            {/* Under 380px the bar holds "Iury" (the link's label keeps the full name). */}
+            <span aria-hidden="true">{site.name.split(" ")[0]}</span>
+            <span aria-hidden="true" className="max-[23.75rem]:hidden">{"\u00a0" + site.name.slice(site.name.indexOf(" ") + 1)}</span>
           </a>
         ) : (
           <Link href="/" aria-label={t("home")} className={brand}>
-            {site.name}
+            {/* Under 380px the bar holds "Iury" (the link's label keeps the full name). */}
+            <span aria-hidden="true">{site.name.split(" ")[0]}</span>
+            <span aria-hidden="true" className="max-[23.75rem]:hidden">{"\u00a0" + site.name.slice(site.name.indexOf(" ") + 1)}</span>
           </Link>
         )}
 
@@ -162,11 +166,13 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
             // Case study: one pill back to the index (Case Study R01; 44px tall on mobile).
             <Link
               href="/#projects"
-              className={`flex min-h-11 items-center gap-2.5 rounded-pill border px-4 text-[max(0.8125rem,12px)] whitespace-nowrap sm:px-4.5 font-medium ${glass} ${glassBlur} ${transition} ${focusRing}`}
+              aria-label={t("allProjects")}
+              className={`flex min-h-11 min-w-11 items-center justify-center gap-2.5 rounded-pill border text-[max(0.8125rem,12px)] whitespace-nowrap min-[30rem]:px-4 sm:px-4.5 font-medium ${glass} ${glassBlur} ${transition} ${focusRing}`}
             >
               <span aria-hidden="true">←</span>
-              <span className="sm:hidden">{t("projectsShort")}</span>
-              <span className="max-sm:hidden">{t("allProjects")}</span>
+              {/* Under 480px the arrow alone, so the bar fits at 320px; the label names it. */}
+              <span aria-hidden="true" className="max-[30rem]:hidden sm:hidden">{t("projectsShort")}</span>
+              <span aria-hidden="true" className="max-sm:hidden">{t("allProjects")}</span>
             </Link>
           )}
           {variant === "case" && (
@@ -199,7 +205,7 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
                   key={l}
                   aria-current="true"
                   lang={l === "pt" ? "pt-BR" : "en"}
-                  className={`flex min-h-[2.375rem] min-w-[2.375rem] items-center justify-center rounded-pill px-2 text-label font-bold tracking-label ${light ? "bg-ink text-paper" : "bg-paper text-ink"}`}
+                  className={`flex min-h-[2.375rem] min-w-[2.375rem] pointer-coarse:min-h-11 pointer-coarse:min-w-11 items-center justify-center rounded-pill px-2 text-label font-bold tracking-label ${light ? "bg-ink text-paper" : "bg-paper text-ink"}`}
                 >
                   {l.toUpperCase()}
                 </span>
@@ -210,7 +216,7 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
                   locale={l}
                   hrefLang={l === "pt" ? "pt-BR" : "en"}
                   aria-label={`${l.toUpperCase()} · ${t("switchLocale")}`}
-                  className={`flex min-h-[2.375rem] min-w-[2.375rem] items-center justify-center rounded-pill px-2 text-label font-medium tracking-label opacity-65 transition-opacity duration-(--duration-fast) hover:opacity-100 ${focusRing}`}
+                  className={`flex min-h-[2.375rem] min-w-[2.375rem] pointer-coarse:min-h-11 pointer-coarse:min-w-11 items-center justify-center rounded-pill px-2 text-label font-medium tracking-label opacity-65 transition-opacity duration-(--duration-fast) hover:opacity-100 ${focusRing}`}
                 >
                   {l.toUpperCase()}
                 </Link>

@@ -45,7 +45,7 @@ export async function Hero() {
       data-nav-id="hero"
       data-surface="dark"
       aria-labelledby="hero-name"
-      className="relative isolate flex flex-col overflow-hidden bg-ink pt-24 pb-14 text-paper md:min-h-dvh md:pt-28 md:pb-6"
+      className="relative isolate flex flex-col overflow-hidden bg-ink pt-24 pb-14 text-paper md:min-h-dvh md:pt-28 md:pb-6 md:short:min-h-0 md:short:pt-24 md:short:pb-12"
     >
       <HeroBackdrop />
 
@@ -61,7 +61,7 @@ export async function Hero() {
           intro. Its width also follows the viewport height (by the mark's own ratio),
           so the whole mark fits on short screens.
         */}
-        <div style={markVars} className="flex w-full flex-1 flex-col gap-12 md:mx-auto md:w-[clamp(50%,calc((100svh-24rem)*var(--mark-ratio)),100%)] md:gap-10">
+        <div style={markVars} className="flex w-full flex-1 flex-col gap-12 md:mx-auto md:w-[clamp(50%,calc((100svh-24rem)*var(--mark-ratio)),100%)] md:gap-10 md:short:w-[min(100%,34rem)]">
         <div className="flex flex-col gap-5 md:flex-1 md:justify-center">
           <div data-hero-mark className="@container relative w-full">
             {/*
@@ -94,10 +94,10 @@ export async function Hero() {
               row's end looking up at the letters. Desktop: the row dissolves
               (md:contents) and the statement sits in the space right of "Iury".
             */}
-            <div className="mt-8 flex items-end justify-between gap-6 md:contents">
+            <div className="mt-8 flex items-end justify-between gap-4 min-[24rem]:gap-6 md:contents">
               <p
                 data-hero-fade-md
-                className="font-display text-[clamp(1.375rem,0.95rem+2.1vw,1.625rem)] leading-[1.1] font-medium tracking-[-0.025em] text-paper md:absolute md:top-(--stmt-top) md:left-(--stmt-left) md:max-w-(--stmt-max) md:text-[max(1rem,3.5cqw)] md:leading-[1.08]"
+                className="font-display text-[clamp(1.1875rem,0.6rem+2.9vw,1.625rem)] leading-[1.1] font-medium tracking-[-0.025em] text-paper md:absolute md:top-(--stmt-top) md:left-(--stmt-left) md:max-w-(--stmt-max) md:text-[max(1rem,3.5cqw)] md:leading-[1.08]"
               >
                 {t("tagline.lead")}
                 <br />
