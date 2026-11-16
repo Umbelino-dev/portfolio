@@ -10,9 +10,20 @@
  */
 import { KNOWLEDGE } from "./knowledge.generated";
 
+/** Minimal KV surface (avoids pulling in @cloudflare/workers-types). */
+interface KV {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
+}
+interface Ctx {
+  waitUntil(promise: Promise<unknown>): void;
+}
+
 interface Env {
   GEMINI_API_KEY?: string;
   GEMINI_MODEL?: string;
+  /** Answers to first questions, so repeated ones cost no Gemini quota. */
+  CHAT_CACHE?: KV;
 }
 
 interface ChatTurn {
@@ -43,6 +54,32 @@ REGRAS
 <conteudo>
 ${KNOWLEDGE}
 </conteudo>`;
+
+const CACHE_TTL_S = 3 * 24 * 3600;
+
+const sha = async (text: string) => {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, "0")).join("");
+};
+
+/** "Como falar com ele?" and "como falar com ele" share one entry. */
+const normalizeQuestion = (q: string) =>
+  q
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
+
+// The key carries a hash of the whole system prompt: editing knowledge/ or the
+// rules changes it, so old answers are never served for new facts.
+let promptHash: Promise<string> | null = null;
+
+async function cacheKey(question: string, page: string | null): Promise<string> {
+  promptHash ??= sha(SYSTEM_PROMPT).then((h) => h.slice(0, 16));
+  const q = (await sha(normalizeQuestion(question))).slice(0, 32);
+  return `v1:${await promptHash}:${page ?? "-"}:${q}`;
+}
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -96,25 +133,12 @@ interface GeminiResponse {
   promptFeedback?: { blockReason?: string };
 }
 
-async function chat(request: Request, env: Env): Promise<Response> {
+async function chat(request: Request, env: Env, ctx: Ctx): Promise<Response> {
   if (request.method !== "POST") return json({ error: "method" }, 405);
 
   // Same-origin only: the page and this Worker share a host.
   const origin = request.headers.get("origin");
   if (origin && origin !== new URL(request.url).origin) return json({ error: "origin" }, 403);
-
-  const key = env.GEMINI_API_KEY;
-  if (!key) return json({ error: "not_configured" }, 503);
-  // GEMINI_MODEL is a comma-separated list in order of preference: models get
-  // retired or overloaded, so a 404, 429 or 5xx moves on to the next.
-  const models = (env.GEMINI_MODEL ?? "")
-    .split(",")
-    .map((m) => m.trim())
-    .filter(Boolean);
-  if (models.length === 0) return json({ error: "not_configured" }, 503);
-
-  const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
-  if (limited(ip)) return json({ error: "rate_limited" }, 429);
 
   let body: { messages?: unknown; page?: unknown };
   try {
@@ -130,6 +154,32 @@ async function chat(request: Request, env: Env): Promise<Response> {
   const system = page
     ? `${SYSTEM_PROMPT}\n\nCONTEXTO: o visitante está lendo o estudo de caso do projeto "${page}". Dê prioridade a esse projeto.`
     : SYSTEM_PROMPT;
+
+  // A first question (no history) with a cached answer costs nothing.
+  const first = turns.length === 1 ? turns[0] : undefined;
+  let cacheId: string | null = null;
+  if (first && env.CHAT_CACHE) {
+    try {
+      cacheId = await cacheKey(first.text, page);
+      const hit = await env.CHAT_CACHE.get(cacheId);
+      if (hit) return json({ reply: hit, cached: true });
+    } catch {
+      cacheId = null; // KV trouble must never block an answer
+    }
+  }
+
+  const key = env.GEMINI_API_KEY;
+  if (!key) return json({ error: "not_configured" }, 503);
+  // GEMINI_MODEL is a comma-separated list in order of preference: models get
+  // retired or overloaded, so a 404, 429 or 5xx moves on to the next.
+  const models = (env.GEMINI_MODEL ?? "")
+    .split(",")
+    .map((m) => m.trim())
+    .filter(Boolean);
+  if (models.length === 0) return json({ error: "not_configured" }, 503);
+
+  const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
+  if (limited(ip)) return json({ error: "rate_limited" }, 429);
 
   const payload = JSON.stringify({
     systemInstruction: { parts: [{ text: system }] },
@@ -166,6 +216,9 @@ async function chat(request: Request, env: Env): Promise<Response> {
         .join("")
         .trim();
       if (!reply) return json({ error: "empty", finish: candidate?.finishReason ?? null, model }, 502);
+      if (cacheId && env.CHAT_CACHE) {
+        ctx.waitUntil(env.CHAT_CACHE.put(cacheId, reply, { expirationTtl: CACHE_TTL_S }).catch(() => undefined));
+      }
       return json({ reply, model });
     } catch {
       // Timeout or network error on this model: try the next one.
@@ -178,9 +231,9 @@ async function chat(request: Request, env: Env): Promise<Response> {
 }
 
 const worker = {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: Ctx): Promise<Response> {
     const { pathname } = new URL(request.url);
-    if (pathname === "/api/chat") return chat(request, env);
+    if (pathname === "/api/chat") return chat(request, env, ctx);
     return json({ error: "not_found" }, 404);
   },
 };
