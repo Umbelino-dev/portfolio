@@ -8,6 +8,8 @@ O que faz hoje:
 - Resolução de chamados parados desde 2020 e suporte técnico via Softdesk.
 - Padronização de e-mails automáticos (HTML + SQL) e relatórios no ReportBuilder.
 
+O DOX é uma solução de terceiro (EMA Sistemas). O Iury tem contato com tabelas, conectores e integrações do ambiente e com a divisão entre a equipe interna e o parceiro que evolui o produto.
+
 Trajetória dentro do Giassi (do mais recente ao mais antigo):
 - Assistente de TI: abril de 2026 até hoje.
 - Auxiliar Administrativo, TI: janeiro a março de 2026. Primeiro cargo na área de Tecnologia.
