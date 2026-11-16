@@ -87,7 +87,7 @@ export interface CaseStudy {
    */
   evidence?: Partial<Record<ProjectStage, Evidence[]>>;
   /** A video shown inside a phone frame (e.g. a motion piece). No `src` yet = "em breve". */
-  video?: { src?: string; poster?: string; title: Localized };
+  video?: { src?: string; poster?: string; /** CSS aspect-ratio of the video, e.g. "9 / 16". */ aspect?: string; title: Localized };
   /** Rendered in order; a chapter without body, steps or figures is skipped. */
   chapters: CaseStudyChapter[];
   source: string;

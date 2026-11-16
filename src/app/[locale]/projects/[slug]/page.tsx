@@ -99,7 +99,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
           {cs.video && (
             <figure className="page-grid w-full gap-y-4 pt-[clamp(1rem,3vw,2rem)]">
               <div className="col-span-full flex justify-center rounded-[1.5rem] bg-[#e7e3d9] py-[clamp(2.5rem,6vw,5rem)]">
-                <PhoneVideo src={cs.video.src} poster={cs.video.poster} title={cs.video.title[locale]} pending={t("videoPending")} />
+                <PhoneVideo src={cs.video.src} poster={cs.video.poster} aspect={cs.video.aspect} title={cs.video.title[locale]} pending={t("videoPending")} />
               </div>
               <figcaption className="col-span-full text-caption text-gray-600 max-md:pr-12">
                 {t("video")}: {cs.video.title[locale]}

@@ -480,7 +480,13 @@ export const projects: Project[] = [
         pt: "Um assistente que funciona como segundo cérebro: você encaminha pelo WhatsApp o que não quer esquecer, e ele organiza e lembra no momento certo.",
         en: "An assistant that works as a second brain: you forward over WhatsApp what you don't want to forget, and it organises it and reminds you at the right moment.",
       },
-      video: { title: { pt: "AutomIA em motion design", en: "AutomIA in motion design" } },
+      // Iury's motion piece (2026-11-16): 1080×1920 source, served at 720×1280 H.264 + AAC with faststart (1.1 MB).
+      video: {
+        src: "/media/automia.mp4",
+        poster: "/media/automia-poster.webp",
+        aspect: "9 / 16",
+        title: { pt: "AutomIA em motion design", en: "AutomIA in motion design" },
+      },
       access: {
         pt: "Ainda não há uma versão pública: o AutomIA está em MVP e validação.",
         en: "There is no public version yet: AutomIA is at MVP and validation.",
