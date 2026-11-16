@@ -104,8 +104,13 @@ async function chat(request: Request, env: Env): Promise<Response> {
 
   const key = env.GEMINI_API_KEY;
   if (!key) return json({ error: "not_configured" }, 503);
-  const model = env.GEMINI_MODEL;
-  if (!model) return json({ error: "not_configured" }, 503);
+  // GEMINI_MODEL is a comma-separated list in order of preference: models get
+  // retired, so a 404 (gone) or 429 (no quota on that one) moves on to the next.
+  const models = (env.GEMINI_MODEL ?? "")
+    .split(",")
+    .map((m) => m.trim())
+    .filter(Boolean);
+  if (models.length === 0) return json({ error: "not_configured" }, 503);
 
   const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
   if (limited(ip)) return json({ error: "rate_limited" }, 429);
@@ -128,19 +133,25 @@ async function chat(request: Request, env: Env): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
   try {
-    const upstream = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
-      {
-        method: "POST",
-        headers: { "content-type": "application/json", "x-goog-api-key": key },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: system }] },
-          contents: turns.map((t) => ({ role: t.role === "user" ? "user" : "model", parts: [{ text: t.text }] })),
-          generationConfig: { temperature: 0.2, maxOutputTokens: MAX_OUTPUT_TOKENS },
-        }),
-        signal: controller.signal,
-      },
-    );
+    const payload = JSON.stringify({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: turns.map((t) => ({ role: t.role === "user" ? "user" : "model", parts: [{ text: t.text }] })),
+      generationConfig: { temperature: 0.2, maxOutputTokens: MAX_OUTPUT_TOKENS },
+    });
+    let upstream: Response | null = null;
+    for (const model of models) {
+      upstream = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+        {
+          method: "POST",
+          headers: { "content-type": "application/json", "x-goog-api-key": key },
+          body: payload,
+          signal: controller.signal,
+        },
+      );
+      if (upstream.status !== 404 && upstream.status !== 429) break;
+    }
+    if (!upstream) return json({ error: "upstream" }, 502);
     if (upstream.status === 429) return json({ error: "quota" }, 429);
     if (!upstream.ok) return json({ error: "upstream", status: upstream.status }, 502);
 

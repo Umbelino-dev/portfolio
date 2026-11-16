@@ -17,7 +17,7 @@
   // The secret GEMINI_API_KEY is added in the dashboard (Settings → Variables and
   // Secrets) once this Worker has code; never in this file.
   "vars": {
-    // Gemini model with free-tier quota on Iury's account (check AI Studio → Get code).
-    "GEMINI_MODEL": "gemini-2.5-flash"
+    // Gemini models in order of preference (comma-separated); the Worker moves to the next on 404/429.
+    "GEMINI_MODEL": "gemini-3.8-flash,gemini-3.6-flash,gemini-2.5-flash"
   }
 }
