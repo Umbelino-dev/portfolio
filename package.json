@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "fonts": "node scripts/fonts.mjs",
-    "prebuild": "node scripts/fonts.mjs",
+    "prebuild": "node scripts/fonts.mjs && node scripts/knowledge.mjs",
+    "knowledge": "node scripts/knowledge.mjs",
     "build": "next build",
     "preview": "npx serve@14 out -l 4173",
     "lint": "eslint .",

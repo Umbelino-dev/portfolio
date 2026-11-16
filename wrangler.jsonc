@@ -5,10 +5,19 @@
   // Wrangler builds before every deploy, so Workers Builds works even when the
   // dashboard's Build command is empty (its deploy step is `npx wrangler deploy`).
   "build": { "command": "npm run build" },
-  // Static assets only: no Worker script runs. `npm run build` writes ./out.
+  // The Worker script only answers /api/*; every other request is served from the
+  // static export (./out) without running it. `npm run build` writes ./out.
+  "main": "worker/index.ts",
   "assets": {
     "directory": "./out",
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  // The secret GEMINI_API_KEY is added in the dashboard (Settings → Variables and
+  // Secrets) once this Worker has code; never in this file.
+  "vars": {
+    // Gemini model with free-tier quota on Iury's account (check AI Studio → Get code).
+    "GEMINI_MODEL": "gemini-2.5-flash"
   }
 }

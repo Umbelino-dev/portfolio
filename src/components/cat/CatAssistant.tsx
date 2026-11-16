@@ -30,12 +30,17 @@ export interface AssistantUI {
   you: string;
   cat: string;
   log: string;
+  /** One-line notice that free text goes to an AI model (shown under the log). */
+  privacy: string;
 }
 
 type Message = { from: "cat" | "you"; text: string };
 
 const MOBILE = "(max-width: 767px)";
 const REPLY_MS = 650;
+const CHAT_TIMEOUT_MS = 10_000;
+/** Turns of context sent with each question (the Worker accepts at most 7). */
+const CHAT_HISTORY = 6;
 
 const reducer = (s: CatState, e: CatEvent) => transition(s, e);
 const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
@@ -54,11 +59,14 @@ export function CatAssistant({
   script,
   ui,
   projectsHref,
+  slug,
 }: {
   context: "home" | "case";
   script: AssistantScript;
   ui: AssistantUI;
   projectsHref: string;
+  /** Case study slug: tells the model which project the visitor is reading. */
+  slug?: string;
 }) {
   const [state, send] = useReducer(reducer, context === "home" ? "observer" : "cling");
   const [messages, setMessages] = useState<Message[]>([{ from: "cat", text: script.greeting }]);
@@ -80,6 +88,7 @@ export function CatAssistant({
   const heroVisible = useRef(context === "home");
   const mounted = useRef(false);
   const replyTimer = useRef<number | undefined>(undefined);
+  const chatAbort = useRef<AbortController | null>(null);
   /** The panel's open/close timeline. Lives outside the per-state context: a state
    *  change (e.g. a keypress waking the cat mid-close) must not kill it half-way. */
   const panelTl = useRef<gsap.core.Timeline | null>(null);
@@ -504,38 +513,79 @@ export function CatAssistant({
   useEffect(
     () => () => {
       window.clearTimeout(replyTimer.current);
+      chatAbort.current?.abort();
       panelTl.current?.kill();
     },
     [],
   );
 
-  // ── Scripted conversation ─────────────────────────────────────────────────
+  // ── Conversation ───────────────────────────────────────────────────────────
+  // Chips are scripted: instant and exact. Typed text goes to /api/chat (Gemini,
+  // grounded in knowledge/*.md); if that fails for any reason, the scripted
+  // keyword match and honest fallback answer instead.
+  const deliver = (answer: string, action?: AssistantChip["action"]) => {
+    setTyping(false);
+    setMessages((m) => [...m, { from: "cat", text: answer }]);
+    if (action) {
+      const target = action; // "projects" | "contact" — both are home sections
+      window.setTimeout(() => {
+        if (context === "home") {
+          close();
+          window.setTimeout(
+            () => document.getElementById(target)?.scrollIntoView({ behavior: reduced() ? "auto" : "smooth" }),
+            350,
+          );
+        } else {
+          window.location.assign(target === "projects" ? projectsHref : projectsHref.replace("#projects", "#contact"));
+        }
+      }, 700);
+    }
+  };
+
+  const scripted = (q: string, chip?: AssistantChip) =>
+    chip ?? script.chips.find((c) => c.keywords.some((k) => normalize(q).includes(normalize(k))));
+
+  const askModel = async (q: string, history: Message[]): Promise<string | null> => {
+    chatAbort.current?.abort();
+    const ctl = new AbortController();
+    chatAbort.current = ctl;
+    const timer = window.setTimeout(() => ctl.abort(), CHAT_TIMEOUT_MS);
+    try {
+      const turns = [...history, { from: "you" as const, text: q }]
+        .slice(-CHAT_HISTORY)
+        .map((m) => ({ role: m.from === "you" ? "user" : "assistant", text: m.text }));
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ messages: turns, page: context === "case" ? slug : undefined }),
+        signal: ctl.signal,
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as { reply?: unknown };
+      return typeof data.reply === "string" && data.reply.trim() ? data.reply.trim() : null;
+    } catch {
+      return null;
+    } finally {
+      window.clearTimeout(timer);
+    }
+  };
+
   const ask = (text: string, chip?: AssistantChip) => {
-    const q = text.trim();
+    const q = text.trim().slice(0, 300);
     if (!q || typing) return;
-    const match =
-      chip ?? script.chips.find((c) => c.keywords.some((k) => normalize(q).includes(normalize(k))));
+    const history = messages;
     setMessages((m) => [...m, { from: "you", text: q }]);
     setTyping(true);
     window.clearTimeout(replyTimer.current);
-    replyTimer.current = window.setTimeout(() => {
-      setTyping(false);
-      setMessages((m) => [...m, { from: "cat", text: match ? match.answer : script.fallback }]);
-      if (match?.action) {
-        const target = match.action; // "projects" | "contact" — both are home sections
-        window.setTimeout(() => {
-          if (context === "home") {
-            close();
-            window.setTimeout(
-              () => document.getElementById(target)?.scrollIntoView({ behavior: reduced() ? "auto" : "smooth" }),
-              350,
-            );
-          } else {
-            window.location.assign(target === "projects" ? projectsHref : projectsHref.replace("#projects", "#contact"));
-          }
-        }, 700);
-      }
-    }, REPLY_MS);
+    if (chip) {
+      replyTimer.current = window.setTimeout(() => deliver(chip.answer, chip.action), REPLY_MS);
+      return;
+    }
+    void askModel(q, history).then((reply) => {
+      if (reply) return deliver(reply);
+      const match = scripted(q);
+      deliver(match ? match.answer : script.fallback, match?.action);
+    });
   };
 
   const onSubmit = (e: FormEvent) => {
@@ -683,6 +733,8 @@ export function CatAssistant({
             </button>
           ))}
         </div>
+
+        <p className="text-note shrink-0 px-5 text-[max(0.8125rem,12px)] leading-snug text-gray-500">{ui.privacy}</p>
 
         <form onSubmit={onSubmit} className="flex shrink-0 items-center gap-2 px-4 py-3">
           <label className="sr-only" htmlFor={`${titleId}-input`}>

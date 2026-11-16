@@ -24,6 +24,7 @@ export async function assistantProps(kind: "home" | "case", slug?: string) {
     you: ui.you ?? "",
     cat: ui.cat ?? "",
     log: ui.log ?? "",
+    privacy: ui.privacy ?? "",
   };
   return { script, ui: assistantUI };
 }

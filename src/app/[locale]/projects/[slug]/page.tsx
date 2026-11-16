@@ -130,7 +130,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
           <Footer topHref="#main" />
         </div>
       </main>
-      <CatAssistant context="case" projectsHref={`/${locale}#projects`} {...assistant} />
+      <CatAssistant context="case" projectsHref={`/${locale}#projects`} slug={slug} {...assistant} />
     </>
   );
 }

@@ -199,7 +199,7 @@
   "assistant": {
     "ui": {
       "title": "Pergunte ao gato",
-      "subtitle": "sabe umas coisas sobre o Iury · protótipo",
+      "subtitle": "responde só com o que o Iury escreveu",
       "subtitleCase": "pergunte sobre este projeto",
       "open": "Pergunte ao gato sobre o Iury",
       "openCase": "Pergunte ao gato sobre este projeto",
@@ -212,7 +212,8 @@
       "thinking": "pensando…",
       "you": "Você",
       "cat": "Gato",
-      "log": "Conversa com o gato"
+      "log": "Conversa com o gato",
+      "privacy": "Texto digitado é processado pelo Gemini (Google) e pode ser usado para melhorar os produtos deles. Não envie dados pessoais."
     },
     "home": {
       "greeting": "Oi, eu sou o gato. Sei umas coisas sobre o Iury. O que você quer saber?",
@@ -268,7 +269,7 @@
           "action": "contact"
         }
       ],
-      "fallback": "Ainda sou um protótipo. Minhas respostas são roteirizadas, sem modelo de linguagem por trás. Tente uma das sugestões."
+      "fallback": "Não consegui consultar o modelo agora. Tente uma das sugestões ou escreva para o Iury."
     },
     "cases": {
       "koinonia": {
@@ -308,7 +309,7 @@
             "answer": "Falhas silenciosas. Leituras sem paginação deixariam o Radar errado depois de mil registros. Um filtro de datas invertido escondia quem precisava de cuidado. E não havia nenhum teste. Tudo corrigido."
           }
         ],
-        "fallback": "Sobre este projeto, só sei responder às sugestões acima. Ainda sou um protótipo roteirizado."
+        "fallback": "Sobre este projeto, não consegui consultar o modelo agora. Tente uma das sugestões."
       }
     }
   },

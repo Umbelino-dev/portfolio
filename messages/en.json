@@ -199,7 +199,7 @@
   "assistant": {
     "ui": {
       "title": "Ask the cat",
-      "subtitle": "knows a few things about Iury · prototype",
+      "subtitle": "answers only from what Iury wrote",
       "subtitleCase": "ask about this project",
       "open": "Ask the cat about Iury",
       "openCase": "Ask the cat about this project",
@@ -212,7 +212,8 @@
       "thinking": "thinking…",
       "you": "You",
       "cat": "Cat",
-      "log": "Conversation with the cat"
+      "log": "Conversation with the cat",
+      "privacy": "Typed text is processed by Gemini (Google) and may be used to improve their products. Don't send personal data."
     },
     "home": {
       "greeting": "Hi, I'm the cat. I know a few things about Iury. What would you like to know?",
@@ -265,7 +266,7 @@
           "action": "contact"
         }
       ],
-      "fallback": "I'm still a prototype. My answers are scripted, with no language model behind them. Try one of the suggestions."
+      "fallback": "I couldn't reach the model just now. Try one of the suggestions, or write to Iury."
     },
     "cases": {
       "koinonia": {
@@ -303,7 +304,7 @@
             "answer": "Silent failures. Unpaginated reads would have broken the Radar past a thousand records. An inverted date filter hid people who needed care. And there were no tests. All fixed."
           }
         ],
-        "fallback": "About this project I can only answer the suggestions above. I'm still a scripted prototype."
+        "fallback": "About this project, I couldn't reach the model just now. Try one of the suggestions."
       }
     }
   },
