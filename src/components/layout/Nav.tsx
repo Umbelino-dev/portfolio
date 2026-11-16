@@ -42,27 +42,28 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
     const read = () => {
       frame = 0;
       const mid = window.innerHeight / 2;
-      // Hit-test the line under the nav: respects clip-path, so the Night→Day
-      // stage reports whichever layer is actually visible there.
+      // The surface under the nav: the innermost [data-surface] box that spans the
+      // line THEME_LINE px from the top (later in document order = deeper). Read
+      // from geometry: every surface is an in-flow section today, and this replaced
+      // an elementsFromPoint hit-test that was the costliest call while scrolling
+      // (2026-11-16 audit). A clipped layer (as the old Night→Day stage was) would
+      // need the hit-test back. `data-nav-as` still names the active item.
       let surface = "dark";
       let alias: string | undefined;
-      const x = Math.min(window.innerWidth - 1, Math.max(0, window.innerWidth / 2));
-      for (const el of document.elementsFromPoint(x, THEME_LINE)) {
-        if (el.closest("nav")) continue;
-        const owner = el.closest<HTMLElement>("[data-surface]");
-        if (owner) {
+      document.querySelectorAll<HTMLElement>("[data-surface]").forEach((owner) => {
+        const r = owner.getBoundingClientRect();
+        if (r.top <= THEME_LINE && r.bottom > THEME_LINE) {
           surface = owner.dataset.surface ?? "dark";
-          alias = owner.dataset.navAs; // e.g. the Night→Day stage: night = Index, day = About
-          break;
+          alias = owner.dataset.navAs;
         }
-      }
+      });
       let current: SectionId = "hero";
       document.querySelectorAll<HTMLElement>("[data-nav-id]").forEach((s) => {
         if (s.getBoundingClientRect().top < mid) current = s.dataset.navId ?? current;
       });
       setLight(surface === "light");
       // The page scrollbar's track follows the same surface (globals.css).
-      document.documentElement.dataset.scrollSurface = surface;
+      if (document.documentElement.dataset.scrollSurface !== surface) document.documentElement.dataset.scrollSurface = surface;
       setActive(alias ?? current);
     };
     const onScroll = () => {

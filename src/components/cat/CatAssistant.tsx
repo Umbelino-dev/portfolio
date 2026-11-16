@@ -219,12 +219,22 @@ export function CatAssistant({
       if (state === "sleep") send({ type: "ACTIVITY" });
       else arm();
     };
+    // The page's scroll range, read again only after the page or the window changes
+    // size: reading scrollHeight in every scroll frame, after other scripts had
+    // written styles, forced a synchronous layout (2026-11-16 audit).
+    let max = -1;
+    const stale = () => {
+      max = -1;
+    };
+    const sized = new ResizeObserver(stale);
+    sized.observe(document.body);
+    window.addEventListener("resize", stale);
     const onScroll = () => {
       onActivity();
       if (state !== "cling" || reduced() || frame) return;
       frame = requestAnimationFrame(() => {
         frame = 0;
-        const max = document.documentElement.scrollHeight - window.innerHeight;
+        if (max < 0) max = document.documentElement.scrollHeight - window.innerHeight;
         const p = max > 0 ? window.scrollY / max : 0;
         if (eyes) gsap.to(eyes, { y: (p - 0.5) * 2.4, duration: 0.2, overwrite: "auto" });
       });
@@ -241,6 +251,8 @@ export function CatAssistant({
     return () => {
       window.clearTimeout(timer);
       cancelAnimationFrame(frame);
+      sized.disconnect();
+      window.removeEventListener("resize", stale);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("keydown", onActivity);
       window.removeEventListener("pointerdown", onActivity);

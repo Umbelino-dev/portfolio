@@ -102,6 +102,21 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
 
         let length = 0;
         let marks: number[] = []; // where each step starts, along the axis (px)
+        // The path, pre-sampled at build time: getPointAtLength on every scroll update
+        // was the second costliest call while scrolling (2026-11-16 audit). 256
+        // samples put a point every few pixels; between them the tip is interpolated
+        // (well under a pixel off on these gentle curves).
+        const SAMPLES = 256;
+        const lut = new Float32Array((SAMPLES + 1) * 2);
+        const pointAt = (t: number) => {
+          const f = Math.min(Math.max(t, 0), 1) * SAMPLES;
+          const i = Math.min(Math.floor(f), SAMPLES - 1);
+          const k = f - i;
+          return {
+            x: lut[i * 2]! + (lut[i * 2 + 2]! - lut[i * 2]!) * k,
+            y: lut[i * 2 + 1]! + (lut[i * 2 + 3]! - lut[i * 2 + 1]!) * k,
+          };
+        };
         let progress = motion ? 0 : 1;
 
         const build = () => {
@@ -135,7 +150,12 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
           }
           path.setAttribute("d", d);
           length = path.getTotalLength();
-          const end = path.getPointAtLength(length);
+          for (let k = 0; k <= SAMPLES; k++) {
+            const pt = path.getPointAtLength((length * k) / SAMPLES);
+            lut[k * 2] = pt.x;
+            lut[k * 2 + 1] = pt.y;
+          }
+          const end = pointAt(1);
           now.style.left = `${end.x}px`;
           now.style.top = `${end.y}px`;
           path.style.strokeDasharray = `${length}`;
@@ -144,7 +164,7 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
 
         const paint = () => {
           path.style.strokeDashoffset = `${length * (1 - progress)}`;
-          const at = path.getPointAtLength(length * progress);
+          const at = pointAt(progress);
           tip.setAttribute("cx", `${at.x}`);
           tip.setAttribute("cy", `${at.y}`);
           tip.style.opacity = motion && progress > 0.001 && progress < 0.999 ? "1" : "0";
@@ -153,6 +173,9 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
           const head = axis === "x" ? at.x : at.y;
           items.forEach((it, i) => {
             const reached = !motion || head >= (marks[i] ?? 0) - 2;
+            // Only on a change: rewriting the same attribute every scroll frame still
+            // invalidated the role's style.
+            if (reached === it.hasAttribute("data-reached")) return;
             if (reached) it.dataset.reached = "";
             else delete it.dataset.reached;
           });

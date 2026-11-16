@@ -257,35 +257,16 @@ export function CatObserver({
           }
           tl.progress(progress);
         };
-        // Building the clips costs a long task on a slow phone (~80 ms at 4× CPU,
-        // measured 2026-11-16) and nothing needs it until the page scrolls, so at the
-        // top it waits for an idle moment or the first scroll, whichever comes first.
-        // Until then the cat sits in the timeline's start pose anyway.
+        build();
         let width = mark?.offsetWidth ?? 0;
         const ro = new ResizeObserver(() => {
           const w = mark?.offsetWidth ?? 0;
-          if (w === width || !tl) return;
+          if (w === width) return;
           width = w;
           build();
         });
-        let idle = 0;
-        const first = () => {
-          window.removeEventListener("scroll", first);
-          if (idle) (window.cancelIdleCallback ?? window.clearTimeout)(idle);
-          idle = 0;
-          if (tl) return;
-          width = mark?.offsetWidth ?? 0;
-          build();
-          if (mark) ro.observe(mark);
-        };
-        if (window.scrollY > 0) first();
-        else {
-          window.addEventListener("scroll", first, { passive: true });
-          idle = window.requestIdleCallback ? window.requestIdleCallback(first, { timeout: 1200 }) : window.setTimeout(first, 300);
-        }
+        if (mark) ro.observe(mark);
         return () => {
-          window.removeEventListener("scroll", first);
-          if (idle) (window.cancelIdleCallback ?? window.clearTimeout)(idle);
           ro.disconnect();
           tl?.scrollTrigger?.kill();
           tl?.kill();
