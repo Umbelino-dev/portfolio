@@ -30,7 +30,6 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
   const t = useTranslations("nav");
   const locale = useLocale();
   const pathname = usePathname();
-  const otherLocale = locale === "pt" ? "en" : "pt";
   const [light, setLight] = useState(false);
   const [active, setActive] = useState<SectionId>("hero");
   const [open, setOpen] = useState(false);
@@ -190,15 +189,33 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
             {ITEMS.map((i) => link(i.id, i.key))}
           </div>
 
-          <Link
-            href={pathname}
-            locale={otherLocale}
-            hrefLang={otherLocale === "pt" ? "pt-BR" : "en"}
-            aria-label={`${t("localeShort")} · ${t("switchLocale")}`}
-            className={`flex min-h-11 min-w-11 items-center justify-center rounded-pill text-label font-medium tracking-label ${focusRing}`}
-          >
-            {t("localeShort")}
-          </Link>
+          {/* The language, said: the current one marked (ink pill), the other a link
+              that switches. Both read "PT" / "EN" in every language. */}
+          <div role="group" aria-label={t("language")} className={`flex items-center rounded-pill border p-[3px] ${glass} ${glassBlur} ${transition}`}>
+            {(["pt", "en"] as const).map((l) =>
+              l === locale ? (
+                <span
+                  key={l}
+                  aria-current="true"
+                  lang={l === "pt" ? "pt-BR" : "en"}
+                  className={`flex min-h-[2.375rem] min-w-[2.375rem] items-center justify-center rounded-pill px-2 text-label font-bold tracking-label ${light ? "bg-ink text-paper" : "bg-paper text-ink"}`}
+                >
+                  {l.toUpperCase()}
+                </span>
+              ) : (
+                <Link
+                  key={l}
+                  href={pathname}
+                  locale={l}
+                  hrefLang={l === "pt" ? "pt-BR" : "en"}
+                  aria-label={`${l.toUpperCase()} · ${t("switchLocale")}`}
+                  className={`flex min-h-[2.375rem] min-w-[2.375rem] items-center justify-center rounded-pill px-2 text-label font-medium tracking-label opacity-65 transition-opacity duration-(--duration-fast) hover:opacity-100 ${focusRing}`}
+                >
+                  {l.toUpperCase()}
+                </Link>
+              ),
+            )}
+          </div>
 
           {/* Mobile: one pill that opens the same list */}
           <button

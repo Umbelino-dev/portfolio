@@ -68,6 +68,53 @@ export const projects: Project[] = [
           },
         },
       },
+      evidence: {
+        0: [
+          {
+            title: { pt: "Onde a dor aparecia", en: "Where the pain showed" },
+            text: {
+              pt: "Na AWAKE, a liderança fazia quase tudo de memória: quem veio aos encontros, quem estava faltando, aniversários, quem procurar.",
+              en: "At AWAKE, leaders did almost everything from memory: who came to meetings, who was missing, birthdays, who to reach out to.",
+            },
+          },
+        ],
+        1: [
+          {
+            title: { pt: "A pergunta real", en: "The real question" },
+            text: {
+              pt: "Uma lista de presença diz quem veio, não por quem começar. A pergunta do produto ficou uma só: quem precisa da minha atenção hoje?",
+              en: "An attendance list says who came, not where to start. The product's question became one: who needs my attention today?",
+            },
+          },
+        ],
+        2: [
+          {
+            title: { pt: "Algo real para testar", en: "Something real to test" },
+            text: {
+              pt: "O briefing para a IA exigia uma aplicação de verdade, não um protótipo visual. Cada rodada foi um plano escrito por mim, executado pela IA e conferido antes da próxima.",
+              en: "The brief for the AI demanded a real application, not a visual prototype. Each round was a plan I wrote, the AI carried out and I checked before the next.",
+            },
+          },
+        ],
+        3: [
+          {
+            title: { pt: "521 commits", en: "521 commits" },
+            text: {
+              pt: "Entre 16 de agosto e 5 de outubro de 2026. Há testes de navegador no desktop e no celular, e as regras do produto têm testes automatizados.",
+              en: "Between 16 August and 5 October 2026, with browser tests on desktop and mobile and the product rules covered by automated tests.",
+            },
+          },
+        ],
+        4: [
+          {
+            title: { pt: "A auditoria de setembro", en: "The September audit" },
+            text: {
+              pt: "Ela achou o Radar errando em silêncio depois de mil registros e o filtro de 7 dias comparando datas invertidas. Os dois foram corrigidos. Hoje o Koinonia está no ar e em uso diário.",
+              en: "It found the Radar failing silently past a thousand records and the 7-day filter comparing dates the wrong way. Both were fixed. Koinonia is live and in daily use.",
+            },
+          },
+        ],
+      },
       chapters: [
         {
           id: "problem",
@@ -255,8 +302,77 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "via-hebraica",
+    slug: "sou-studio",
     index: "P.02",
+    name: "SOU Studio",
+    status: "shaping",
+    stage: 3,
+    stageNote: { pt: "Em desenvolvimento: um estúdio pequeno, ainda se estruturando.", en: "In progress: a small studio, still taking shape." },
+    tags: ["business", "design", "web"],
+    summary: {
+      pt: "Meu estúdio de soluções digitais: sites, sistemas sob medida, catálogos digitais, identidade visual, reparos e soluções com IA. Feito para ser seu.",
+      en: "My digital solutions studio: websites, custom systems, digital catalogues, visual identity, repairs and AI solutions. Made to be yours.",
+    },
+    links: [{ label: { pt: "Ver a SOU Studio", en: "Visit SOU Studio" }, href: "https://soustudio.com.br" }],
+    related: [{ kind: "instagram", label: { pt: "@sou_studioo", en: "@sou_studioo" }, href: "https://instagram.com/sou_studioo" }],
+    source: "knowledge/sou-studio.md (Iury's profile, 2026-11-16): site, Instagram, slogan, service areas, 'em desenvolvimento'",
+    confirmed: true,
+    caseStudy: {
+      confirmed: true,
+      source: "knowledge/sou-studio.md (2026-11-16)",
+      lead: {
+        pt: "Um estúdio de soluções digitais que reúne tecnologia, design e desenvolvimento para negócios e necessidades específicas. Feito para ser seu.",
+        en: "A digital solutions studio bringing technology, design and development together for businesses and specific needs. Made to be yours.",
+      },
+      evidence: {
+        3: [
+          {
+            title: { pt: "Seis frentes", en: "Six areas" },
+            text: {
+              pt: "Sites; sistemas e aplicações sob medida; catálogos e vitrines digitais com área administrativa; identidade visual e design; reparos de celulares e eletrônicos; soluções com IA para negócios.",
+              en: "Websites; custom systems and apps; digital catalogues and storefronts with an admin area; visual identity and design; phone and electronics repair; AI solutions for businesses.",
+            },
+          },
+          {
+            title: { pt: "O que já saiu daqui", en: "What has come out of it" },
+            text: {
+              pt: "O Koinonia é uma produção SOU Studio, e o Hyper faz parte da rotina de conteúdo do estúdio.",
+              en: "Koinonia is a SOU Studio production, and Hyper is part of the studio's content routine.",
+            },
+          },
+        ],
+      },
+      chapters: [
+        {
+          id: "idea",
+          part: "about",
+          label: { pt: "O estúdio", en: "The studio" },
+          title: { pt: "Feito para ser seu.", en: "Made to be yours." },
+          steps: [
+            { title: { pt: "Sites", en: "Websites" }, text: { pt: "Desenvolvimento de sites.", en: "Website development." } },
+            { title: { pt: "Sistemas sob medida", en: "Custom systems" }, text: { pt: "Sistemas e aplicações feitos para cada necessidade.", en: "Systems and apps made for each need." } },
+            { title: { pt: "Catálogos digitais", en: "Digital catalogues" }, text: { pt: "Vitrines digitais com área administrativa.", en: "Digital storefronts with an admin area." } },
+            { title: { pt: "Identidade visual", en: "Visual identity" }, text: { pt: "Marca e design.", en: "Brand and design." } },
+            { title: { pt: "Reparos", en: "Repairs" }, text: { pt: "Celulares e eletrônicos.", en: "Phones and electronics." } },
+            { title: { pt: "Soluções com IA", en: "AI solutions" }, text: { pt: "Explorar o que a IA resolve para cada negócio.", en: "Exploring what AI can solve for each business." } },
+          ],
+        },
+        {
+          id: "use",
+          part: "process",
+          label: { pt: "Onde está agora", en: "Where it is now" },
+          title: { pt: "Um estúdio em construção.", en: "A studio in the making." },
+          body: {
+            pt: ["A SOU está em desenvolvimento: é um estúdio pequeno, não uma grande agência. Os projetos desta página mostram o tipo de trabalho que sai dela."],
+            en: ["SOU is in progress: a small studio, not a big agency. The projects on this page show the kind of work that comes out of it."],
+          },
+        },
+      ],
+    },
+  },
+  {
+    slug: "via-hebraica",
+    index: "P.03",
     name: "Via Hebraica",
     nameLang: "pt",
     status: "evolving",
@@ -267,8 +383,14 @@ export const projects: Project[] = [
       pt: "Um dos meus primeiros projetos: app web de estudos bíblicos com leitor, atlas, cronologia e marca-páginas. Feito enquanto eu aprendia, ainda precisa evoluir.",
       en: "One of my first projects: a Bible-study web app with a reader, atlas, timeline and bookmarks. Built while I was learning, it still needs to grow.",
     },
+    cover: {
+      src: "/media/via-hebraica-cover.webp",
+      width: 1600,
+      height: 1200,
+      alt: { pt: "Logo do Via Hebraica: um livro aberto com um caminho no meio e uma estrela acima.", en: "Via Hebraica logo: an open book with a path through it and a star above." },
+    },
     links: [{ label: { pt: "Ver o Via Hebraica", en: "Visit Via Hebraica" }, href: "https://viahebraica.app" }],
-    source: "audit §5; Iury (chat, 2026-11-16): one of his first projects, built while learning, still needs work",
+    source: "audit §5; Iury (chat, 2026-11-16): one of his first projects, built while learning, still needs work; logo from Iury (vectorised)",
     confirmed: true,
     caseStudy: {
       confirmed: true,
@@ -276,6 +398,32 @@ export const projects: Project[] = [
       lead: {
         pt: "Um app web para estudar a Bíblia, com leitor, atlas, cronologia e marca-páginas. Um dos meus primeiros projetos.",
         en: "A web app for studying the Bible, with a reader, atlas, timeline and bookmarks. One of my first projects.",
+      },
+      cover: {
+        id: "cover",
+        aspect: "4/3",
+        label: { pt: "Marca", en: "Brand" },
+        caption: { pt: "A marca do Via Hebraica, redesenhada em vetor.", en: "The Via Hebraica mark, redrawn as a vector." },
+        image: {
+          src: "/media/via-hebraica-cover.webp",
+          width: 1600,
+          height: 1200,
+          alt: { pt: "Logo do Via Hebraica: um livro aberto com um caminho no meio e uma estrela acima.", en: "Via Hebraica logo: an open book with a path through it and a star above." },
+        },
+      },
+      evidence: {
+        3: [
+          {
+            title: { pt: "O que foi construído", en: "What was built" },
+            text: { pt: "Um leitor para o texto, um atlas, uma cronologia e marca-páginas, feitos enquanto eu aprendia a desenvolver.", en: "A reader for the text, an atlas, a timeline and bookmarks, made while I was learning to develop." },
+          },
+        ],
+        4: [
+          {
+            title: { pt: "O que falta", en: "What is missing" },
+            text: { pt: "Está no ar, mas ainda precisa de melhorias e evolução.", en: "It is live, but it still needs work and growth." },
+          },
+        ],
       },
       chapters: [
         {
@@ -308,10 +456,110 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "pais-de-primeira-viagem",
-    index: "P.03",
-    name: "Pais de primeira viagem",
-    nameLang: "pt",
+    slug: "automia",
+    index: "P.04",
+    name: "AutomIA",
+    status: "mvp",
+    stage: 2,
+    stageNote: {
+      pt: "MVP em validação: o diferencial frente a assistentes como ChatGPT e Gemini ainda precisa ser provado.",
+      en: "MVP being validated: what sets it apart from assistants like ChatGPT and Gemini still has to be proven.",
+    },
+    tags: ["ai", "product", "event"],
+    summary: {
+      pt: "Um segundo cérebro pelo WhatsApp: você encaminha mensagens, áudios e documentos, ele organiza e lembra na hora certa. Nasceu em equipe no Startup Weekend.",
+      en: "A second brain over WhatsApp: you forward messages, audio and documents, it organises them and reminds you at the right time. Born as a team at Startup Weekend.",
+    },
+    related: [{ kind: "linkedin", label: { pt: "Post no LinkedIn", en: "LinkedIn post" }, href: "https://lnkd.in/p/dqdj2qYm" }],
+    source: "Iury's Startup Weekend post (2026-11-12); knowledge/projetos.md (Iury's profile, 2026-11-16): AUTOMIA, second brain over WhatsApp, MVP and validation; Iury (chat): spelling AutomIA, motion video in a phone",
+    confirmed: true,
+    caseStudy: {
+      confirmed: true,
+      source: "Iury's post + knowledge/projetos.md + chat (2026-11-16)",
+      lead: {
+        pt: "Um assistente que funciona como segundo cérebro: você encaminha pelo WhatsApp o que não quer esquecer, e ele organiza e lembra no momento certo.",
+        en: "An assistant that works as a second brain: you forward over WhatsApp what you don't want to forget, and it organises it and reminds you at the right moment.",
+      },
+      // Iury's motion piece (2026-11-16): 1080×1920 source, served at 720×1280 H.264 + AAC with faststart (1.1 MB).
+      video: {
+        src: "/video/automia.mp4",
+        poster: "/video/automia-poster.webp",
+        aspect: "9 / 16",
+        title: { pt: "AutomIA em motion design", en: "AutomIA in motion design" },
+      },
+      access: {
+        pt: "Ainda não há uma versão pública: o AutomIA está em MVP e validação.",
+        en: "There is no public version yet: AutomIA is at MVP and validation.",
+      },
+      evidence: {
+        0: [
+          {
+            title: { pt: "Onde começou", en: "Where it started" },
+            text: {
+              pt: "No Startup Weekend, com um time que se conheceu no próprio evento, num sábado das 8h às 22h.",
+              en: "At Startup Weekend, with a team that met at the event itself, on a Saturday from 8 am to 10 pm.",
+            },
+          },
+        ],
+        1: [
+          {
+            title: { pt: "O que o evento ensinou", en: "What the event taught" },
+            text: {
+              pt: "Validar o problema vem antes de construir a solução: é preciso provar que outras pessoas sentem a mesma dor, não só eu.",
+              en: "Validating the problem comes before building the solution: you have to prove other people feel the same pain, not just you.",
+            },
+          },
+        ],
+        2: [
+          {
+            title: { pt: "MVP em validação", en: "MVP being validated" },
+            text: {
+              pt: "A ideia já virou um MVP. O que falta provar é o diferencial: por que usar o AutomIA e não um assistente como ChatGPT ou Gemini.",
+              en: "The idea is now an MVP. What still has to be proven is the difference: why use AutomIA instead of an assistant like ChatGPT or Gemini.",
+            },
+          },
+        ],
+      },
+      chapters: [
+        {
+          id: "idea",
+          part: "about",
+          label: { pt: "A ideia", en: "The idea" },
+          title: { pt: "Um segundo cérebro no WhatsApp.", en: "A second brain in WhatsApp." },
+          body: {
+            pt: [
+              "Você encaminha mensagens, áudios e documentos pelo WhatsApp. O AutomIA organiza as informações e lembra você no momento certo.",
+              "A ideia nasceu no Startup Weekend, com um time que eu conheci ali. O pitch ficou comigo, e o passador de slides parou de funcionar justo na minha vez.",
+            ],
+            en: [
+              "You forward messages, audio and documents over WhatsApp. AutomIA organises the information and reminds you at the right moment.",
+              "The idea was born at Startup Weekend, with a team I met there. I gave the pitch, and the slide clicker stopped working right on my turn.",
+            ],
+          },
+        },
+        {
+          id: "stage",
+          part: "process",
+          label: { pt: "Onde está agora", en: "Where it is now" },
+          title: { pt: "Provar a diferença.", en: "Proving the difference." },
+          body: {
+            pt: [
+              "Está em fase de MVP e validação. Não é um produto lançado.",
+              "A pergunta que falta responder é a mais difícil: o que ele faz melhor do que os assistentes que as pessoas já usam.",
+            ],
+            en: [
+              "It is at the MVP and validation stage. It is not a launched product.",
+              "The question still open is the hardest one: what it does better than the assistants people already use.",
+            ],
+          },
+        },
+      ],
+    },
+  },
+  {
+    slug: "1kid",
+    index: "P.05",
+    name: "1Kid",
     status: "validating",
     stage: 1,
     stageNote: {
@@ -321,21 +569,68 @@ export const projects: Project[] = [
     year: 2026,
     tags: ["research", "product"],
     summary: {
-      pt: "Uma ideia em desenvolvimento, ainda sem solução. Agora: entender se a dor existe e se ela importa.",
-      en: "An idea in progress, with no solution yet. Now: finding out whether the pain exists and whether it matters.",
+      pt: "Uma ideia sobre os desafios de quem acabou de ter o primeiro filho, ainda sem solução. Agora: entender se a dor existe e se ela importa.",
+      en: "An idea about the challenges of people who just had their first child, with no solution yet. Now: finding out whether the pain exists and whether it matters.",
     },
-    source: "Iury (chat, 2026-11-16): renamed from 'Copiloto de parentalidade'; problem validation, no validated solution",
+    cover: {
+      src: "/media/1kid-cover.webp",
+      width: 1600,
+      height: 1200,
+      alt: { pt: "Logo do 1Kid: o número 1 e a letra K formando um bebê enrolado, com dois traços laranja.", en: "1Kid logo: the number 1 and the letter K forming a swaddled baby, with two orange strokes." },
+    },
+    source: "Iury (chat, 2026-11-16): renamed 1Kid (was 'Copiloto de parentalidade'); problem validation, no validated solution; logo from Iury",
     confirmed: true,
     caseStudy: {
       confirmed: true,
-      source: "Iury (chat, 2026-11-16)",
+      source: "Iury (chat, 2026-11-16) + outside research (cited)",
       lead: {
         pt: "Uma ideia ainda em desenvolvimento. Antes de pensar em qualquer solução, estou descobrindo se o problema é real.",
         en: "An idea still in progress. Before thinking about any solution, I am finding out whether the problem is real.",
       },
+      cover: {
+        id: "cover",
+        aspect: "4/3",
+        label: { pt: "Marca", en: "Brand" },
+        caption: { pt: "A marca do 1Kid.", en: "The 1Kid mark." },
+        image: {
+          src: "/media/1kid-cover.webp",
+          width: 1600,
+          height: 1200,
+          alt: { pt: "Logo do 1Kid: o número 1 e a letra K formando um bebê enrolado, com dois traços laranja.", en: "1Kid logo: the number 1 and the letter K forming a swaddled baby, with two orange strokes." },
+        },
+      },
       access: {
         pt: "Ainda não há o que acessar: o projeto está na validação do problema.",
         en: "There is nothing to open yet: the project is at problem validation.",
+      },
+      evidence: {
+        0: [
+          {
+            title: { pt: "Pesquisa: o sono depois do primeiro filho", en: "Research: sleep after the first child" },
+            text: {
+              pt: "Um estudo com 4.659 pais na Alemanha viu o sono cair forte nos primeiros meses, sobretudo para as mães. Ele não voltou ao nível de antes nem seis anos depois. Pais de primeira viagem foram os mais afetados.",
+              en: "A study of 4,659 parents in Germany saw sleep drop sharply in the first months, above all for mothers. It had not returned to the earlier level six years later. First-time parents were hit hardest.",
+            },
+            source: { label: "Richter et al., Sleep, 2019 (doi:10.1093/sleep/zsz015)", href: "https://doi.org/10.1093/sleep/zsz015" },
+          },
+        ],
+        1: [
+          {
+            title: { pt: "Pesquisa: o peso no Brasil", en: "Research: the weight in Brazil" },
+            text: {
+              pt: "Na pesquisa Nascer no Brasil, com 23.894 mães entrevistadas, 26,3% tinham sinais de provável depressão pós-parto. É um rastreio, não um diagnóstico, mas mostra o tamanho do desafio.",
+              en: "In the Birth in Brazil survey, with 23,894 mothers interviewed, 26.3% showed signs of probable postpartum depression. It is a screening, not a diagnosis, but it shows the size of the challenge.",
+            },
+            source: { label: "Fiocruz, Nascer no Brasil (Theme Filha et al., 2016)", href: "https://portaldeboaspraticas.iff.fiocruz.br/biblioteca/factors-associated-with-postpartum-depressive-symptomatology-in-brazil-the-birth-in-brazil-national/" },
+          },
+          {
+            title: { pt: "O que estou fazendo agora", en: "What I am doing now" },
+            text: {
+              pt: "Pesquisa mostra que a dificuldade existe; não mostra qual dor um produto deveria resolver. Por isso o passo agora é conversar com pais: entender se a dor existe para eles, quanto pesa e como lidam com ela hoje.",
+              en: "Research shows the difficulty exists; it does not show which pain a product should solve. So the step now is talking to parents. Is the pain real for them? How much does it weigh, and how do they deal with it today?",
+            },
+          },
+        ],
       },
       chapters: [
         {
@@ -374,10 +669,9 @@ export const projects: Project[] = [
     },
   },
   {
-    slug: "central-de-tendencias",
-    index: "P.04",
-    name: "Central de Inteligência de Tendências",
-    nameLang: "pt",
+    slug: "hyper",
+    index: "P.06",
+    name: "Hyper",
     status: "in-use",
     stage: 4,
     stageNote: { pt: "Em uso na SOU Studio, sempre que preciso de ideias.", en: "In use at SOU Studio, whenever I need ideas." },
@@ -386,7 +680,13 @@ export const projects: Project[] = [
       pt: "Ferramenta que uso na SOU Studio para encontrar tendências e oportunidades de conteúdo.",
       en: "A tool I use at SOU Studio to find trends and content opportunities.",
     },
-    source: "Iury (chat, 2026-11-16): a tool used now and then at SOU Studio to find trends and content ideas",
+    cover: {
+      src: "/media/hyper-cover.webp",
+      width: 1600,
+      height: 1200,
+      alt: { pt: "A marca H do Hyper sobre um gráfico de hype em alta, em verde-limão.", en: "Hyper's H mark over a rising hype chart, in lime." },
+    },
+    source: "Iury (chat, 2026-11-16): renamed Hyper (was 'Central de Inteligência de Tendências'); used now and then at SOU Studio; logo from Iury (vectorised), cover: a positive hype chart",
     confirmed: true,
     caseStudy: {
       confirmed: true,
@@ -395,9 +695,38 @@ export const projects: Project[] = [
         pt: "Uma ferramenta de uso real no dia a dia da SOU Studio, para identificar tendências e oportunidades de conteúdo.",
         en: "A tool in real use at SOU Studio, for spotting trends and content opportunities.",
       },
+      cover: {
+        id: "cover",
+        aspect: "4/3",
+        label: { pt: "Marca", en: "Brand" },
+        caption: { pt: "A marca do Hyper sobre um gráfico de hype em alta.", en: "Hyper's mark over a rising hype chart." },
+        image: {
+          src: "/media/hyper-cover.webp",
+          width: 1600,
+          height: 1200,
+          alt: { pt: "A marca H do Hyper sobre um gráfico de hype em alta, em verde-limão.", en: "Hyper's H mark over a rising hype chart, in lime." },
+        },
+      },
       access: {
         pt: "É uma ferramenta interna da SOU Studio, sem acesso público.",
         en: "It is an internal SOU Studio tool, with no public access.",
+      },
+      evidence: {
+        3: [
+          {
+            title: { pt: "Para que foi feito", en: "What it was made for" },
+            text: { pt: "Identificar tendências e oportunidades de conteúdo para a SOU Studio.", en: "Spotting trends and content opportunities for SOU Studio." },
+          },
+        ],
+        4: [
+          {
+            title: { pt: "Como é usado", en: "How it is used" },
+            text: {
+              pt: "De vez em quando, para encontrar ideias e desenvolver conteúdos que façam sentido para o momento.",
+              en: "Now and then, to find ideas and develop content that fits the moment.",
+            },
+          },
+        ],
       },
       chapters: [
         {
@@ -407,11 +736,11 @@ export const projects: Project[] = [
           title: { pt: "Encontrar o que faz sentido agora.", en: "Finding what makes sense right now." },
           body: {
             pt: [
-              "A Central ajuda a identificar tendências e oportunidades de conteúdo.",
-              "Eu a uso de vez em quando, para encontrar ideias e desenvolver conteúdos que façam sentido para o momento.",
+              "O Hyper ajuda a identificar tendências e oportunidades de conteúdo.",
+              "Eu o uso de vez em quando, para encontrar ideias e desenvolver conteúdos que façam sentido para o momento.",
             ],
             en: [
-              "The tool helps spot trends and content opportunities.",
+              "Hyper helps spot trends and content opportunities.",
               "I use it now and then, to find ideas and develop content that fits the moment.",
             ],
           },
@@ -422,7 +751,7 @@ export const projects: Project[] = [
           label: { pt: "No fluxo de trabalho", en: "In the workflow" },
           title: { pt: "Parte do meu fluxo de trabalho.", en: "Part of my workflow." },
           body: {
-            pt: ["Ela não é uma demonstração: faz parte de como a SOU Studio pensa conteúdo. Entra em cena quando preciso de ideias novas."],
+            pt: ["Ele não é uma demonstração: faz parte de como a SOU Studio pensa conteúdo. Entra em cena quando preciso de ideias novas."],
             en: ["It is not a demo: it is part of how SOU Studio thinks about content. It comes in when I need fresh ideas."],
           },
         },

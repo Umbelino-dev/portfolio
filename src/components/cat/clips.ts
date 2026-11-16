@@ -55,7 +55,20 @@ export function prime(p: CatParts) {
     [p.legL, "41 86"],
     [p.legR, "59 86"],
   ];
-  for (const [el, origin] of svg) if (el) gsap.set(el, { svgOrigin: origin });
+  for (const [el, origin] of svg) if (el) pivot(el, origin);
+}
+
+/**
+ * Sets a part's pivot in the drawing's own units. `smoothOrigin: false` is the
+ * point: by default GSAP compensates the translation when an origin is set on a
+ * part that is already rotated, and the cat's parts get their pivot set more than
+ * once (prime, idle life, every matchMedia run), so the compensation piled up and
+ * a leg or the tail ended up rotating round a point hundreds of units away: parts
+ * flew off the body while the hero scrolled (Iury, 2026-11-16). Never set a cat
+ * pivot any other way.
+ */
+export function pivot(el: Element, origin: string) {
+  gsap.set(el, { svgOrigin: origin, smoothOrigin: false });
 }
 
 const legs = (p: CatParts) => [p.legL, p.legR].filter(Boolean) as Element[];

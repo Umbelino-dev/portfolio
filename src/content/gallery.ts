@@ -11,7 +11,7 @@ import type { Localized } from "./types";
  *
  * Iury, 2026-11-16: the portrait left the deck (it stays in the hero). The two
  * Startup Weekend photos share one post but say different things: "O time do
- * AutonomIA" is about the team (everyone met there), "Startup Weekend" is about
+ * AutomIA" is about the team (everyone met there), "Startup Weekend" is about
  * the event. CRIO Conecta ran three days (27–29 Oct 2026), one post per day; the
  * photo (Iury with Miguel Cordova) is from day two. Stories and takeaways are
  * drawn from Iury's posts and words, never copied; the people listed in the
@@ -58,24 +58,24 @@ export const gallery: GalleryPhoto[] = [
       pt: "Iury no centro de um grupo de seis pessoas, quase todas de camiseta verde e crachá do T.S.W., num espaço de trabalho.",
       en: "Iury at the centre of a group of six people, most in green T-shirts and T.S.W. badges, in a workspace.",
     },
-    caption: { pt: "O time do AutonomIA", en: "The AutonomIA team" },
+    caption: { pt: "O AutomIA", en: "AutomIA" },
     summary: {
-      pt: "Um time que se conheceu no próprio Startup Weekend. Ninguém se conhecia antes, e juntos criamos o AutonomIA.",
-      en: "A team that met at Startup Weekend itself. None of us knew each other before, and together we created AutonomIA.",
+      pt: "Um time que se conheceu no próprio Startup Weekend. Ninguém se conhecia antes, e juntos criamos o AutomIA.",
+      en: "A team that met at Startup Weekend itself. None of us knew each other before, and together we created AutomIA.",
     },
     story: {
-      pt: "Conheci todo o time no evento. Juntos, criamos o AutonomIA, um organizador de tarefas com IA que lembra você pelo WhatsApp. O pitch ficou comigo.",
-      en: "I met the whole team at the event. Together we created AutonomIA, an AI task organiser that reminds you over WhatsApp. I gave the pitch.",
+      pt: "Conheci todo o time no evento. Juntos, criamos o AutomIA, um organizador de tarefas com IA que lembra você pelo WhatsApp. O pitch ficou comigo.",
+      en: "I met the whole team at the event. Together we created AutomIA, an AI task organiser that reminds you over WhatsApp. I gave the pitch.",
     },
     linkedin: { url: "https://lnkd.in/p/dqdj2qYm" },
     takeaways: {
       pt: [
         "Trabalhar em um time formado na hora, com gente que eu nunca tinha visto, num sábado das 8h às 22h.",
-        "Sair do zero até o pitch do AutonomIA com pessoas que conheci ali mesmo.",
+        "Sair do zero até o pitch do AutomIA com pessoas que conheci ali mesmo.",
       ],
       en: [
         "Working in a team formed on the spot, with people I had never met, on a Saturday from 8 am to 10 pm.",
-        "Going from nothing to the AutonomIA pitch with people I met right there.",
+        "Going from nothing to the AutomIA pitch with people I met right there.",
       ],
     },
   },
@@ -138,8 +138,8 @@ export const gallery: GalleryPhoto[] = [
       en: "Validating the problem is harder than building the solution. That is what the weekend taught me.",
     },
     story: {
-      pt: "O pitch do AutonomIA ficou comigo, e o passador de slides parou de funcionar justo na minha vez.",
-      en: "I gave the AutonomIA pitch, and the slide clicker stopped working right on my turn.",
+      pt: "O pitch do AutomIA ficou comigo, e o passador de slides parou de funcionar justo na minha vez.",
+      en: "I gave the AutomIA pitch, and the slide clicker stopped working right on my turn.",
     },
     linkedin: { url: "https://lnkd.in/p/dqdj2qYm" },
     takeaways: {

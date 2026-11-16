@@ -11,6 +11,10 @@ Estas informações foram autorizadas pelo próprio Iury para o público conhece
 - Tem uma namorada, a quem ama muito.
 - Pretende se casar em 2027 (é um plano dele para o ano que vem, não uma data marcada).
 
+## O Tisco
+- O Tisco é um gato de verdade e mora com o Iury. O Iury o encontrou em um supermercado e levou para casa.
+- O gato do site é inspirado nele. O Tisco do site é o assistente que responde as perguntas sobre o Iury.
+
 ## Hobbies e o que gosta de fazer
 - Assistir filmes.
 - Praticar esportes e correr. Já correu uma night run de 8 km.

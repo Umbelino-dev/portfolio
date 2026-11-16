@@ -11,20 +11,26 @@
 
 - O Koinonia é a versão melhorada de um projeto anterior, o Centro do Despertar, que não existe mais.
 
+## SOU Studio (em desenvolvimento)
+- O estúdio do Iury também aparece entre os projetos do site, logo abaixo do Koinonia. Detalhes em sou-studio.md.
+
 ## Via Hebraica (no ar, ainda precisa evoluir)
 - Um dos primeiros projetos do Iury, feito enquanto aprendia. App web de estudos bíblicos com leitor, atlas, cronologia e marca-páginas: https://viahebraica.app
 - Está no ar, mas ainda precisa de melhorias e evolução.
 - [PREENCHER: ferramentas usadas e o que ele decidiu]
 
-## Pais de primeira viagem (2026, validando o problema)
+## 1Kid (2026, validando o problema)
 - Uma ideia em desenvolvimento, ainda sem solução. Agora o Iury tenta entender se a dor existe, se ela importa e como as pessoas lidam com ela hoje.
-- Antes se chamava "Copiloto de parentalidade". Não há solução validada nem produto pronto.
+- Antes se chamava "Pais de primeira viagem" e, antes disso, "Copiloto de parentalidade". Não há solução validada nem produto pronto.
+- Pesquisas citadas no site como indícios do problema (não como validação): Richter et al., revista Sleep, 2019 (o sono de pais cai forte depois do primeiro filho e não volta ao nível de antes nem seis anos depois); Fiocruz, Nascer no Brasil, 2016 (26,3% das mães com sinais de provável depressão pós-parto).
 
-## Central de Inteligência de Tendências (em uso na SOU Studio)
+## Hyper (em uso na SOU Studio)
+- Antes se chamava "Central de Inteligência de Tendências".
 - Ferramenta que o Iury usa na SOU Studio para encontrar tendências e oportunidades de conteúdo, sempre que precisa de ideias.
 - [PREENCHER: como funciona, em uma frase]
 
-## AUTOMIA (conceito em validação)
+## AutomIA (MVP em validação)
+- Escreve-se AutomIA. Nasceu em equipe no Startup Weekend, onde o Iury fez o pitch.
 - Ideia de assistente inteligente, um "segundo cérebro": o usuário encaminha mensagens, áudios e documentos pelo WhatsApp, e o sistema organiza as informações e lembra no momento certo.
 - Está em fase de MVP e validação. O diferencial em relação a assistentes como ChatGPT e Gemini ainda precisa ser provado. Não é um produto consolidado nem lançado.
 

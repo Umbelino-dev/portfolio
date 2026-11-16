@@ -8,8 +8,9 @@
  * it never reaches the browser. Any failure answers with an error code and the
  * client falls back to the scripted assistant.
  */
-import { checkReply } from "./guard";
-import { KNOWLEDGE } from "./knowledge.generated";
+import { checkReply, extractGo } from "./guard";
+import { video } from "./media";
+import { KNOWLEDGE, PROJECT_SLUGS } from "./knowledge.generated";
 
 /** Minimal KV surface (avoids pulling in @cloudflare/workers-types). */
 interface KV {
@@ -25,6 +26,8 @@ interface Env {
   GEMINI_MODEL?: string;
   /** Answers to first questions, so repeated ones cost no Gemini quota. */
   CHAT_CACHE?: KV;
+  /** The static export (wrangler.jsonc `assets.binding`), read by /video/* for byte ranges. */
+  ASSETS?: { fetch(request: Request): Promise<Response> };
 }
 
 interface ChatTurn {
@@ -53,6 +56,7 @@ REGRAS
 9. Posicionamento: o Iury está em início de carreira, no primeiro ano de programação. Nunca o descreva como especialista, sênior ou experiente, nem sugira que domina uma tecnologia só porque ela aparece na lista. Reconheça que os projetos dele usam IA como apoio.
 10. Vida pessoal: pode falar de hobbies, rotina, fé, onde mora e curiosidades do Iury, mas SOMENTE com o que está escrito. Seja caloroso e breve. Não acrescente detalhes (nomes, lugares, gostos, datas) e não especule. Se pedirem algo pessoal que não consta, diga que não tem essa informação. Pode juntar fatos do conteúdo para responder (por exemplo, o que ele costuma fazer no tempo livre).
 11. Respeite a seção "O que o gato não responde" do conteúdo.
+12. Navegação: se a pergunta tratar de algo que existe no site, responda e termine com uma linha final exatamente assim: [[ir:destino]]. Destinos válidos: about (Perfil: formação, competências, trajetória, fotos), projects (a lista de projetos), approach (a abordagem em cinco passos), contact (contato), ou a página de um projeto pelo nome dele em minúsculas e com hífens (${PROJECT_SLUGS.join(", ")}). Use no máximo um destino e só quando o assunto for realmente daquela parte do site. Se a pergunta não for sobre algo que está no site, não escreva a linha. Nunca escreva o destino de outra forma.
 
 <conteudo>
 ${KNOWLEDGE}
@@ -83,7 +87,7 @@ let promptHash: Promise<string> | null = null;
 async function cacheKey(question: string, page: string | null): Promise<string> {
   promptHash ??= sha(SYSTEM_PROMPT).then((h) => h.slice(0, 16));
   const q = (await sha(normalizeQuestion(question))).slice(0, 32);
-  return `v1:${await promptHash}:${page ?? "-"}:${q}`;
+  return `v2:${await promptHash}:${page ?? "-"}:${q}`;
 }
 
 const json = (body: unknown, status = 200) =>
@@ -173,7 +177,10 @@ async function chat(request: Request, env: Env, ctx: Ctx): Promise<Response> {
     try {
       cacheId = await cacheKey(first.text, page);
       const hit = await env.CHAT_CACHE.get(cacheId);
-      if (hit) return json({ reply: hit, cached: true });
+      if (hit) {
+        const saved = JSON.parse(hit) as { reply?: unknown; go?: unknown };
+        if (typeof saved.reply === "string") return json({ reply: saved.reply, go: saved.go ?? null, cached: true });
+      }
     } catch {
       cacheId = null; // KV trouble must never block an answer
     }
@@ -229,15 +236,20 @@ async function chat(request: Request, env: Env, ctx: Ctx): Promise<Response> {
       if (!reply) return json({ error: "empty", finish: candidate?.finishReason ?? null, model }, 502);
       // Second layer behind the prompt: a reply that invents a contact, leaks the
       // prompt or runs long is dropped (never shown, never cached); try the next model.
-      const verdict = checkReply(reply, KNOWLEDGE);
+      const { text, go } = extractGo(reply, PROJECT_SLUGS);
+      const verdict = text ? checkReply(text, KNOWLEDGE) : { ok: false as const };
       if (!verdict.ok) {
         last = { error: "ungrounded" };
         continue;
       }
       if (cacheId && env.CHAT_CACHE) {
-        ctx.waitUntil(env.CHAT_CACHE.put(cacheId, reply, { expirationTtl: CACHE_TTL_S }).catch(() => undefined));
+        ctx.waitUntil(
+          env.CHAT_CACHE.put(cacheId, JSON.stringify({ reply: text, go }), { expirationTtl: CACHE_TTL_S }).catch(
+            () => undefined,
+          ),
+        );
       }
-      return json({ reply, model });
+      return json({ reply: text, go, model });
     } catch {
       // Timeout or network error on this model: try the next one.
       last = { error: "upstream_timeout" };
@@ -252,6 +264,7 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: Ctx): Promise<Response> {
     const { pathname } = new URL(request.url);
     if (pathname === "/api/chat") return chat(request, env, ctx);
+    if (pathname.startsWith("/video/") && env.ASSETS) return video(request, env.ASSETS);
     return json({ error: "not_found" }, 404);
   },
 };

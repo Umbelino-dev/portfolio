@@ -20,8 +20,12 @@ export interface ProjectRow {
   href?: string;
   external?: boolean;
   externalLabel?: string;
+  /** The product's own site, when the row itself leads to the project page: the ↗ shortcut. */
+  site?: { href: string; label: string };
   /** Custom cursor label (fine pointers only). */
   cursorLabel?: string;
+  /** Cursor label for the ↗ shortcut. */
+  cursorSite?: string;
 }
 
 const LERP = 0.14;
@@ -155,11 +159,27 @@ export function ProjectList({ rows, label }: { rows: ProjectRow[]; label: string
               </span>
             </>
           );
-          const rowClass = `block py-[clamp(1rem,2vw,1.75rem)] transition-opacity duration-(--duration-base) ease-(--ease-out-soft) ${
+          const rowClass = `block py-[clamp(1rem,2vw,1.75rem)] ${row.site ? "pr-14 md:pr-16" : ""} transition-opacity duration-(--duration-base) ease-(--ease-out-soft) ${
             active !== null && active !== i ? "opacity-25" : "opacity-100"
           }`;
           return (
-            <li key={row.slug}>
+            <li key={row.slug} className="relative">
+              {/* Straight to the product's site, beside the row (a link can't sit inside the row's link). */}
+              {row.site && (
+                <a
+                  href={row.site.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={row.site.label}
+                  title={row.site.label}
+                  data-cursor-label={row.cursorSite}
+                  className="absolute top-[clamp(1rem,2vw,1.75rem)] right-0 z-10 flex size-11 items-center justify-center rounded-full border border-ink/15 bg-paper text-ink transition-colors duration-(--duration-fast) hover:border-ink hover:bg-ink hover:text-paper focus-visible:outline-ink md:size-12"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem]" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7M9 7h8v8" />
+                  </svg>
+                </a>
+              )}
               {row.href ? (
                 <a
                   href={row.href}

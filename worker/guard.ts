@@ -35,3 +35,24 @@ export function checkReply(reply: string, knowledge: string): GuardResult {
   }
   return { ok: true };
 }
+
+/**
+ * The cat may end a reply with `[[ir:destino]]` to point the visitor to a part of
+ * the site. The tag never reaches the visitor: it is stripped here and the
+ * destination is accepted only if it is on the fixed allowlist.
+ */
+export const SECTION_DESTINATIONS = ["about", "projects", "approach", "contact"] as const;
+
+export function extractGo(raw: string, projectSlugs: readonly string[]): { text: string; go: string | null } {
+  const found: string[] = [];
+  const text = raw
+    .replace(/\[\[\s*ir\s*:\s*([a-z0-9-]+)\s*\]\]/gi, (_m, d: string) => {
+      found.push(d.toLowerCase());
+      return "";
+    })
+    .replace(/\[\[[^\n]*$/, "") // a tag cut off by the token limit
+    .trim();
+  const allowed = new Set<string>([...SECTION_DESTINATIONS, ...projectSlugs]);
+  const last = found[found.length - 1];
+  return { text, go: last && allowed.has(last) ? last : null };
+}

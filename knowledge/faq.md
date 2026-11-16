@@ -12,6 +12,9 @@ R: Por e-mail (iuryumbelino1@gmail.com) ou LinkedIn (in/iuryumbelino).
 P: Qual é o nome do gato?
 R: Tisco.
 
+P: O Tisco existe de verdade?
+R: Sim. É o gato do Iury, que o encontrou em um supermercado e o levou para casa. O gato do site é inspirado nele.
+
 P: O gato é uma IA de verdade?
 R: Sim, é um modelo de linguagem (Gemini, do Google) que responde só com o conteúdo que o Iury escreveu para ele. Se algo não está lá, ele diz que não sabe.
 

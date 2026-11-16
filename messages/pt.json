@@ -16,7 +16,8 @@
     "skip": "Pular para o conteúdo",
     "localeShort": "EN",
     "allProjects": "Todos os projetos",
-    "projectsShort": "Projetos"
+    "projectsShort": "Projetos",
+    "language": "Idioma"
   },
   "status": {
     "concept": "Conceito",
@@ -26,7 +27,10 @@
     "validating": "Validando o problema",
     "live": "No ar, em uso",
     "evolving": "No ar, em evolução",
-    "in-use": "Em uso"
+    "in-use": "Em uso",
+    "pitch": "Pitch no Startup Weekend",
+    "shaping": "Em estruturação",
+    "mvp": "MVP em validação"
   },
   "hero": {
     "cta": "Me conheça",
@@ -91,16 +95,21 @@
     "data": "Dados",
     "research": "Pesquisa",
     "retail": "Varejo",
-    "personalTools": "Ferramentas pessoais"
+    "personalTools": "Ferramentas pessoais",
+    "design": "Design",
+    "audiovisual": "Audiovisual",
+    "business": "Negócio",
+    "event": "Evento"
   },
   "projects": {
     "label": "Projetos",
-    "note": "Quatro projetos, cada um na sua etapa real: do problema ainda em validação ao produto em uso diário.",
+    "note": "Seis projetos, cada um na sua etapa real: do problema ainda em validação ao produto em uso diário.",
     "visit": "abre o site em nova aba",
     "listLabel": "Projetos",
     "openCase": "Ver o projeto",
     "pending": "imagem em breve",
-    "indexLabel": "Escolha um projeto"
+    "indexLabel": "Escolha um projeto",
+    "site": "Ir direto para o site"
   },
   "approach": {
     "label": "Abordagem",
@@ -220,7 +229,21 @@
     "process": "Processo e desenvolvimento",
     "access": "Acesso ao projeto",
     "stage": "Etapa atual",
-    "stageOf": "{step}, etapa {n} de {total}"
+    "stageOf": "{step}, etapa {n} de {total}",
+    "stageHint": "Toque em uma etapa para ver o que ela teve neste projeto.",
+    "research": "Pesquisa externa",
+    "sourceLabel": "Fonte",
+    "notReached": "Ainda não chegou aqui.",
+    "noRecord": "Ainda não documentei esta etapa.",
+    "stageCurrent": "etapa atual",
+    "video": "Vídeo",
+    "videoPending": "O vídeo entra aqui em breve.",
+    "related": "Também no",
+    "relatedKinds": {
+      "linkedin": "LinkedIn",
+      "github": "GitHub",
+      "instagram": "Instagram"
+    }
   },
   "assistant": {
     "ui": {
@@ -337,6 +360,13 @@
         ],
         "fallback": "Sobre este projeto, não consegui consultar o modelo agora. Tente uma das sugestões."
       }
+    },
+    "go": {
+      "about": "Ver no Perfil",
+      "projects": "Ver os projetos",
+      "approach": "Ver a abordagem",
+      "contact": "Ir para o contato",
+      "project": "Abrir a página: {name}"
     }
   },
   "contact": {
@@ -354,7 +384,7 @@
       "instagram": "Instagram"
     },
     "catTitle": "Pergunte ao gato",
-    "catText": "Um assistente que responde sobre meu trabalho, meus projetos e como falar comigo. É roteirizado e usa só fatos verificados.",
+    "catText": "O Tisco, meu gato, responde sobre meu trabalho, meus projetos e como falar comigo. Usa IA e só o que eu escrevi para ele.",
     "catCta": "Começar a conversa"
   },
   "footer": {

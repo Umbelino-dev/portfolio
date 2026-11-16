@@ -4,7 +4,7 @@ import { useCallback, useEffect, useId, useReducer, useRef, useState, type FormE
 import { gsap, MQ } from "@/lib/gsap";
 import { CatFigure } from "./CatFigure";
 import { catParts, greet, prime, settle, wake, type CatParts } from "./clips";
-import { CAT_OPEN, HERO_LEFT_AT, IDLE_MS, transition, type CatEvent, type CatState } from "./states";
+import { CAT_OPEN, IDLE_MS, transition, type CatEvent, type CatState } from "./states";
 
 export interface AssistantChip {
   label: string;
@@ -32,9 +32,12 @@ export interface AssistantUI {
   log: string;
   /** One-line notice that free text goes to an AI model (shown under the log). */
   privacy: string;
+  /** Link label per destination the cat may point to: a home section (about, projects, approach, contact) or a project slug. */
+  go: Record<string, string>;
 }
 
-type Message = { from: "cat" | "you"; text: string };
+type Message = { from: "cat" | "you"; text: string; /** Where the cat points the visitor (validated by the Worker and against `ui.go`). */ go?: string };
+const SECTIONS = ["about", "projects", "approach", "contact"];
 
 const MOBILE = "(max-width: 767px)";
 const REPLY_MS = 650;
@@ -141,19 +144,26 @@ export function CatAssistant({
     gsap.to(p.paws, { opacity: gripping ? 1 : 0, duration: d * 0.3 });
   };
   // ── Hero visibility drives S1 ⇄ S2 (home only) ───────────────────────────
+  // The cat leaves the hero as soon as it reaches the nav line, not when half the
+  // hero is gone: riding the page, it used to slide under the nav's frosted glass,
+  // where its body blurred away while the tail still showed below, so it looked
+  // as if it came apart (Iury, 2026-11-16). So the trigger is the cat itself: fully
+  // visible below the nav = in the hero; any part of it at or above the nav = left.
   useEffect(() => {
     if (context !== "home") return;
-    const hero = document.getElementById("hero");
-    if (!hero) return;
+    const cat = heroCat();
+    if (!cat) return;
+    const nav = document.querySelector("nav");
+    const line = Math.round((nav?.getBoundingClientRect().bottom ?? 72) + 12);
     const io = new IntersectionObserver(
       ([entry]) => {
-        const visible = (entry?.intersectionRatio ?? 0) >= 1 - HERO_LEFT_AT; // half out of view = left
+        const visible = (entry?.intersectionRatio ?? 0) >= 0.98;
         heroVisible.current = visible;
         send({ type: visible ? "HERO_ENTERED" : "HERO_LEFT" });
       },
-      { threshold: [0, 1 - HERO_LEFT_AT, 1] },
+      { rootMargin: `-${line}px 0px 0px 0px`, threshold: [0, 0.98, 1] },
     );
-    io.observe(hero);
+    io.observe(cat);
     return () => io.disconnect();
   }, [context]);
 
@@ -372,6 +382,8 @@ export function CatAssistant({
         }
         gsap.set(hero, { autoAlpha: 0 });
         gsap.set(d, { autoAlpha: 1 });
+        const discEl = inner.querySelector("[data-cat-disc]");
+        if (discEl) gsap.fromTo(discEl, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, delay: 0.12, ease: "power2.out" });
         gsap.fromTo(
           inner,
           { x: dx, y: dy, scale: hr.width / dr.width },
@@ -385,6 +397,7 @@ export function CatAssistant({
         const back = () => {
           gsap.set(d, { autoAlpha: 0, y: 0 });
           gsap.set(inner, { x: 0, y: 0, scale: 1 });
+          gsap.set(inner.querySelector("[data-cat-disc]"), { opacity: 1, scale: 1 });
           if (hero) gsap.to(hero, { autoAlpha: 1, duration: rm ? 0.16 : 0.12 });
         };
         if (rm || !hero) {
@@ -393,6 +406,8 @@ export function CatAssistant({
         }
         const hr = hero.getBoundingClientRect();
         const dr = inner.getBoundingClientRect();
+        const discBack = inner.querySelector("[data-cat-disc]");
+        if (discBack) gsap.to(discBack, { opacity: 0, scale: 0.4, duration: 0.3, ease: "power2.in" });
         gsap.to(inner, {
           x: hr.left + hr.width / 2 - (dr.left + dr.width / 2),
           y: hr.top + hr.height / 2 - (dr.top + dr.height / 2),
@@ -523,9 +538,9 @@ export function CatAssistant({
   // Chips are scripted: instant and exact. Typed text goes to /api/chat (Gemini,
   // grounded in knowledge/*.md); if that fails for any reason, the scripted
   // keyword match and honest fallback answer instead.
-  const deliver = (answer: string, action?: AssistantChip["action"]) => {
+  const deliver = (answer: string, action?: AssistantChip["action"], go?: string) => {
     setTyping(false);
-    setMessages((m) => [...m, { from: "cat", text: answer }]);
+    setMessages((m) => [...m, { from: "cat", text: answer, go }]);
     if (action) {
       const target = action; // "projects" | "contact" — both are home sections
       window.setTimeout(() => {
@@ -545,7 +560,7 @@ export function CatAssistant({
   const scripted = (q: string, chip?: AssistantChip) =>
     chip ?? script.chips.find((c) => c.keywords.some((k) => normalize(q).includes(normalize(k))));
 
-  const askModel = async (q: string, history: Message[]): Promise<string | null> => {
+  const askModel = async (q: string, history: Message[]): Promise<{ reply: string; go?: string } | null> => {
     chatAbort.current?.abort();
     const ctl = new AbortController();
     chatAbort.current = ctl;
@@ -561,13 +576,30 @@ export function CatAssistant({
         signal: ctl.signal,
       });
       if (!res.ok) return null;
-      const data = (await res.json()) as { reply?: unknown };
-      return typeof data.reply === "string" && data.reply.trim() ? data.reply.trim() : null;
+      const data = (await res.json()) as { reply?: unknown; go?: unknown };
+      if (typeof data.reply !== "string" || !data.reply.trim()) return null;
+      // Only a destination the page knows how to label is ever shown.
+      const go = typeof data.go === "string" && Object.hasOwn(ui.go, data.go) ? data.go : undefined;
+      return { reply: data.reply.trim(), go };
     } catch {
       return null;
     } finally {
       window.clearTimeout(timer);
     }
+  };
+
+  // The cat points, it does not drag: a link under the answer, so the visitor keeps
+  // the conversation until they choose to go.
+  const base = projectsHref.split("#")[0] ?? "";
+  const goHref = (dest: string) => (SECTIONS.includes(dest) ? `${base}#${dest}` : `${base}/projects/${dest}`);
+  const onGo = (e: React.MouseEvent<HTMLAnchorElement>, dest: string) => {
+    if (context !== "home" || !SECTIONS.includes(dest)) return; // other pages: a normal link
+    e.preventDefault();
+    close();
+    window.setTimeout(
+      () => document.getElementById(dest)?.scrollIntoView({ behavior: reduced() ? "auto" : "smooth" }),
+      350,
+    );
   };
 
   const ask = (text: string, chip?: AssistantChip) => {
@@ -581,8 +613,8 @@ export function CatAssistant({
       replyTimer.current = window.setTimeout(() => deliver(chip.answer, chip.action), REPLY_MS);
       return;
     }
-    void askModel(q, history).then((reply) => {
-      if (reply) return deliver(reply);
+    void askModel(q, history).then((answer) => {
+      if (answer) return deliver(answer.reply, undefined, answer.go);
       const match = scripted(q);
       deliver(match ? match.answer : script.fallback, match?.action);
     });
@@ -642,9 +674,12 @@ export function CatAssistant({
             aria-haspopup="dialog"
             aria-expanded={open}
             onClick={() => (open ? close() : requestOpen())}
-            className={`group relative flex ${disc} items-end justify-center rounded-full border border-ink/14 bg-paper pb-1.5 focus-visible:outline-ink`}
+            className={`group relative flex ${disc} items-end justify-center rounded-full pb-1.5 focus-visible:outline-ink`}
           >
-            <CatFigure className={`${catSize} overflow-visible`} />
+            {/* The disc is its own layer, so it can grow in while the cat glides down
+                from the hero (and fade on the way back) instead of popping in. */}
+            <span data-cat-disc aria-hidden="true" className="absolute inset-0 rounded-full border border-ink/14 bg-paper" />
+            <CatFigure className={`${catSize} relative overflow-visible`} />
             {/* Zzz — only while asleep */}
             <span
               aria-hidden="true"
@@ -710,6 +745,15 @@ export function CatAssistant({
             <div key={i} className={`flex max-w-[92%] flex-col gap-1 ${m.from === "you" ? "self-end text-right" : ""}`}>
               <span className="text-note text-[max(0.9375rem,13px)] text-gray-500">{m.from === "cat" ? ui.cat : ui.you}</span>
               <p className={`text-[max(0.9375rem,13px)] leading-normal text-pretty ${m.from === "you" ? "text-paper-300" : ""}`}>{m.text}</p>
+              {m.go && !(context === "case" && m.go === slug) && (
+                <a
+                  href={goHref(m.go)}
+                  onClick={(e) => onGo(e, m.go as string)}
+                  className="inline-flex min-h-11 items-center self-start font-display text-[max(0.9375rem,13px)] font-bold underline underline-offset-4 hover:text-signal focus-visible:outline-signal"
+                >
+                  {ui.go[m.go]} →
+                </a>
+              )}
             </div>
           ))}
           {typing && (

@@ -9,7 +9,7 @@
 import type { Locale } from "@/i18n/routing";
 
 /** Project stage — encoded by shape in the UI (StatusMark), never by colour. */
-export type ProjectStatus = "concept" | "experiment" | "prototype" | "in-development" | "validating" | "live" | "evolving" | "in-use";
+export type ProjectStatus = "concept" | "experiment" | "prototype" | "in-development" | "validating" | "live" | "evolving" | "in-use" | "pitch" | "shaping" | "mvp";
 
 /**
  * Where a project stands on the five-step approach (Approach section): 0 observe
@@ -57,6 +57,20 @@ export interface CaseStudyChapter {
   figures?: MediaSlot[];
 }
 
+export interface Evidence {
+  title: Localized;
+  text: Localized;
+  /** Outside research: where it comes from (a real, checked link). */
+  source?: { label: string; href: string };
+}
+
+/** A link related to a project that is not the product itself (its post, its repository). */
+export interface RelatedLink {
+  kind: "linkedin" | "github" | "instagram";
+  label: Localized;
+  href: string;
+}
+
 export interface CaseStudy {
   /** false = draft: no page is generated and the index does not link to it. */
   confirmed: boolean;
@@ -66,13 +80,21 @@ export interface CaseStudy {
   cover?: MediaSlot;
   /** "Acesso ao projeto" when there is no public link: says why, never a dead button. */
   access?: Localized;
+  /**
+   * What each approach step looked like for this project (0 observe … 4 improve):
+   * facts from the project, or outside research with its source. A step with
+   * nothing here says so; nothing is invented to fill it.
+   */
+  evidence?: Partial<Record<ProjectStage, Evidence[]>>;
+  /** A video shown inside a phone frame (e.g. a motion piece). No `src` yet = "em breve". */
+  video?: { src?: string; poster?: string; /** CSS aspect-ratio of the video, e.g. "9 / 16". */ aspect?: string; title: Localized };
   /** Rendered in order; a chapter without body, steps or figures is skipped. */
   chapters: CaseStudyChapter[];
   source: string;
 }
 
 /** Tag keys, translated in messages (`tags.*`). */
-export type TagKey = "web" | "pwa" | "product" | "personal" | "ai" | "data" | "research" | "retail" | "personalTools";
+export type TagKey = "web" | "pwa" | "product" | "personal" | "ai" | "data" | "research" | "retail" | "personalTools" | "design" | "audiovisual" | "business" | "event";
 
 /** A real image for a project. Until it exists, the UI draws an editorial placeholder. */
 export interface MediaImage {
@@ -101,7 +123,10 @@ export interface Project {
   cover?: MediaImage & { fit?: "cover" | "contain"; background?: string };
   role?: Localized;
   stack?: string[];
+  /** The product itself (its site or app): shown with the ↗ "go to the site" mark. */
   links?: ProjectLink[];
+  /** Where it also lives: its LinkedIn post, its GitHub repository. Verified links only. */
+  related?: RelatedLink[];
   /** Case study. Only `confirmed` ones get a page (/[locale]/projects/[slug]). */
   caseStudy?: CaseStudy;
   /** Where the facts came from — for maintainers, never rendered. */

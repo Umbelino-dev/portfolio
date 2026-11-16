@@ -108,6 +108,16 @@
       scroll-snap-type: y proximity;
     }
   }
+  /*
+   * Every jump inside the site glides there (Iury, 2026-11-16): anchors, the nav,
+   * "Me conheça", the footer links and back to top. Never with reduced motion
+   * (the reduced-motion reset sets it back to auto).
+   */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
   html {
     background: var(--color-ink);
     color: var(--color-paper);

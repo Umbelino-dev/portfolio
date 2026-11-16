@@ -374,7 +374,7 @@ export function PhotoDeck({ photos, labels }: { photos: DeckPhoto[]; labels: Dec
         {/* The names are the index: one per photo, side by side. The one in front
             is ink on the lime highlighter; any name brings its photo forward. They
             follow `front`, so they stay in step with clicks, arrows and auto-play. */}
-        <ul className="flex flex-wrap justify-center gap-x-6 gap-y-1">
+        <ul className="grid w-full max-w-[42rem] gap-x-4 text-center" style={{ gridTemplateColumns: `repeat(${photos.length}, minmax(0, 1fr))` }}>
           {photos.map((p, i) => {
             const active = front === i;
             return (

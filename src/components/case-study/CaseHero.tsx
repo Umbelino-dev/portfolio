@@ -44,11 +44,21 @@ export async function CaseHero({
         {(caseStudy.lead ?? project.summary)[locale] && (
           <p className="max-w-[48ch] text-lead leading-snug text-pretty text-[#3f3d39]">{(caseStudy.lead ?? project.summary)[locale]}</p>
         )}
-        {link && (
-          <a href={link.href} target="_blank" rel="noopener noreferrer" className={`${button.ink} mt-2`}>
-            {link.label[locale]} <span aria-hidden="true">↗</span>
-            <span className="sr-only"> ({t("newTab")})</span>
-          </a>
+        {(link || (project.related?.length ?? 0) > 0) && (
+          <div className="mt-2 flex flex-wrap gap-3">
+            {link && (
+              <a href={link.href} target="_blank" rel="noopener noreferrer" className={button.ink}>
+                {link.label[locale]} <span aria-hidden="true">↗</span>
+                <span className="sr-only"> ({t("newTab")})</span>
+              </a>
+            )}
+            {project.related?.map((r) => (
+              <a key={r.href} href={r.href} target="_blank" rel="noopener noreferrer" className={`${button.outline} text-ink`}>
+                {t(`relatedKinds.${r.kind}`)} <span aria-hidden="true">↗</span>
+                <span className="sr-only"> ({t("newTab")})</span>
+              </a>
+            ))}
+          </div>
         )}
       </div>
 

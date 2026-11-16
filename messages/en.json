@@ -16,7 +16,8 @@
     "skip": "Skip to content",
     "localeShort": "PT",
     "allProjects": "All projects",
-    "projectsShort": "Projects"
+    "projectsShort": "Projects",
+    "language": "Language"
   },
   "status": {
     "concept": "Concept",
@@ -26,7 +27,10 @@
     "validating": "Validating the problem",
     "live": "Live, in use",
     "evolving": "Live, still growing",
-    "in-use": "In use"
+    "in-use": "In use",
+    "pitch": "Startup Weekend pitch",
+    "shaping": "Taking shape",
+    "mvp": "MVP, being validated"
   },
   "hero": {
     "cta": "Get to know me",
@@ -91,16 +95,21 @@
     "data": "Data",
     "research": "Research",
     "retail": "Retail",
-    "personalTools": "Personal tools"
+    "personalTools": "Personal tools",
+    "design": "Design",
+    "audiovisual": "Video",
+    "business": "Business",
+    "event": "Event"
   },
   "projects": {
     "label": "Projects",
-    "note": "Four projects, each at its real stage: from a problem still being validated to a product in daily use.",
+    "note": "Six projects, each at its real stage: from a problem still being validated to a product in daily use.",
     "visit": "opens the site in a new tab",
     "listLabel": "Projects",
     "openCase": "View the project",
     "pending": "image coming soon",
-    "indexLabel": "Pick a project"
+    "indexLabel": "Pick a project",
+    "site": "Go straight to the site"
   },
   "approach": {
     "label": "Approach",
@@ -220,7 +229,21 @@
     "process": "Process and development",
     "access": "Access the project",
     "stage": "Current stage",
-    "stageOf": "{step}, step {n} of {total}"
+    "stageOf": "{step}, step {n} of {total}",
+    "stageHint": "Tap a step to see what it held for this project.",
+    "research": "Outside research",
+    "sourceLabel": "Source",
+    "notReached": "Not here yet.",
+    "noRecord": "I have not documented this step yet.",
+    "stageCurrent": "current step",
+    "video": "Video",
+    "videoPending": "The video comes here soon.",
+    "related": "Also on",
+    "relatedKinds": {
+      "linkedin": "LinkedIn",
+      "github": "GitHub",
+      "instagram": "Instagram"
+    }
   },
   "assistant": {
     "ui": {
@@ -332,6 +355,13 @@
         ],
         "fallback": "About this project, I couldn't reach the model just now. Try one of the suggestions."
       }
+    },
+    "go": {
+      "about": "See the Profile",
+      "projects": "See the projects",
+      "approach": "See the approach",
+      "contact": "Go to contact",
+      "project": "Open the page: {name}"
     }
   },
   "contact": {
@@ -349,7 +379,7 @@
       "instagram": "Instagram"
     },
     "catTitle": "Ask the cat",
-    "catText": "An assistant that answers about my work, my projects and how to reach me. It is scripted and only uses verified facts.",
+    "catText": "Tisco, my cat, answers about my work, my projects and how to reach me. It uses AI and only what I wrote for it.",
     "catCta": "Start a conversation"
   },
   "footer": {
