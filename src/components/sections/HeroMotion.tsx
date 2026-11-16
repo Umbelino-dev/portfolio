@@ -18,7 +18,12 @@ export function HeroMotion({ children, className }: { children: ReactNode; class
       const mm = gsap.matchMedia();
       mm.add(MQ.motion, () => {
         const glyphs = gsap.utils.toArray<SVGPathElement>("[data-glyph]");
-        const tl = gsap.timeline({ delay: 0.1 });
+        // Once the entrance has played, the CSS failsafe (a forwards-filled animation)
+        // is switched off: left on, it kept every glyph a composited layer for good,
+        // and each frame of any later animation paid to layerize them all.
+        const done = (sel: string) => () =>
+          scope.current?.querySelectorAll<HTMLElement | SVGElement>(sel).forEach((n) => void (n.style.animation = "none"));
+        const tl = gsap.timeline({ delay: 0.1, onComplete: done("[data-glyph], [data-join]") });
         tl.fromTo(
           glyphs,
           { y: 140, autoAlpha: 0 },
@@ -34,7 +39,7 @@ export function HeroMotion({ children, className }: { children: ReactNode; class
       // The statement fades in only on desktop; on phones it is a large block in
       // the first screen and must be painted at once (it can be the LCP element).
       mm.add(`${MQ.motion} and (min-width: 768px)`, () => {
-        gsap.fromTo("[data-hero-fade-md]", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.64, delay: 0.55 });
+        gsap.fromTo("[data-hero-fade-md]", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.64, delay: 0.55, onComplete: () => scope.current?.querySelectorAll<HTMLElement>("[data-hero-fade-md]").forEach((n) => void (n.style.animation = "none")) });
       });
       return () => mm.revert();
     },

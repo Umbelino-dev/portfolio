@@ -560,7 +560,7 @@ const DeckCard = memo(function DeckCard({
   onLeave: (i: number) => void;
 }) {
   return (
-    <figure data-deck-card className="absolute inset-x-0 top-0 aspect-[3/4] will-change-transform">
+    <figure data-deck-card className="absolute inset-x-0 top-0 aspect-[3/4]">
       <button
         type="button"
         aria-label={`${more}: ${p.caption}`}
@@ -581,7 +581,7 @@ const DeckCard = memo(function DeckCard({
         className="group/card block h-full w-full cursor-pointer text-left focus-visible:outline-ink"
       >
         {/* The lift: an inner layer, so it composes with the deck's own transforms. */}
-        <span className="relative block h-full overflow-hidden rounded-[clamp(1.25rem,2vw,1.875rem)] bg-ink-800 shadow-[0_22px_36px_-22px_rgba(16,16,16,0.55)] transition-[translate] duration-(--duration-base) ease-(--ease-out-soft) [will-change:translate] [@media(hover:hover)]:group-hover/card:-translate-y-4 group-focus-visible/card:-translate-y-4">
+        <span className="relative block h-full overflow-hidden rounded-[clamp(1.25rem,2vw,1.875rem)] bg-ink-800 shadow-[0_22px_36px_-22px_rgba(16,16,16,0.55)] transition-[translate] duration-(--duration-base) ease-(--ease-out-soft) [@media(hover:hover)]:group-hover/card:-translate-y-4 group-focus-visible/card:-translate-y-4">
           <Image
             src={p.src}
             alt={p.alt}

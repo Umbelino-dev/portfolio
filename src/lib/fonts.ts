@@ -17,11 +17,16 @@ export const display = localFont({
   fallback: ["system-ui", "sans-serif"],
 });
 
-/** Text: IBM Plex Sans — body, UI, metadata. */
+/**
+ * Text: IBM Plex Sans — body, UI, metadata. No italic face: nothing on the site is
+ * set in italic, and next/font preloads every face of a family, so the unused
+ * italic (24 KB) was fetched on every first visit, competing with Satoshi on slow
+ * connections (2026-11-16 audit). Re-add IBMPlexSans-Italic.woff2 here if italic
+ * text is ever needed (the file stays in src/fonts).
+ */
 export const sans = localFont({
   src: [
     { path: "../fonts/IBMPlexSans-Regular.woff2", weight: "400", style: "normal" },
-    { path: "../fonts/IBMPlexSans-Italic.woff2", weight: "400", style: "italic" },
     { path: "../fonts/IBMPlexSans-Medium.woff2", weight: "500", style: "normal" },
     { path: "../fonts/IBMPlexSans-SemiBold.woff2", weight: "600", style: "normal" },
   ],
@@ -37,7 +42,10 @@ export const serif = localFont({
   src: [{ path: "../fonts/InstrumentSerif-Italic.woff2", weight: "400", style: "italic" }],
   variable: "--font-instrument-serif",
   display: "swap",
-  preload: true, // the statement is in the first screen (in flow on phones): avoid a swap shift
+  // Not preloaded: no page uses it today (Iury, 2026-11-11: the curved face did not
+  // work), so a preload fetched 22 KB nobody saw. Unpreloaded and unused, the
+  // browser never downloads it; if it comes back, it loads on first use.
+  preload: false,
   adjustFontFallback: "Times New Roman",
   fallback: ["Georgia", "serif"],
 });

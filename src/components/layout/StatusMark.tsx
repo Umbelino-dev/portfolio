@@ -1,7 +1,7 @@
 import type { ProjectStatus } from "@/content/types";
 
 /**
- * A project's stage, said in words (Instrument Serif italic, the annotation voice).
+ * A project's stage, said in words (the annotation voice, `text-note`).
  * No shapes or colours: "No ar", "Em desenvolvimento" and "Conceito" read on any
  * surface and need no legend. `status` stays in the API for callers that sort or
  * style by stage.

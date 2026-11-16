@@ -3,8 +3,7 @@
 import { useRef } from "react";
 import { gsap, MQ, useGSAP } from "@/lib/gsap";
 import { anchors } from "@/components/hero/name-paths";
-import { CatFigure } from "./CatFigure";
-import { TAIL_WAVE } from "./CatFigure";
+import { CatFigure, TAIL_WAVE_FRAMES, WAVE_STEP_MS } from "./CatFigure";
 import { catParts, crouch, pivot, prime, run, stretch, tailFlick, walk } from "./clips";
 import { CAT_OPEN } from "./states";
 
@@ -23,7 +22,7 @@ type Pose = "idle" | "left" | "right" | "near";
  * - Fine pointer + motion: head ±9°, body ±3°, eyes ±3px toward the pointer.
  * - Over text or links: no reaction (reading is not disturbed).
  * - Breathing (scaleY 1→1.025, 1.6s) only while idle; blink every 4–6s; the tail
- *   waves (shape tween, 2.2s) and the right ear twitches now and then.
+ *   waves (pre-sampled shapes on a timer, 2.2s each way) and the right ear twitches now and then.
  * - Touch: breathing + blink only. Reduced motion: fully static.
  * Work happens only while the hero is on screen and the tab is visible.
  */
@@ -66,24 +65,38 @@ export function CatObserver({
         pivot(head, "50 62");
         pivot(eyes, "50 40");
 
-        const breath = gsap.to(el, {
-          scaleY: 1.025,
-          transformOrigin: "50% 100%",
-          duration: 1.6,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-          paused: true,
-        });
+        // Breathing is a CSS animation on its own wrapper ([data-cat-breath], globals.css):
+        // a transform the compositor runs, so an idle cat no longer keeps GSAP's ticker
+        // (and a full-page layerize) going every frame. Same 2.5% / 1.6 s / sine.
+        const [breathEl] = q<HTMLElement>("[data-cat-breath]");
+        const breath = {
+          play: () => breathEl?.setAttribute("data-on", ""),
+          pause: () => breathEl?.removeAttribute("data-on"),
+        };
 
         // Idle life, on hooks the clip library never touches: the tail's own shape
         // waves (a slow sine between two curves) and the right ear twitches now and then.
         const [tailWave] = q<SVGPathElement>('[data-cat="tail-wave"]');
         const [earR] = q<SVGGElement>('[data-cat="ear-r"]');
         if (earR) pivot(earR, "72 30");
-        const wave = tailWave
-          ? gsap.to(tailWave, { attr: { d: TAIL_WAVE }, duration: 2.2, ease: "sine.inOut", yoyo: true, repeat: -1, paused: true })
-          : null;
+        // The tail's wave steps through pre-sampled shapes on a timer (CatFigure
+        // TAIL_WAVE_FRAMES): ~11 changes a second instead of a 60 fps tween, and no
+        // GSAP ticker kept awake. Stopped off screen and in a hidden tab.
+        let waveAt = 0;
+        let waveTimer: number | undefined;
+        const wave = {
+          play: () => {
+            if (!tailWave || waveTimer !== undefined) return;
+            waveTimer = window.setInterval(() => {
+              waveAt = (waveAt + 1) % TAIL_WAVE_FRAMES.length;
+              tailWave.setAttribute("d", TAIL_WAVE_FRAMES[waveAt]!);
+            }, WAVE_STEP_MS);
+          },
+          pause: () => {
+            window.clearInterval(waveTimer);
+            waveTimer = undefined;
+          },
+        };
         const twitch = () => {
           if (!earR) return;
           gsap
@@ -244,16 +257,35 @@ export function CatObserver({
           }
           tl.progress(progress);
         };
-        build();
+        // Building the clips costs a long task on a slow phone (~80 ms at 4× CPU,
+        // measured 2026-11-16) and nothing needs it until the page scrolls, so at the
+        // top it waits for an idle moment or the first scroll, whichever comes first.
+        // Until then the cat sits in the timeline's start pose anyway.
         let width = mark?.offsetWidth ?? 0;
         const ro = new ResizeObserver(() => {
           const w = mark?.offsetWidth ?? 0;
-          if (w === width) return;
+          if (w === width || !tl) return;
           width = w;
           build();
         });
-        if (mark) ro.observe(mark);
+        let idle = 0;
+        const first = () => {
+          window.removeEventListener("scroll", first);
+          if (idle) (window.cancelIdleCallback ?? window.clearTimeout)(idle);
+          idle = 0;
+          if (tl) return;
+          width = mark?.offsetWidth ?? 0;
+          build();
+          if (mark) ro.observe(mark);
+        };
+        if (window.scrollY > 0) first();
+        else {
+          window.addEventListener("scroll", first, { passive: true });
+          idle = window.requestIdleCallback ? window.requestIdleCallback(first, { timeout: 1200 }) : window.setTimeout(first, 300);
+        }
         return () => {
+          window.removeEventListener("scroll", first);
+          if (idle) (window.cancelIdleCallback ?? window.clearTimeout)(idle);
           ro.disconnect();
           tl?.scrollTrigger?.kill();
           tl?.kill();
@@ -277,8 +309,10 @@ export function CatObserver({
       data-cat-root="observer"
       data-cursor-label={cursorLabel}
     >
-      <span data-cat-lean className="block h-full w-full">
-        <CatFigure className="block h-full w-full overflow-visible" />
+      <span data-cat-breath className="block h-full w-full">
+        <span data-cat-lean className="block h-full w-full">
+          <CatFigure className="block h-full w-full overflow-visible" />
+        </span>
       </span>
     </button>
   );

@@ -168,9 +168,10 @@ export function land(p: CatParts) {
 }
 
 /**
- * Settle into sleep: eyes first, then the body curls and the tail wraps.
- * Then slow breathing for a while (bounded: it stops on its own, and GSAP's
- * ticker does not run in a hidden tab).
+ * Settle into sleep: eyes first, then the body curls and the tail wraps. The slow
+ * breathing that follows is a CSS animation on the dock's [data-cat-breath]
+ * wrapper (CatAssistant turns it on while asleep): six breaths on the compositor,
+ * not a GSAP tween keeping the ticker and a full-page layerize going.
  */
 export function settle(p: CatParts, delay = 0) {
   return gsap
@@ -180,8 +181,7 @@ export function settle(p: CatParts, delay = 0) {
     .to(p.body, { scaleY: 0.82, duration: 0.52, ease: "power2.in" }, 0.2)
     .to(p.head, { y: 6, rotation: -4, duration: 0.52 }, 0.2)
     .to(legs(p), { y: 2, rotation: 0, duration: 0.4 }, 0.2)
-    .to(p.tail, { rotation: 26, duration: 0.6, ease: "power2.out" }, 0.3)
-    .to(p.frame, { scaleY: 1.03, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 11 }, 0.9);
+    .to(p.tail, { rotation: 26, duration: 0.6, ease: "power2.out" }, 0.3);
 }
 
 /** Wake: an ear twitch, eyes open, the body rises, a stretch. */

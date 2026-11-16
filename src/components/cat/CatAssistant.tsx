@@ -679,7 +679,10 @@ export function CatAssistant({
             {/* The disc is its own layer, so it can grow in while the cat glides down
                 from the hero (and fade on the way back) instead of popping in. */}
             <span data-cat-disc aria-hidden="true" className="absolute inset-0 rounded-full border border-ink/14 bg-paper" />
-            <CatFigure className={`${catSize} relative overflow-visible`} />
+            {/* Asleep: six slow breaths on the compositor (CSS, globals.css). */}
+            <span data-cat-breath data-sleep={state === "sleep" ? "" : undefined} className="relative block">
+              <CatFigure className={`${catSize} overflow-visible`} />
+            </span>
             {/* Zzz — only while asleep */}
             <span
               aria-hidden="true"

@@ -19,9 +19,40 @@ import { useId } from "react";
 export const TAIL_REST = "M79 117 C93 118 99 107 95 95 C92 87 92 80 97 75";
 export const TAIL_WAVE = "M79 117 C94 117 98 104 93 93 C89 85 91 77 94 71";
 
+/**
+ * The idle wave, pre-sampled: 48 shapes from rest to wave and back (24 each way,
+ * 2.2 s each way), eased with the same sine as the old tween. CatObserver steps
+ * through them on a timer (WAVE_STEP_MS). The tail tip moves a few pixels over
+ * 2.2 s, so each step is a fraction of a pixel and the motion reads as smooth, but
+ * the browser re-lays the SVG out ~11 times a second instead of 60: each `d` change
+ * invalidates the drawing's gradients and layout, measured as the largest idle cost
+ * on the page (2026-11-16). A discrete SMIL <animate> was tried first: Chrome still
+ * re-laid the SVG out on every frame while it ran, so it saved nothing.
+ */
+const WAVE_STEPS = 24;
+const nums = (d: string) => d.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+const TAIL_WAVE_VALUES = (() => {
+  const a = nums(TAIL_REST);
+  const b = nums(TAIL_WAVE);
+  const shape = (t: number) => {
+    let i = 0;
+    return TAIL_REST.replace(/-?\d+(?:\.\d+)?/g, () => {
+      const v = a[i]! + (b[i]! - a[i]!) * t;
+      i += 1;
+      return String(Math.round(v * 100) / 100);
+    });
+  };
+  const ease = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2; // sine.inOut
+  const there = Array.from({ length: WAVE_STEPS + 1 }, (_, k) => shape(ease(k / WAVE_STEPS)));
+  return [...there, ...there.slice(1, -1).reverse()];
+})();
+export const TAIL_WAVE_FRAMES: readonly string[] = TAIL_WAVE_VALUES;
+export const WAVE_STEP_MS = 4400 / TAIL_WAVE_VALUES.length;
+
 const FUR = "#1c1c1c";
 const FUR_FRONT = "#232323";
 
+/** The cat drawing (one for every state). Parts carry `data-cat` for the clips. */
 export function CatFigure({ className }: { className?: string }) {
   const id = useId().replace(/[^a-zA-Z0-9_-]/g, "");
   const rim = `url(#rim-${id})`;

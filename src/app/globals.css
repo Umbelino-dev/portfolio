@@ -252,6 +252,34 @@
   }
 }
 
+/*
+ * The cat's breathing, on the compositor (a transform on its own wrapper), so an
+ * idle or sleeping cat does not keep JavaScript running every frame. Hero: 2.5%,
+ * 1.6 s each way, forever while it is on screen (CatObserver sets data-on). Dock,
+ * asleep: 3%, 1.4 s, six breaths after it curls up (the old bounded GSAP tween).
+ */
+[data-cat-breath] {
+  transform-origin: 50% 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-cat-breath][data-on] {
+    animation: cat-breath-idle 1.6s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  }
+  [data-cat-breath][data-sleep] {
+    animation: cat-breath-sleep 1.4s cubic-bezier(0.37, 0, 0.63, 1) 0.9s 12 alternate;
+  }
+}
+@keyframes cat-breath-idle {
+  to {
+    transform: scaleY(1.025);
+  }
+}
+@keyframes cat-breath-sleep {
+  to {
+    transform: scaleY(1.03);
+  }
+}
+
 /* Sleeping cat: three z's rise 12px and fade over 1.8s, staggered 600ms (Cat Journey R03 · S4·B). */
 .cat-z {
   display: inline-block;
