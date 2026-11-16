@@ -169,6 +169,21 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
               <span className="max-sm:hidden">{t("allProjects")}</span>
             </Link>
           )}
+          {variant === "case" && (
+            // Every page has a way to talk: on a project page, the footer's contact block.
+            <a
+              href="#contact"
+              aria-label={t("contact")}
+              className={`flex min-h-11 min-w-11 items-center justify-center rounded-pill border text-[max(0.8125rem,12px)] font-medium whitespace-nowrap sm:px-4 ${glass} ${glassBlur} ${transition} ${focusRing}`}
+            >
+              {/* Small screens: an envelope, so the bar fits beside the name; the label from sm up. */}
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="size-[1.125rem] sm:hidden" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3.5" y="5.5" width="17" height="13" rx="2" />
+                <path d="M4 7l8 6 8-6" />
+              </svg>
+              <span className="max-sm:hidden">{t("contact")}</span>
+            </a>
+          )}
 
           {/* Desktop: the glass pill with every section */}
           <div className={`${variant === "case" ? "!hidden" : ""} hidden items-center gap-0.5 rounded-pill border p-[3px] md:flex ${glass} ${glassBlur} ${transition}`}>

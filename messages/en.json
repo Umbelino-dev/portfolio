@@ -23,7 +23,10 @@
     "experiment": "Experiment",
     "prototype": "Prototype",
     "in-development": "In development",
-    "live": "Live"
+    "validating": "Validating the problem",
+    "live": "Live, in use",
+    "evolving": "Live, still growing",
+    "in-use": "In use"
   },
   "hero": {
     "cta": "Get to know me",
@@ -41,6 +44,7 @@
     "label": "Profile",
     "lead": "Most of what I make starts as a question I can't let go of. This is where I show what I found.",
     "gallery": "Photos",
+    "galleryShow": "Show {caption}",
     "galleryTitle": "Where I learn outside work",
     "galleryMore": "Learn more",
     "galleryHint": "Click to learn more",
@@ -91,17 +95,17 @@
   },
   "projects": {
     "label": "Projects",
-    "note": "Six projects at different stages. Each one shows only what exists today. Some statuses may still change.",
+    "note": "Four projects, each at its real stage: from a problem still being validated to a product in daily use.",
     "visit": "opens the site in a new tab",
     "listLabel": "Projects",
-    "openCase": "Read the case study",
+    "openCase": "View the project",
     "pending": "image coming soon",
     "indexLabel": "Pick a project"
   },
   "approach": {
     "label": "Approach",
     "title": "How a question becomes a thing.",
-    "hint": "Hover or click each step to see the techniques.",
+    "hint": "Hover or click each step. Each project shows up at the stage it is at today.",
     "stepsLabel": "The five steps",
     "stepOf": "Step {n} of {total}",
     "next": "Next step",
@@ -121,11 +125,12 @@
             "name": "Reading logs and real data",
             "text": "Digging into database records and recurring tickets (Softdesk) before drawing conclusions."
           }
-        ]
+        ],
+        "phase": "Problem discovery"
       },
       {
         "title": "Understand",
-        "text": "Find the real question under the request.",
+        "text": "Find the real question under the request, and prove it matters.",
         "techniques": [
           {
             "name": "5 Whys and root cause",
@@ -134,8 +139,14 @@
           {
             "name": "Process mapping (as-is)",
             "text": "Drawing every current step of the process to find where it stalls or causes rework."
+          },
+          {
+            "name": "Conversations about the pain",
+            "text": "Asking people who live the problem whether the pain exists, how much it weighs and how they handle it, before any solution."
           }
-        ]
+        ],
+        "phase": "Problem validation",
+        "gate": "I only move to a solution once the problem holds up."
       },
       {
         "title": "Experiment",
@@ -149,7 +160,9 @@
             "name": "Hypothesis testing with users",
             "text": "Putting the prototype in the hands of the people who run the process and measuring whether it really saves time."
           }
-        ]
+        ],
+        "phase": "Solution validation",
+        "gate": "Only what survived the test goes on to be built."
       },
       {
         "title": "Build",
@@ -163,7 +176,8 @@
             "name": "Incremental delivery",
             "text": "Shipping in parts to deliver value quickly without stopping the operation."
           }
-        ]
+        ],
+        "phase": "Development"
       },
       {
         "title": "Improve",
@@ -177,12 +191,17 @@
             "name": "Cyclical iteration",
             "text": "Feeding what was learned back into the Observe step."
           }
-        ]
+        ],
+        "phase": "Iterative development",
+        "gate": "What shows up here goes back to the Observe step."
       }
-    ]
+    ],
+    "projects": "Projects at this stage",
+    "none": "No project at this stage right now.",
+    "phase": "Phase"
   },
   "caseStudy": {
-    "label": "Case study",
+    "label": "Project",
     "status": "Status",
     "year": "Year",
     "role": "Role",
@@ -196,7 +215,12 @@
     "pending": "coming soon",
     "newTab": "opens in a new tab",
     "links": "Links",
-    "progress": "Reading progress"
+    "progress": "Reading progress",
+    "about": "About the project",
+    "process": "Process and development",
+    "access": "Access the project",
+    "stage": "Current stage",
+    "stageOf": "{step}, step {n} of {total}"
   },
   "assistant": {
     "ui": {
@@ -313,7 +337,7 @@
     "label": "Contact",
     "open": "Open to collaborations, roles & good questions",
     "lead": "Got a question worth building? Write to me.",
-    "cta": "Write to Iury",
+    "cta": "Write to me",
     "pending": "Contact channels arrive here soon. Meanwhile, the cat answers the basics.",
     "askCat": "Ask the cat",
     "links": "Contact links",
@@ -322,11 +346,16 @@
       "linkedin": "LinkedIn",
       "github": "GitHub",
       "instagram": "Instagram"
-    }
+    },
+    "catTitle": "Ask the cat",
+    "catText": "An assistant that answers about my work, my projects and how to reach me. It is scripted and only uses verified facts.",
+    "catCta": "Start a conversation"
   },
   "footer": {
     "rights": "© 2026 Iury Umbelino",
-    "top": "Back to top"
+    "top": "Back to top",
+    "navLabel": "Navigation",
+    "approach": "Approach"
   },
   "cursor": {
     "project": "view project",

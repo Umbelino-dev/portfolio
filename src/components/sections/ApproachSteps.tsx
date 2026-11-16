@@ -1,11 +1,24 @@
 "use client";
 
 import { useId, useRef, useState, type KeyboardEvent } from "react";
+import { Link } from "@/i18n/navigation";
 
 export interface ApproachStep {
   title: string;
   text: string;
+  /** The product-discovery name of the step ("Validação do problema"). */
+  phase: string;
+  /** What must hold before moving on, when the step has a gate. */
+  gate?: string;
   techniques: { name: string; text: string }[];
+}
+
+/** A project placed on the step it is at today (src/content/projects.ts → stage). */
+export interface StageProject {
+  stage: number;
+  name: string;
+  href: string;
+  note: string;
 }
 
 export interface ApproachLabels {
@@ -15,6 +28,8 @@ export interface ApproachLabels {
   restart: string; // "Voltar a Observar"
   loop: string; // "O último passo alimenta o primeiro"
   techniques: string; // "Técnicas"
+  projects: string; // "Projetos nesta etapa"
+  none: string; // "Nenhum projeto nesta etapa agora."
 }
 
 /**
@@ -29,7 +44,7 @@ export interface ApproachLabels {
  * Motion: transform / opacity only; reduced motion makes every change instant
  * (global reset).
  */
-export function ApproachSteps({ steps, labels }: { steps: ApproachStep[]; labels: ApproachLabels }) {
+export function ApproachSteps({ steps, labels, projects }: { steps: ApproachStep[]; labels: ApproachLabels; projects: StageProject[] }) {
   const uid = useId();
   const [active, setActive] = useState(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -112,6 +127,7 @@ export function ApproachSteps({ steps, labels }: { steps: ApproachStep[]; labels
                 />
                 <span className="text-note text-gray-600">{i + 1}</span>
                 <span className="font-display text-[clamp(1.125rem,0.9rem+0.9vw,1.75rem)] leading-tight font-bold tracking-[-0.02em] max-lg:sr-only">{s.title}</span>
+                <span className="text-note text-ink max-lg:hidden">{s.phase}</span>
                 <span className="max-w-[22ch] text-caption leading-snug text-pretty text-gray-600 max-lg:hidden">{s.text}</span>
               </button>
             );
@@ -130,7 +146,9 @@ export function ApproachSteps({ steps, labels }: { steps: ApproachStep[]; labels
           <div key={`h-${active}`} className="flex flex-col gap-3 motion-safe:animate-[fade-rise_320ms_cubic-bezier(0.2,0.7,0.1,1)]">
             <p className="text-note text-gray-600">{labels.stepOf.replace("{n}", String(active + 1)).replace("{total}", String(n))}</p>
             <h4 className="font-display text-headline-m leading-[1.05] font-bold tracking-[-0.02em]">{step.title}</h4>
+            <p className="text-note text-ink">{step.phase}</p>
             <p className="max-w-[32ch] text-lead leading-snug text-pretty">{step.text}</p>
+            {step.gate && <p className="max-w-[36ch] text-ui leading-normal text-pretty text-gray-600">{step.gate}</p>}
             <button
               type="button"
               onClick={() => select(active + 1)}
@@ -157,6 +175,27 @@ export function ApproachSteps({ steps, labels }: { steps: ApproachStep[]; labels
                 </li>
               ))}
             </ul>
+            {/* The projects that are at this step today: the approach, as it really runs. */}
+            <div className="mt-6 flex flex-col gap-3">
+              <h5 className="text-note text-gray-600">{labels.projects}</h5>
+              {projects.filter((pr) => pr.stage === active).length ? (
+                <ul className="flex flex-col gap-3">
+                  {projects.filter((pr) => pr.stage === active).map((pr) => (
+                    <li key={pr.href} className="flex flex-col gap-0.5">
+                      <Link
+                        href={pr.href}
+                        className="flex min-h-11 w-fit items-center gap-2 font-display text-title font-bold tracking-[-0.01em] underline decoration-1 underline-offset-[0.25em] transition-colors duration-(--duration-fast) hover:text-gray-600"
+                      >
+                        {pr.name} <span aria-hidden="true">→</span>
+                      </Link>
+                      <span className="text-ui text-gray-600">{pr.note}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-ui text-gray-600">{labels.none}</p>
+              )}
+            </div>
           </div>
         </div>
       )}

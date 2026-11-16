@@ -147,7 +147,7 @@ export async function About() {
       <div className="flex flex-col justify-center pt-(--section-space) lg:min-h-svh lg:snap-start lg:pt-[clamp(5.5rem,11vh,8rem)] lg:pb-[clamp(1.5rem,4vh,3rem)]">
         {/* w-full: page-grid centres itself with auto margins, which would shrink it in this flex column. */}
         <div className="page-grid w-full">
-          <h3 className={`${sectionTitleClass} col-span-full`}>{ta("galleryTitle")}</h3>
+          <h3 className={`${sectionTitleClass} col-span-full text-center`}>{ta("galleryTitle")}</h3>
         </div>
         <PhotoDeck
           photos={gallery.map((p) => ({
@@ -168,6 +168,7 @@ export async function About() {
           }))}
           labels={{
             deck: ta("gallery"),
+            show: ta.raw("galleryShow") as string,
             more: ta("galleryMore"),
             hint: ta("galleryHint"),
             pending: ta("galleryPending"),

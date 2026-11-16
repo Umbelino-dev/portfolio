@@ -23,7 +23,10 @@
     "experiment": "Experimento",
     "prototype": "Protótipo",
     "in-development": "Em desenvolvimento",
-    "live": "No ar"
+    "validating": "Validando o problema",
+    "live": "No ar, em uso",
+    "evolving": "No ar, em evolução",
+    "in-use": "Em uso"
   },
   "hero": {
     "cta": "Me conheça",
@@ -41,6 +44,7 @@
     "label": "Perfil",
     "lead": "Quase tudo que faço começa com uma pergunta que não me larga. Aqui eu mostro o que encontrei.",
     "gallery": "Fotos",
+    "galleryShow": "Mostrar {caption}",
     "galleryTitle": "Onde aprendo fora do trabalho",
     "galleryMore": "Saber mais",
     "galleryHint": "Clique para saber mais",
@@ -91,17 +95,17 @@
   },
   "projects": {
     "label": "Projetos",
-    "note": "Seis projetos em fases diferentes. Cada um mostra só o que existe hoje. Alguns status ainda podem mudar.",
+    "note": "Quatro projetos, cada um na sua etapa real: do problema ainda em validação ao produto em uso diário.",
     "visit": "abre o site em nova aba",
     "listLabel": "Projetos",
-    "openCase": "Ler o estudo de caso",
+    "openCase": "Ver o projeto",
     "pending": "imagem em breve",
     "indexLabel": "Escolha um projeto"
   },
   "approach": {
     "label": "Abordagem",
     "title": "Como uma pergunta vira uma coisa.",
-    "hint": "Passe o mouse ou clique em cada passo para ver as técnicas.",
+    "hint": "Passe o mouse ou clique em cada passo. Cada projeto aparece na etapa em que está hoje.",
     "stepsLabel": "Os cinco passos",
     "stepOf": "Passo {n} de {total}",
     "next": "Próximo passo",
@@ -121,11 +125,12 @@
             "name": "Análise de logs e dados reais",
             "text": "Investigar registros no banco e chamados recorrentes (Softdesk) antes de tirar conclusões."
           }
-        ]
+        ],
+        "phase": "Descoberta do problema"
       },
       {
         "title": "Entender",
-        "text": "Achar a pergunta real por baixo do pedido.",
+        "text": "Achar a pergunta real por baixo do pedido, e provar que ela importa.",
         "techniques": [
           {
             "name": "5 Porquês e causa raiz",
@@ -134,8 +139,14 @@
           {
             "name": "Mapeamento de fluxo (As-Is)",
             "text": "Desenhar cada etapa atual do processo para encontrar onde ele trava ou gera retrabalho."
+          },
+          {
+            "name": "Conversas sobre a dor",
+            "text": "Perguntar a quem vive o problema se a dor existe, quanto ela pesa e como lida com ela hoje, antes de propor qualquer solução."
           }
-        ]
+        ],
+        "phase": "Validação do problema",
+        "gate": "Só sigo para a solução quando o problema se confirma."
       },
       {
         "title": "Experimentar",
@@ -149,7 +160,9 @@
             "name": "Teste de hipótese com usuários",
             "text": "Colocar o protótipo na mão de quem opera o processo e medir se realmente economiza tempo."
           }
-        ]
+        ],
+        "phase": "Validação da solução",
+        "gate": "Só vai para a construção o que sobreviveu ao teste."
       },
       {
         "title": "Construir",
@@ -163,7 +176,8 @@
             "name": "Entregas incrementais",
             "text": "Colocar em produção por partes para gerar valor rápido sem parar a operação."
           }
-        ]
+        ],
+        "phase": "Desenvolvimento"
       },
       {
         "title": "Melhorar",
@@ -177,12 +191,17 @@
             "name": "Iteração cíclica",
             "text": "Usar os novos aprendizados para alimentar novamente a etapa de Observar."
           }
-        ]
+        ],
+        "phase": "Desenvolvimento iterativo",
+        "gate": "O que aparece aqui volta para a etapa de Observar."
       }
-    ]
+    ],
+    "projects": "Projetos nesta etapa",
+    "none": "Nenhum projeto nesta etapa agora.",
+    "phase": "Fase"
   },
   "caseStudy": {
-    "label": "Estudo de caso",
+    "label": "Projeto",
     "status": "Status",
     "year": "Ano",
     "role": "Papel",
@@ -196,7 +215,12 @@
     "pending": "em breve",
     "newTab": "abre em nova aba",
     "links": "Links",
-    "progress": "Progresso de leitura"
+    "progress": "Progresso de leitura",
+    "about": "Sobre o projeto",
+    "process": "Processo e desenvolvimento",
+    "access": "Acesso ao projeto",
+    "stage": "Etapa atual",
+    "stageOf": "{step}, etapa {n} de {total}"
   },
   "assistant": {
     "ui": {
@@ -318,7 +342,7 @@
     "label": "Contato",
     "open": "Aberto a colaborações, vagas e boas perguntas",
     "lead": "Tem uma pergunta que vale construir? Me escreve.",
-    "cta": "Escreva para o Iury",
+    "cta": "Escrever para mim",
     "pending": "Os canais de contato entram aqui em breve. Enquanto isso, o gato responde o básico.",
     "askCat": "Pergunte ao gato",
     "links": "Links de contato",
@@ -327,11 +351,16 @@
       "linkedin": "LinkedIn",
       "github": "GitHub",
       "instagram": "Instagram"
-    }
+    },
+    "catTitle": "Pergunte ao gato",
+    "catText": "Um assistente que responde sobre meu trabalho, meus projetos e como falar comigo. É roteirizado e usa só fatos verificados.",
+    "catCta": "Começar a conversa"
   },
   "footer": {
     "rights": "© 2026 Iury Umbelino",
-    "top": "Voltar ao topo"
+    "top": "Voltar ao topo",
+    "navLabel": "Navegação",
+    "approach": "Abordagem"
   },
   "cursor": {
     "project": "ver projeto",

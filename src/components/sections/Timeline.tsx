@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { DUR, gsap, MQ, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
 export interface TimelineStep {
@@ -53,8 +53,12 @@ const UNDER = 22;
  */
 export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: TimelineLabels }) {
   const root = useRef<HTMLDivElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
+  // `open` is the step asked for; `shown` is the step on screen. They differ only
+  // while a panel animates out, so closing and switching never cut abruptly.
   const [open, setOpen] = useState<number | null>(null);
+  const [shown, setShown] = useState<number | null>(null);
+  /** How the next `shown` arrives: revealed (opening) or crossfaded (switching on desktop). */
+  const arrival = useRef<"reveal" | "swap">("reveal");
   const [hot, setHot] = useState<number | null>(null);
   const uid = useId();
 
@@ -197,27 +201,96 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
     { scope: root },
   );
 
-  // Account reveal whenever the open step changes (clip-path only).
-  useEffect(() => {
-    const el = panel.current;
-    if (open === null || !el) return;
-    if (!window.matchMedia(MQ.reduced).matches) {
-      gsap.fromTo(el, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: DUR.slow });
+  /** The account panels currently on screen (desktop or mobile layout). */
+  const panels = () =>
+    Array.from(root.current?.querySelectorAll<HTMLElement>("[data-tl-panel]") ?? []).filter((el) => el.offsetParent !== null);
+
+  // Leaving: close (the panel folds up) or switch (desktop: the content fades and
+  // the new one rises in the same panel; mobile: the panel moves to another role,
+  // so the old one folds up first). Driven by the event, not an effect. Only
+  // clip-path, opacity and transform.
+  const leaving = useRef<gsap.core.Tween | null>(null);
+  const go = (next: number | null) => {
+    setOpen(next);
+    leaving.current?.kill();
+    const els = panels();
+    if (shown === null || !els.length || window.matchMedia(MQ.reduced).matches) {
+      arrival.current = "reveal";
+      setShown(next);
+      return;
     }
-    el.scrollIntoView({ block: "nearest", behavior: "auto" });
-  }, [open]);
+    if (next === shown) {
+      // Asked back mid-exit: restore the panel as it was.
+      gsap.to(els, { clipPath: "inset(0 0 0% 0)", opacity: 1, duration: 0.2 });
+      gsap.to(els.map((el) => el.querySelector("[data-tl-content]")), { opacity: 1, y: 0, duration: 0.2 });
+      return;
+    }
+    const inPlace = next !== null && els.every((el) => el.dataset.tlPanel === "h");
+    leaving.current = inPlace
+      ? gsap.to(
+          els.map((el) => el.querySelector("[data-tl-content]")),
+          {
+            opacity: 0,
+            y: -10,
+            duration: 0.18,
+            ease: "power1.in",
+            onComplete: () => {
+              arrival.current = "swap";
+              setShown(next);
+            },
+          },
+        )
+      : gsap.to(els, {
+          clipPath: "inset(0 0 100% 0)",
+          opacity: 0,
+          duration: DUR.base,
+          ease: "power2.in",
+          onComplete: () => {
+            arrival.current = "reveal";
+            setShown(next);
+          },
+        });
+  };
+  // The latest `go` for listeners registered once (Esc), so they never act on a stale `shown`.
+  const goRef = useRef(go);
+  useEffect(() => {
+    goRef.current = go;
+  });
+  useEffect(() => {
+    return () => {
+      leaving.current?.kill();
+    };
+  }, []);
+
+  // Arriving: reveal a new panel, or bring the swapped content in.
+  useLayoutEffect(() => {
+    if (shown === null) return;
+    const els = panels();
+    if (!els.length) return;
+    gsap.set(els, { clearProps: "opacity", clipPath: "inset(0 0 0% 0)" });
+    if (!window.matchMedia(MQ.reduced).matches) {
+      const content = els.map((el) => el.querySelector("[data-tl-content]"));
+      if (arrival.current === "swap") {
+        gsap.fromTo(content, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.42, ease: "power3.out" });
+      } else {
+        gsap.fromTo(els, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: DUR.slow, ease: "power3.out" });
+        gsap.fromTo(content, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: DUR.slow, ease: "power3.out", delay: 0.08 });
+      }
+    }
+    els[0]?.scrollIntoView({ block: "nearest", behavior: "auto" });
+  }, [shown]);
 
   // Esc closes.
   useEffect(() => {
     if (open === null) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(null);
+      if (e.key === "Escape") goRef.current(null);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const toggle = (i: number) => setOpen((o) => (o === i ? null : i));
+  const toggle = (i: number) => go(open === i ? null : i);
   const panelId = (i: number) => `${uid}-panel-${i}`;
   const quiet = (i: number) => hot !== null && hot !== i;
   /** "desde abril de 2026" → "Desde abril de 2026" when it opens a sentence. */
@@ -296,7 +369,7 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
     </button>
   );
 
-  const opened = open !== null ? steps[open] : undefined;
+  const opened = shown !== null ? steps[shown] : undefined;
 
   return (
     <div ref={root}>
@@ -319,14 +392,15 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
           ))}
         </ol>
 
-        {opened && open !== null && (
+        {opened && shown !== null && (
           <div
-            ref={panel}
-            id={panelId(open)}
+            data-tl-panel="h"
+            id={panelId(shown)}
             role="region"
             aria-label={opened.role}
-            className="relative mt-[clamp(1.5rem,3vw,3rem)] grid scroll-mb-8 grid-cols-12 gap-x-(--page-gutter) gap-y-8"
+            className="relative mt-[clamp(1.5rem,3vw,3rem)] scroll-mb-8"
           >
+            <div data-tl-content className="grid grid-cols-12 gap-x-(--page-gutter) gap-y-8">
             <div className="col-span-4 flex flex-col gap-4">
               <p className="font-display text-headline-l leading-[0.98] font-bold tracking-[-0.03em] text-balance">{opened.role}</p>
               <p className="text-note text-[1.125rem] text-gray-600">
@@ -334,13 +408,14 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
               </p>
               <button
                 type="button"
-                onClick={() => setOpen(null)}
+                onClick={() => go(null)}
                 className="mt-2 flex min-h-11 items-center self-start font-display text-[1rem] font-bold underline decoration-1 underline-offset-[0.3em] transition-colors duration-(--duration-fast) hover:text-gray-600 focus-visible:outline-ink"
               >
                 {labels.close}
               </button>
             </div>
             <div className="col-span-7 col-start-6">{account(opened)}</div>
+            </div>
           </div>
         )}
       </div>
@@ -352,12 +427,14 @@ export function Timeline({ steps, labels }: { steps: TimelineStep[]; labels: Tim
           {steps.map((s, i) => (
             <li key={s.period} data-step className="tl-step flex flex-col gap-5">
               {head(s, i, true)}
-              {open === i && (
-                <div id={`${panelId(i)}-m`} role="region" aria-label={s.role} className="flex flex-col gap-4">
+              {shown === i && (
+                <div id={`${panelId(i)}-m`} data-tl-panel="v" role="region" aria-label={s.role} className="flex flex-col gap-4">
+                  <div data-tl-content className="flex flex-col gap-4">
                   <p className="text-note text-gray-600">
                     {s.org}, {s.area}. {cap(s.duration)}.
                   </p>
                   {account(s)}
+                  </div>
                 </div>
               )}
             </li>

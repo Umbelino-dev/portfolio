@@ -7,6 +7,7 @@ import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { Projects } from "@/components/sections/Projects";
 import { Contact } from "@/components/sections/Contact";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CatAssistant } from "@/components/cat/CatAssistant";
 import { assistantProps } from "@/components/cat/assistantProps";
 import { PersonJsonLd } from "@/components/layout/PersonJsonLd";
@@ -26,6 +27,7 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
         <About />
         <Projects />
         <Contact />
+        <SiteFooter topHref="#hero" withContact={false} />
       </main>
       <CatAssistant context="home" projectsHref={`/${locale}#projects`} {...assistant} />
       <PersonJsonLd locale={locale} />

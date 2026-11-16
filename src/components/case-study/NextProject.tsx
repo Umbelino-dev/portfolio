@@ -1,9 +1,8 @@
 import { Link } from "@/i18n/navigation";
 
 /**
- * The closing block (Case Study R01, Mobile · M7): dark, and the whole block is one
- * link — to the next confirmed case study, or back to the project index when there
- * is none. 96px bottom padding so the last line clears the cat and the home indicator.
+ * The closing block: dark, the whole block one link to the next project (or back
+ * to the index). Title at the home's headline size, like every other heading.
  */
 export function NextProject({
   href,
@@ -20,14 +19,17 @@ export function NextProject({
     <Link
       href={href}
       data-surface="dark"
-      className="mt-[clamp(7rem,11vw,12.5rem)] flex flex-col gap-5 bg-ink px-(--page-margin) pt-[clamp(2.5rem,4vw,4rem)] pb-24 text-paper transition-colors duration-(--duration-fast) hover:bg-[#161616] focus-visible:outline-signal max-md:pr-12 md:pb-[clamp(4rem,6vw,6.5rem)]"
+      className="group/next mt-(--section-space) block bg-ink pt-[clamp(3rem,6vw,5rem)] pb-[clamp(2.5rem,5vw,4rem)] text-paper transition-colors duration-(--duration-fast) hover:bg-[#161616] focus-visible:outline-signal"
     >
-      <span className="text-note text-[1.375rem] text-paper-300">{eyebrow}</span>
-      <span
-        lang={titleLang}
-        className="font-display text-[clamp(2.75rem,1.2rem+7vw,9.375rem)] leading-[0.88] font-bold tracking-[-0.045em] text-balance hyphens-auto [overflow-wrap:anywhere]"
-      >
-        {title} <span aria-hidden="true">→</span>
+      {/* The site grid, so the title lines up with the page's content above. */}
+      <span className="page-grid w-full gap-y-3 max-md:pr-12">
+        <span className="col-span-full text-note text-paper-300">{eyebrow}</span>
+        <span lang={titleLang} className="col-span-full font-display text-headline-l font-black tracking-[-0.03em] text-balance [overflow-wrap:anywhere]">
+          {title}{" "}
+          <span aria-hidden="true" className="inline-block transition-transform duration-(--duration-base) ease-(--ease-out-soft) group-hover/next:translate-x-2">
+            →
+          </span>
+        </span>
       </span>
     </Link>
   );

@@ -12,7 +12,10 @@ import { NextProject } from "@/components/case-study/NextProject";
 import { ReadingProgress } from "@/components/case-study/ReadingProgress";
 import { CatAssistant } from "@/components/cat/CatAssistant";
 import { assistantProps } from "@/components/cat/assistantProps";
-import { Footer } from "@/components/layout/Footer";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SectionTitle } from "@/components/layout/SectionTitle";
+import { StageStrip } from "@/components/case-study/StageStrip";
+import { button } from "@/components/layout/button";
 
 // Only confirmed case studies exist as pages; everything else is a 404 at build time.
 export const dynamicParams = false;
@@ -60,9 +63,19 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
   const assistant = await assistantProps("case", slug);
   const cs = project.caseStudy;
   const chapters = cs.chapters.filter(hasContent);
+  const about = chapters.filter((c) => c.part === "about");
+  const process = chapters.filter((c) => c.part === "process");
   const cases = getCaseStudies();
   const next = cases[(cases.findIndex((p) => p.slug === slug) + 1) % cases.length];
   const hasNext = next && next.slug !== slug;
+  // The part titles: the home's section-title voice, one system for every project.
+  const part = (id: string, title: string) => (
+    <div className="page-grid w-full">
+      <SectionTitle id={id} className="col-span-full">
+        {title}
+      </SectionTitle>
+    </div>
+  );
 
   return (
     <>
@@ -70,50 +83,62 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
       <Nav variant="case" />
       <main id="main" data-surface="light" className="surface-light">
         <article>
+          {/* 1 · Apresentação */}
           <CaseHero project={project} caseStudy={cs} locale={locale} />
-
           {cs.cover && (
-            <figure className="flex flex-col gap-3 md:px-(--page-margin)">
-              <div className="md:max-h-[86vh] md:overflow-hidden">
-                <MediaFrame
-                  slot={cs.cover}
-                  locale={locale}
-                  priority
-                  pending={t("pending")}
-                />
+            <figure className="page-grid w-full gap-y-3">
+              <div className="col-span-full">
+                <MediaFrame slot={cs.cover} locale={locale} priority pending={t("pending")} sizes="(min-width: 1440px) 1328px, 92vw" />
               </div>
-              <figcaption className="px-(--page-margin) text-caption text-gray-600 max-md:pr-12 md:px-0">
-                {cs.cover.caption[locale]}
-              </figcaption>
+              <figcaption className="col-span-full text-caption text-gray-600 max-md:pr-12">{cs.cover.caption[locale]}</figcaption>
             </figure>
           )}
 
-          <div className="flex flex-col gap-[clamp(7rem,11vw,12.5rem)] pt-[clamp(6rem,9vw,10rem)]">
-            {chapters.map((c) => (
-              <Chapter key={c.id} chapter={c} locale={locale} placeholder={t("pending")} />
-            ))}
+          {/* 2 · Sobre o projeto */}
+          {about.length > 0 && (
+            <section aria-labelledby="part-about" className="flex flex-col gap-[clamp(2.5rem,5vw,4rem)] pt-(--section-space)">
+              {part("part-about", t("about"))}
+              <div className="flex flex-col gap-[clamp(3.5rem,7vw,6rem)]">
+                {about.map((c) => (
+                  <Chapter key={c.id} chapter={c} locale={locale} placeholder={t("pending")} />
+                ))}
+              </div>
+            </section>
+          )}
 
-            {project.links && (
-              <section aria-label={t("links")} className="px-(--page-margin) max-md:pr-12 md:grid md:grid-cols-3 md:gap-x-[clamp(1.5rem,4vw,5rem)]">
-                <ul className="flex flex-col md:col-span-2 md:col-start-2">
-                  {project.links.map((l) => (
-                    <li key={l.href}>
-                      <a
-                        href={l.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex min-h-14 items-center gap-3 py-2 font-display text-headline-m font-bold tracking-[-0.02em] transition-colors duration-(--duration-fast) hover:text-gray-600"
-                      >
-                        {l.label[locale]}
-                        <span aria-hidden="true">↗</span>
-                        <span className="sr-only"> ({t("newTab")})</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-          </div>
+          {/* 3 · Processo e desenvolvimento: where it stands, then how it was made. */}
+          <section aria-labelledby="part-process" className="flex flex-col gap-[clamp(2.5rem,5vw,4rem)] pt-(--section-space)">
+            {part("part-process", t("process"))}
+            <div className="page-grid w-full max-md:pr-12">
+              <div className="col-span-4 md:col-span-12 lg:col-span-8 lg:col-start-5">
+                <StageStrip project={project} locale={locale} />
+              </div>
+            </div>
+            <div className="flex flex-col gap-[clamp(3.5rem,7vw,6rem)]">
+              {process.map((c) => (
+                <Chapter key={c.id} chapter={c} locale={locale} placeholder={t("pending")} />
+              ))}
+            </div>
+          </section>
+
+          {/* 4 · Acesso ao projeto: a real link, or one honest line why there is none. */}
+          <section aria-labelledby="part-access" className="flex flex-col gap-[clamp(1.5rem,3vw,2.5rem)] pt-(--section-space)">
+            {part("part-access", t("access"))}
+            <div className="page-grid w-full max-md:pr-12">
+              <div className="col-span-4 flex flex-wrap gap-3 md:col-span-12 lg:col-span-8 lg:col-start-5">
+                {project.links?.length ? (
+                  project.links.map((l) => (
+                    <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" className={button.ink}>
+                      {l.label[locale]} <span aria-hidden="true">↗</span>
+                      <span className="sr-only"> ({t("newTab")})</span>
+                    </a>
+                  ))
+                ) : (
+                  <p className="max-w-[52ch] text-lead leading-snug text-pretty text-[#3f3d39]">{cs.access?.[locale]}</p>
+                )}
+              </div>
+            </div>
+          </section>
         </article>
 
         {hasNext ? (
@@ -126,9 +151,7 @@ export default async function CaseStudyPage({ params }: PageProps<"/[locale]/pro
         ) : (
           <NextProject href="/#projects" eyebrow={t("index")} title={t("allProjects")} />
         )}
-        <div data-surface="dark" className="bg-ink px-(--page-margin) pb-8 text-paper">
-          <Footer topHref="#main" />
-        </div>
+        <SiteFooter />
       </main>
       <CatAssistant context="case" projectsHref={`/${locale}#projects`} {...assistant} />
     </>
