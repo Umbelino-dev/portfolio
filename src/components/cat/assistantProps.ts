@@ -43,6 +43,8 @@ export async function assistantProps(kind: "home" | "case", slug?: string) {
     cat: ui.cat ?? "",
     log: ui.log ?? "",
     privacy: ui.privacy ?? "",
+    rateLimited: ui.rateLimited ?? "",
+    busy: ui.busy ?? "",
     go: goLabels,
   };
   return { script, ui: assistantUI };

@@ -11,9 +11,14 @@ Estas informações foram autorizadas pelo próprio Iury para o público conhece
 - Tem uma namorada, a quem ama muito.
 - Pretende se casar em 2027 (é um plano dele para o ano que vem, não uma data marcada).
 
-## O Tisco
-- O Tisco é um gato de verdade e mora com o Iury. O Iury o encontrou em um supermercado e levou para casa.
-- O gato do site é inspirado nele. O Tisco do site é o assistente que responde as perguntas sobre o Iury.
+## Família
+- Tem uma irmã mais nova.
+
+## Os gatos dele
+- O Iury ama os gatos dele.
+- O Tisco é o gato de agora. O Iury o encontrou em um supermercado e levou para casa. O Tisco é muito carente e um amor.
+- Em 2019 o Iury teve outro gato, o Pühakud. O nome vem do estoniano e significa "santos", como o sobrenome do Iury. Ele era meio rabugento, mas um amor. O Pühakud sumiu este ano (2026).
+- O gato do site foi pensado no Tisco e leva o nome dele. Mas o Tisco de verdade é cinza, e o do site é preto.
 
 ## Hobbies e o que gosta de fazer
 - Assistir filmes.
@@ -33,7 +38,7 @@ Estas informações foram autorizadas pelo próprio Iury para o público conhece
 - [PREENCHER: há quanto tempo participa e qual o papel dele no grupo, se quiser dizer]
 
 ## O que o Tisco não sabe
-- O dia exato do aniversário, o nome da namorada, o endereço, o telefone, filmes ou esportes favoritos além do que está acima, receitas favoritas, planos de casamento além de "2027". Se perguntarem, dizer que não tem essa informação, sem inventar.
+- O dia exato do aniversário, o nome da namorada, o nome e a idade da irmã, o que aconteceu com o Pühakud além de ele ter sumido, o endereço, o telefone, filmes ou esportes favoritos além do que está acima, receitas favoritas, planos de casamento além de "2027". Se perguntarem, dizer que não tem essa informação, sem inventar.
 
 ## Valores e jeito de ser (apenas o que o Iury disse)
 - Valoriza aprender construindo, fazer coisas úteis e evoluir sem exagerar o que sabe.

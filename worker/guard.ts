@@ -19,11 +19,17 @@ const LEAK_MARKERS = ["<conteudo>", "</conteudo>", "REGRAS", "SYSTEM_PROMPT", "s
 
 const clean = (t: string) => t.toLowerCase().replace(/[.,;:!?)\]"']+$/g, "");
 
-export type GuardResult = { ok: true } | { ok: false; reason: "too_long" | "leak" | "unknown_contact" };
+export type GuardResult = { ok: true } | { ok: false; reason: "too_long" | "leak" | "unknown_contact" | "invented" };
+
+// Patterns that mark an invented family anecdote or a page that does not exist.
+const INVENTED =
+  /\b(la em casa|a gente) (sempre|costuma|brinca|fala|diz|adora|conta|ri)\b|secao (de|sobre) (vida pessoal|familia|hobbies|curiosidades|gatos)|\b(reservado|timido|introvertido)\b/;
 
 export function checkReply(reply: string, knowledge: string): GuardResult {
   if (reply.length > MAX_REPLY_CHARS) return { ok: false, reason: "too_long" };
   if (LEAK_MARKERS.some((m) => reply.includes(m))) return { ok: false, reason: "leak" };
+
+  if (INVENTED.test(reply.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""))) return { ok: false, reason: "invented" };
 
   const known = knowledge.toLowerCase();
   const emails = reply.match(EMAIL) ?? [];
@@ -65,4 +71,25 @@ const PERSONAL =
 
 export function isPersonalTopic(text: string): boolean {
   return PERSONAL.test(text.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""));
+}
+
+// A destination is offered only when the VISITOR's question is about that part of
+// the site (not merely when the reply touches it): "qual o nome dele?" must not
+// link to the Profile. Project pages need the project's name in the question or
+// the reply. Fewer links is the safe error.
+const strip = (t: string) => t.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+const TOPICS: Record<string, RegExp> = {
+  about:
+    /formacao|curso|faculdade|universidade|unesc|unopar|estuda|competenc|skill|habilidade|stack|tecnolog|linguagem|trajetoria|experienc|carreira|profission|giassi|educat|degree|stud(y|ies)|career|foto|evento|startup weekend|crio conecta|\bsql\b/,
+  projects: /projet|project|portfolio|produtos?\b|\bapps?\b|\bjogo|\bgames?\b|construiu|built|made/,
+  approach: /abordagem|metodo|metodologia|processo|approach|method|como (ele )?(trabalha|pensa|resolve)|how (does )?(he )?(work|think)|passos|steps/,
+  contact: /contato|contact|e-?mail|falar com|entrar em contato|reach|linkedin|github|instagram|contrat|hire|vaga|whatsapp|telefone|disponib|available/,
+};
+
+export function destinationFits(go: string, question: string, reply: string): boolean {
+  const q = strip(question);
+  const topic = TOPICS[go];
+  if (topic) return topic.test(q);
+  const name = go.replace(/-/g, " ");
+  return `${q} ${strip(reply)}`.includes(name) || `${q} ${strip(reply)}`.includes(go);
 }

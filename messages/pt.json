@@ -262,7 +262,9 @@
       "you": "Você",
       "cat": "Gato",
       "log": "Conversa com o gato",
-      "privacy": "Texto digitado é processado pelo Gemini (Google) e pode ser usado para melhorar os produtos deles. Não envie dados pessoais."
+      "privacy": "Texto digitado é processado pelo Gemini (Google) e pode ser usado para melhorar os produtos deles. Não envie dados pessoais.",
+      "rateLimited": "Você mandou muitas perguntas em pouco tempo. Espere cerca de um minuto e tente de novo, ou use as sugestões abaixo.",
+      "busy": "Estou com muita conversa agora e não consegui consultar o modelo. Use uma das sugestões ou tente de novo em alguns minutos."
     },
     "home": {
       "greeting": "Oi, eu sou o Tisco, o gato. Sei umas coisas sobre o Iury. O que você quer saber?",
