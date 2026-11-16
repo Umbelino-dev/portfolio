@@ -64,13 +64,21 @@
   --text-ui--line-height: 1.2;
   --text-caption: max(12px, 0.8125rem);
   --text-caption--line-height: 1.5;
-  --text-label: max(11px, 0.75rem);
+  --text-label: max(12px, 0.75rem); /* 12px floor: the PT/EN pill read 11px on phones (2026-11-16) */
   --text-label--line-height: 1.2;
   --text-label--letter-spacing: 0.1em;
 
   /* Layout ------------------------------------------------------------ */
   --container-page: 90rem; /* 1440px */
   --spacing-gutter: 1rem; /* 16 mobile → 24 desktop, see .page-grid */
+  /*
+   * Touch targets (2026-11-16): 11 (44px) and 12 (48px) on the spacing scale never
+   * drop below their pixel size on a coarse pointer, whatever the root scale, so
+   * the smaller "zoomed out" type on phones and tablets keeps thumb-sized controls.
+   * With a mouse they follow the scale as before (--tap-* in the base layer).
+   */
+  --spacing-11: var(--tap-11);
+  --spacing-12: var(--tap-12);
   --spacing-margin: 1.25rem; /* 20 mobile → 56 desktop */
 
   /* Radius: 0 for content. Pills only for floating controls. */
@@ -86,6 +94,8 @@
 
 @layer base {
   :root {
+    --tap-11: 2.75rem;
+    --tap-12: 3rem;
     --page-margin: 1.25rem;
     --page-gutter: 1rem;
     --section-space: 6rem;
@@ -95,6 +105,28 @@
       --page-margin: clamp(1.25rem, 3.5vw, 3.5rem);
       --page-gutter: 1.5rem;
       --section-space: 10rem;
+    }
+  }
+
+  /*
+   * Phones and tablets, zoomed out (Iury, 2026-11-16: "como se tivesse mais zoom
+   * out"): the same proportion idea as the desktop's 75%, gentler where the screen
+   * is held closer. Phones 87.5% (14px), tablets and small windows 81.25% (13px).
+   * Reading text keeps its floors (the max() in the type tokens) and touch targets
+   * keep 44/48px (--tap-*), so smaller never means harder to read or to tap.
+   */
+  html {
+    font-size: 87.5%;
+  }
+  @media (min-width: 48rem) {
+    html {
+      font-size: 81.25%;
+    }
+  }
+  @media (pointer: coarse) {
+    :root {
+      --tap-11: max(2.75rem, 44px);
+      --tap-12: max(3rem, 48px);
     }
   }
 

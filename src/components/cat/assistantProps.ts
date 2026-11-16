@@ -1,6 +1,7 @@
 import { getMessages } from "next-intl/server";
 import { getCaseStudies } from "@/content/projects";
 import type { AssistantScript, AssistantUI } from "./CatAssistant";
+import type { Quips } from "./quips";
 
 /**
  * Builds the assistant's scripted copy on the server (messages/*.json → assistant.*),
@@ -13,6 +14,7 @@ export async function assistantProps(kind: "home" | "case", slug?: string) {
       go: Record<string, string>;
       home: AssistantScript;
       cases: Record<string, AssistantScript>;
+      quips: Quips;
     };
   };
   const ui = assistant.ui;
@@ -46,6 +48,7 @@ export async function assistantProps(kind: "home" | "case", slug?: string) {
     rateLimited: ui.rateLimited ?? "",
     busy: ui.busy ?? "",
     go: goLabels,
+    quips: assistant.quips,
   };
   return { script, ui: assistantUI };
 }

@@ -210,6 +210,27 @@ export function greet(p: CatParts) {
     .to(p.gaze, { x: 0, y: 0, duration: 0.3 }, 1);
 }
 
+/** A little hop on the spot: crouch, spring up, land with a squash (quips). */
+export function hop(p: CatParts) {
+  return gsap
+    .timeline()
+    .to(p.frame, { scaleY: 0.9, scaleX: 1.06, duration: 0.1, ease: "power1.out" })
+    .to(p.frame, { y: -9, scaleY: 1.06, scaleX: 0.96, duration: 0.18, ease: "power2.out" })
+    .to(p.frame, { y: 0, scaleY: 0.94, scaleX: 1.04, duration: 0.16, ease: "power2.in" })
+    .to(p.frame, { scaleY: 1, scaleX: 1, duration: 0.4, ease: "elastic.out(1, 0.5)" })
+    .to(p.ears, { y: -3, duration: 0.12, yoyo: true, repeat: 1 }, 0.1);
+}
+
+/** A curious head tilt, ears up, then back (quips). */
+export function headTilt(p: CatParts) {
+  return gsap
+    .timeline()
+    .to(p.look, { rotation: 13, duration: 0.26, ease: "power2.out" }, 0)
+    .to(p.ears, { y: -3, duration: 0.2 }, 0)
+    .to(p.look, { rotation: 0, duration: 0.6, ease: "elastic.out(1, 0.5)" }, 0.95)
+    .to(p.ears, { y: 0, duration: 0.25 }, 0.95);
+}
+
 /** A tail flick, for idle moments (paired with blinks). */
 export function tailFlick(p: CatParts) {
   return gsap.timeline().to(p.tail, { rotation: -14, duration: 0.18, ease: "power1.out" }).to(p.tail, { rotation: 0, duration: 0.5, ease: "elastic.out(1, 0.4)" });

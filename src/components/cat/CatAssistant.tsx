@@ -5,6 +5,7 @@ import { gsap, MQ } from "@/lib/gsap";
 import { CatFigure } from "./CatFigure";
 import { catParts, greet, prime, settle, wake, type CatParts } from "./clips";
 import { CAT_OPEN, IDLE_MS, transition, type CatEvent, type CatState } from "./states";
+import { pick, QuipBubble, react, useBubble, type Quips } from "./quips";
 
 export interface AssistantChip {
   label: string;
@@ -38,6 +39,8 @@ export interface AssistantUI {
   busy: string;
   /** Link label per destination the cat may point to: a home section (about, projects, approach, contact) or a project slug. */
   go: Record<string, string>;
+  /** Tisco's one-liners (quips.tsx). */
+  quips?: Quips;
 }
 
 type Message = { from: "cat" | "you"; text: string; /** Where the cat points the visitor (validated by the Worker and against `ui.go`). */ go?: string };
@@ -101,6 +104,9 @@ export function CatAssistant({
   const panelTl = useRef<gsap.core.Timeline | null>(null);
   const titleId = useId();
   const open = state === "awaken";
+  const bubble = useBubble();
+  /** Speaks a pending section line, if any (set by the quips effect). */
+  const trySections = useRef<() => void>(() => {});
   const small = context === "case";
 
   const reduced = () => window.matchMedia(MQ.reduced).matches;
@@ -201,6 +207,107 @@ export function CatAssistant({
       window.clearTimeout(hintTimer);
     };
   }, [context]);
+
+  // ── Quips: Tisco's one-liners while docked (quips.tsx). Never while the panel
+  //    is open or he is gliding; at most one every 9 s and eight per visit.
+  useEffect(() => {
+    const q = ui.quips;
+    if (!q) return;
+    const docked = () => prev.current === "cling" || prev.current === "sleep" || prev.current === "waking";
+    /** A line with a small gesture when he is awake; asleep he only mumbles. */
+    const speak = (text: string, gesture = true) => {
+      if (!docked()) return false;
+      if (!bubble.say(text)) return false;
+      const p = gesture && prev.current === "cling" && !reduced() ? clipParts() : null;
+      if (p) react(p);
+      return true;
+    };
+    // Now and then: awake, a random line; asleep, something from a dream.
+    const tick = () => {
+      if (prev.current === "sleep") {
+        if (Math.random() < 0.6) speak(pick(q.sleep), false);
+      } else if (prev.current === "cling") speak(pick(q.random));
+    };
+    const first = window.setTimeout(tick, 22_000);
+    const every = window.setInterval(tick, 38_000);
+    // First view of each home section. A section seen while he is still gliding
+    // to the dock waits: `trySections` runs again once he lands (state effect below).
+    const seen = new Set<string>();
+    const inView = new Set<string>();
+    trySections.current = () => {
+      for (const id of inView) {
+        const line = q.sections[id];
+        if (!line || seen.has(id)) continue;
+        if (speak(line)) seen.add(id);
+        return;
+      }
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) inView.add(e.target.id);
+          else inView.delete(e.target.id);
+        }
+        trySections.current();
+      },
+      { threshold: 0.2 },
+    );
+    for (const id of Object.keys(q.sections)) {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    }
+    // The end of the page.
+    let saidBottom = false;
+    const footer = document.querySelector("footer");
+    const end = new IntersectionObserver(
+      ([e]) => {
+        if (!saidBottom && e?.isIntersecting && speak(q.bottom)) saidBottom = true;
+      },
+      { threshold: 0.6 },
+    );
+    if (footer) end.observe(footer);
+    // A very fast scroll by hand (over ~5000 px/s with a wheel or a finger), once.
+    // Anchor jumps glide just as fast, so only scrolls right after an input count.
+    let saidFast = false;
+    let handAt = -Infinity;
+    const onHand = () => {
+      handAt = performance.now();
+    };
+    let lastY = window.scrollY;
+    let lastT = performance.now();
+    const onScroll = () => {
+      const now = performance.now();
+      const v = Math.abs(window.scrollY - lastY) / Math.max(1, now - lastT);
+      lastY = window.scrollY;
+      lastT = now;
+      if (!saidFast && v > 5 && now - handAt < 160 && speak(q.fast)) saidFast = true;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", onHand, { passive: true });
+    window.addEventListener("touchmove", onHand, { passive: true });
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(every);
+      io.disconnect();
+      end.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("wheel", onHand);
+      window.removeEventListener("touchmove", onHand);
+      trySections.current = () => {};
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context]);
+
+  // Waking up, sometimes he says so. The bubble hides when the panel opens.
+  useEffect(() => {
+    // Just landed: a beat later (after `prev` has caught up), a pending section line.
+    let later: number | undefined;
+    if (open) bubble.hide();
+    else if (state === "cling") later = window.setTimeout(() => trySections.current(), 450);
+    else if (state === "waking" && ui.quips && Math.random() < 0.35) bubble.say(pick(ui.quips.wake));
+    return () => window.clearTimeout(later);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, open]);
 
   // ── Any "ask the cat" control (hero cat, contact) opens the assistant ────
   useEffect(() => {
@@ -673,7 +780,7 @@ export function CatAssistant({
     else gsap.to(panel.current, { y: 0, duration: 0.2 });
   };
 
-  const disc = small ? "size-11" : "size-14";
+  const disc = small ? "size-11" : "size-14 pointer-coarse:size-[max(3.5rem,56px)]";
   const catSize = small ? "w-[26px]" : "w-10";
 
   return (
@@ -693,6 +800,7 @@ export function CatAssistant({
         className="invisible fixed right-[max(1.5rem,env(safe-area-inset-right))] bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-[70] opacity-0"
       >
         <div ref={dockInner} className="relative">
+          <QuipBubble bubbleRef={bubble.ref} className="right-0 bottom-full mb-3 origin-bottom-right rounded-br-[4px]" />
           <button
             ref={button}
             type="button"

@@ -116,7 +116,7 @@ export function ApproachSteps({ steps, labels, projects }: { steps: ApproachStep
                 tabIndex={on ? 0 : -1}
                 onClick={() => select(i)}
                 onPointerEnter={(e) => e.pointerType === "mouse" && select(i)}
-                className={`group/step flex cursor-pointer flex-col items-center gap-3 px-1 text-center transition-opacity duration-(--duration-fast) focus-visible:outline-none ${on ? "opacity-100" : "opacity-55 hover:opacity-100"}`}
+                className={`group/step flex min-h-11 cursor-pointer flex-col items-center gap-3 px-1 text-center transition-opacity duration-(--duration-fast) focus-visible:outline-none ${on ? "opacity-100" : "opacity-55 hover:opacity-100"}`}
               >
                 {/* The stop: lime when active, ink once passed, open ahead. */}
                 <span

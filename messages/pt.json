@@ -375,6 +375,40 @@
       "approach": "Ver a abordagem",
       "contact": "Ir para o contato",
       "project": "Abrir a página: {name}"
+    },
+    "quips": {
+      "random": [
+        "Mie comigo! Eu sei umas coisas sobre o Iury.",
+        "Tô de bigode em tudo por aqui.",
+        "Pode perguntar. Eu não arranho.",
+        "Esse humano programa. Eu supervisiono.",
+        "Meu currículo: dormir, observar e responder perguntas.",
+        "Sete vidas e uma curiosidade só.",
+        "Psiu. Me clica, vai.",
+        "Rola à vontade. Eu cuido deste canto.",
+        "Miau-ravilha te ver por aqui.",
+        "Ronrono com cada pergunta boa."
+      ],
+      "sleep": [
+        "Zzz… sachê…",
+        "Zzz… mais cinco minutinhos…",
+        "Zzz… novelo… novelo…"
+      ],
+      "sections": {
+        "about": "Esse é o meu humano. Fala bem dele, viu?",
+        "projects": "Projetos! Pode olhar com calma, eu não derrubo nada da mesa.",
+        "approach": "Observar é o passo 1. E o meu esporte favorito."
+      },
+      "fast": "Ei, devagar! Minhas patinhas são curtas.",
+      "bottom": "Fim da página. A curiosidade continua.",
+      "wake": [
+        "Hã? Eu tava só descansando os olhos.",
+        "Acordei! Perdi alguma coisa?"
+      ],
+      "hero": [
+        "Mie comigo! Clica em mim e pergunta do Iury.",
+        "Oi! Eu sou o Tisco. Pode me chamar quando quiser."
+      ]
     }
   },
   "contact": {

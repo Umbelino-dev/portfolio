@@ -370,6 +370,40 @@
       "approach": "See the approach",
       "contact": "Go to contact",
       "project": "Open the page: {name}"
+    },
+    "quips": {
+      "random": [
+        "Meow with me! I know a thing or two about Iury.",
+        "I've got my whiskers on everything here.",
+        "Ask away. I don't scratch.",
+        "This human codes. I supervise.",
+        "My résumé: napping, watching and answering questions.",
+        "Nine lives and just one curiosity.",
+        "Psst. Click me.",
+        "Scroll all you like. I've got this corner.",
+        "Purr-fect to see you here.",
+        "I purr at every good question."
+      ],
+      "sleep": [
+        "Zzz… treats…",
+        "Zzz… five more minutes…",
+        "Zzz… yarn… yarn…"
+      ],
+      "sections": {
+        "about": "That's my human. Say nice things, OK?",
+        "projects": "Projects! Take your time, I won't knock anything off the table.",
+        "approach": "Observe is step 1. Also my favourite sport."
+      },
+      "fast": "Hey, slow down! My paws are short.",
+      "bottom": "End of the page. Not of the curiosity.",
+      "wake": [
+        "Huh? I was just resting my eyes.",
+        "I'm up! Did I miss anything?"
+      ],
+      "hero": [
+        "Meow with me! Click me and ask about Iury.",
+        "Hi! I'm Tisco. Call me whenever you like."
+      ]
     }
   },
   "contact": {

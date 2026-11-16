@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { gsap, MQ, useGSAP } from "@/lib/gsap";
 import { anchors } from "@/components/hero/name-paths";
 import { CatFigure, TAIL_WAVE_FRAMES, WAVE_STEP_MS } from "./CatFigure";
-import { catParts, crouch, pivot, prime, run, stretch, tailFlick, walk } from "./clips";
+import { catParts, crouch, greet, pivot, prime, run, stretch, tailFlick, walk } from "./clips";
+import { pick, QuipBubble, useBubble } from "./quips";
 import { CAT_OPEN } from "./states";
 
 /** Pointer rules from Homepage R02 · N3 (Cat — observer mode). */
@@ -39,13 +40,42 @@ export function CatObserver({
   label,
   cursorLabel,
   look = "left",
+  quips,
 }: {
   className?: string;
   label: string;
   cursorLabel?: string;
   look?: Look;
+  /** Lines for a hello in the hero (messages → assistant.quips.hero). */
+  quips?: string[];
 }) {
   const root = useRef<HTMLButtonElement>(null);
+  const bubble = useBubble({ max: 1 });
+
+  // Hello: a few seconds after the page settles, if the visitor is still at the top,
+  // Tisco waves and says one line ("Mie comigo!"). Once per visit; scrolling or
+  // opening the assistant hides it.
+  useEffect(() => {
+    const el = root.current;
+    if (!el || !quips?.length) return;
+    const t = window.setTimeout(() => {
+      if (el.offsetParent === null || window.scrollY > 40) return;
+      if (!bubble.say(pick(quips))) return;
+      if (window.matchMedia(MQ.reduced).matches) return;
+      const p = catParts(el, el.querySelector("[data-cat-lean]"));
+      if (p) greet(p);
+    }, 6500);
+    const onScroll = () => {
+      if (window.scrollY > 40) bubble.hide();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener(CAT_OPEN, bubble.hide);
+    return () => {
+      window.clearTimeout(t);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener(CAT_OPEN, bubble.hide);
+    };
+  }, [quips, bubble]);
 
   useGSAP(
     () => {
@@ -293,6 +323,11 @@ export function CatObserver({
       {/* Aura: a soft signal-green glow round Tisco, so the black body never fights the
           dark hero (static, no filter, no animation; globals.css). */}
       <span aria-hidden="true" data-cat-halo className="pointer-events-none absolute -z-10" />
+      {/* Desktop: to his right, in the free space past the "o". Mobile: above him. */}
+      <QuipBubble
+        bubbleRef={bubble.ref}
+        className={look === "left" ? "bottom-[62%] left-full ml-1 origin-bottom-left rounded-bl-[4px] text-left" : "right-0 bottom-full mb-2 origin-bottom-right rounded-br-[4px] text-left"}
+      />
       <span data-cat-breath className="block h-full w-full">
         <span data-cat-lean className="block h-full w-full">
           <CatFigure lit className="block h-full w-full overflow-visible" />

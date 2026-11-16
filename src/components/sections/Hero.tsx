@@ -37,6 +37,8 @@ export async function Hero() {
   const t = await getTranslations("hero");
   const ta = await getTranslations("assistant.ui");
   const tc = await getTranslations("cursor");
+  const tq = await getTranslations("assistant.quips");
+  const heroQuips = tq.raw("hero") as string[];
   const locale = (await getLocale()) as Locale;
 
   return (
@@ -107,6 +109,7 @@ export async function Hero() {
                 label={ta("open")}
                 cursorLabel={tc("ask")}
                 look="up"
+                quips={heroQuips}
                 className="relative mb-1 aspect-[4/5] w-12 flex-none md:hidden"
               />
             </div>
@@ -115,7 +118,8 @@ export async function Hero() {
               label={ta("open")}
               cursorLabel={tc("ask")}
               look="left"
-              className="absolute bottom-(--o-bottom) left-(--o-center) hidden aspect-[4/5] w-[max(2.75rem,7.5cqw)] -translate-x-1/2 md:block"
+              quips={heroQuips}
+              className="absolute bottom-(--o-bottom) left-(--o-center) hidden aspect-[4/5] w-[max(var(--spacing-11),7.5cqw)] -translate-x-1/2 md:block"
             />
           </div>
         </div>
