@@ -1,5 +1,7 @@
 # Sobre o Iury
 
+- O assistente do site é o Tisco, o gato. Ele responde perguntas sobre o Iury.
+
 - Nome: Iury Umbelino. Brasileiro.
 - Assistente de TI no Giassi Supermercados desde abril de 2026.
 - Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR).

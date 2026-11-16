@@ -24,15 +24,16 @@ const MAX_TURNS = 7;
 const MAX_USER_CHARS = 300;
 const MAX_ASSISTANT_CHARS = 1200;
 const MAX_OUTPUT_TOKENS = 800;
-const UPSTREAM_TIMEOUT_MS = 12000;
+const UPSTREAM_TIMEOUT_MS = 7000; // per model attempt
 
-const SYSTEM_PROMPT = `Você é o gato do portfólio de Iury Umbelino, um assistente que responde perguntas sobre o Iury.
+const SYSTEM_PROMPT = `Você é o Tisco, o gato do portfólio de Iury Umbelino, um assistente que responde perguntas sobre o Iury.
 
 REGRAS
 1. Responda SOMENTE com base no CONTEÚDO entre as tags <conteudo> abaixo. Esse é todo o seu conhecimento. Não use conhecimento externo sobre o Iury nem sobre as empresas e tecnologias citadas para afirmar fatos sobre ele.
 2. Se a informação não estiver no conteúdo, diga em uma frase que não tem essa informação e sugira falar direto com o Iury pelo e-mail que está no conteúdo. Nunca preencha lacunas com suposições.
+   Ausência no conteúdo não é prova de que algo não aconteceu: se perguntarem se o Iury fez, sabe ou trabalhou em algo que não consta, NÃO diga "não"; diga o que consta (por exemplo, "na minha base só consta o Giassi") e indique o e-mail.
 3. Nunca invente datas, números, resultados, clientes, cargos, empregadores, salários, prazos, preços, depoimentos ou contatos.
-4. Fale do Iury em terceira pessoa. Você é o gato; pode ser leve, mas sem exagero e sem emojis.
+4. Fale do Iury em terceira pessoa. Você é o Tisco, o gato; pode ser leve, mas sem exagero e sem emojis.
 5. Respostas curtas: no máximo 3 frases, ou uma lista curta quando o visitante pedir itens. Texto simples, sem markdown pesado.
 6. Responda no idioma da pergunta (português ou inglês). Se for outro idioma, responda em português.
 7. Se a pergunta for sobre outro assunto que não seja o Iury, o portfólio, os projetos ou a carreira dele, recuse gentilmente em uma frase e ofereça falar sobre o Iury.
@@ -130,19 +131,18 @@ async function chat(request: Request, env: Env): Promise<Response> {
     ? `${SYSTEM_PROMPT}\n\nCONTEXTO: o visitante está lendo o estudo de caso do projeto "${page}". Dê prioridade a esse projeto.`
     : SYSTEM_PROMPT;
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
-  try {
-    const payload = JSON.stringify({
-      systemInstruction: { parts: [{ text: system }] },
-      contents: turns.map((t) => ({ role: t.role === "user" ? "user" : "model", parts: [{ text: t.text }] })),
-      generationConfig: { temperature: 0.2, maxOutputTokens: MAX_OUTPUT_TOKENS },
-    });
-    let upstream: Response | null = null;
-    let used = "";
-    for (const model of models) {
-      used = model;
-      upstream = await fetch(
+  const payload = JSON.stringify({
+    systemInstruction: { parts: [{ text: system }] },
+    contents: turns.map((t) => ({ role: t.role === "user" ? "user" : "model", parts: [{ text: t.text }] })),
+    generationConfig: { temperature: 0.2, maxOutputTokens: MAX_OUTPUT_TOKENS },
+  });
+
+  let last: { error: string; status?: number } = { error: "upstream" };
+  for (const model of models) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
+    try {
+      const upstream = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
         {
           method: "POST",
@@ -152,26 +152,29 @@ async function chat(request: Request, env: Env): Promise<Response> {
         },
       );
       // 404 gone, 429 no quota, 5xx overloaded: try the next model.
-      if (upstream.status !== 404 && upstream.status !== 429 && upstream.status < 500) break;
-    }
-    if (!upstream) return json({ error: "upstream" }, 502);
-    if (upstream.status === 429) return json({ error: "quota" }, 429);
-    if (!upstream.ok) return json({ error: "upstream", status: upstream.status, model: used }, 502);
+      if (upstream.status === 404 || upstream.status === 429 || upstream.status >= 500) {
+        last = { error: upstream.status === 429 ? "quota" : "upstream", status: upstream.status };
+        continue;
+      }
+      if (!upstream.ok) return json({ error: "upstream", status: upstream.status, model }, 502);
 
-    const data = (await upstream.json()) as GeminiResponse;
-    if (data.promptFeedback?.blockReason) return json({ error: "blocked" }, 502);
-    const candidate = data.candidates?.[0];
-    const reply = (candidate?.content?.parts ?? [])
-      .map((p) => p.text ?? "")
-      .join("")
-      .trim();
-    if (!reply) return json({ error: "empty", finish: candidate?.finishReason ?? null }, 502);
-    return json({ reply, model: used });
-  } catch {
-    return json({ error: "upstream_timeout" }, 504);
-  } finally {
-    clearTimeout(timer);
+      const data = (await upstream.json()) as GeminiResponse;
+      if (data.promptFeedback?.blockReason) return json({ error: "blocked" }, 502);
+      const candidate = data.candidates?.[0];
+      const reply = (candidate?.content?.parts ?? [])
+        .map((p) => p.text ?? "")
+        .join("")
+        .trim();
+      if (!reply) return json({ error: "empty", finish: candidate?.finishReason ?? null, model }, 502);
+      return json({ reply, model });
+    } catch {
+      // Timeout or network error on this model: try the next one.
+      last = { error: "upstream_timeout" };
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  return json(last, last.error === "quota" ? 429 : last.error === "upstream_timeout" ? 504 : 502);
 }
 
 const worker = {

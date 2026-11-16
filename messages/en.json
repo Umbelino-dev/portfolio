@@ -242,7 +242,7 @@
       "privacy": "Typed text is processed by Gemini (Google) and may be used to improve their products. Don't send personal data."
     },
     "home": {
-      "greeting": "Hi, I'm the cat. I know a few things about Iury. What would you like to know?",
+      "greeting": "Hi, I'm Tisco, the cat. I know a few things about Iury. What would you like to know?",
       "chips": [
         {
           "label": "Who is Iury?",
