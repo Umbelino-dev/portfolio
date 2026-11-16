@@ -47,10 +47,10 @@ What is already configured in the repo:
 Canonical links, `hreflang`, Open Graph, the sitemap and the structured data all need the public address. It is read **at build time** from:
 
 ```
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
+NEXT_PUBLIC_SITE_URL=https://umbelino.dev
 ```
 
-No trailing slash. Without it, the build uses the live Worker address, `https://portfolio.iuryumbelino1.workers.dev`. Set it only when the site moves to a custom domain.
+No trailing slash. Without it, the build uses `https://umbelino.dev` (the default in `src/content/profile.ts`), so the variable is only needed to build for another address.
 
 ### Option A: from GitHub, automatically (recommended)
 
@@ -74,14 +74,19 @@ npx wrangler login
 ```
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://your-domain.com npm run deploy
+NEXT_PUBLIC_SITE_URL=https://umbelino.dev npm run deploy
 ```
 
 `npm run deploy` runs `npm run build` and then `wrangler deploy`.
 
-### Custom domain
+### Custom domain (umbelino.dev)
 
-In the Worker: **Settings → Domains & Routes → Add → Custom domain**, and enter the domain. The domain has to be on Cloudflare DNS. Then set `NEXT_PUBLIC_SITE_URL` to that domain and redeploy.
+The domain has to be on Cloudflare DNS (the zone `umbelino.dev` active in the same account).
+
+1. Worker `portfolio` → **Settings → Domains & Routes → Add → Custom domain** → `umbelino.dev`. Cloudflare creates the DNS record and the certificate.
+2. **www → apex:** DNS → add a proxied record for `www` (for example `AAAA www 100::`, proxied). Then **Rules → Redirect Rules → Create rule** (template "Redirect from WWW to root"): hostname equals `www.umbelino.dev` → dynamic redirect to `concat("https://umbelino.dev", http.request.uri.path)`, status 301, preserve query string.
+3. **Build variable:** Worker → **Settings → Build → Variables and secrets** → `NEXT_PUBLIC_SITE_URL = https://umbelino.dev` (optional, it is the default; set it so the dashboard says so), then **Retry build** or push to `main`.
+4. **workers.dev during the transition:** keep it on. The chat works there too (the Worker accepts same-origin requests on whatever host serves the page), and every page already points its canonical URL to `umbelino.dev`. A redirect from `*.workers.dev` cannot be made with a Redirect Rule (it is not your zone). When the domain is confirmed, turn it off in **Settings → Domains & Routes → workers.dev → Disable** (and **Preview URLs** if you do not use them).
 
 ### Before going live (checklist)
 

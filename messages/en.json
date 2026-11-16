@@ -30,7 +30,8 @@
     "in-use": "In use",
     "pitch": "Startup Weekend pitch",
     "shaping": "Taking shape",
-    "mvp": "MVP, being validated"
+    "mvp": "MVP, being validated",
+    "ended": "Ended after the event"
   },
   "hero": {
     "cta": "Get to know me",
@@ -61,7 +62,9 @@
     "galleryPause": "Pause photos",
     "galleryPlay": "Play photos",
     "galleryPrev": "Previous photo",
-    "galleryNext": "Next photo"
+    "galleryNext": "Next photo",
+    "publicCode": "Public code",
+    "newTab": "opens in a new tab"
   },
   "experience": {
     "title": "Where curiosity becomes routine.",
@@ -103,13 +106,14 @@
   },
   "projects": {
     "label": "Projects",
-    "note": "Six projects, each at its real stage: from a problem still being validated to a product in daily use.",
+    "note": "Three projects live, two being explored and one experiment that has ended. Each at its real stage.",
     "visit": "opens the site in a new tab",
     "listLabel": "Projects",
     "openCase": "View the project",
-    "pending": "image coming soon",
     "indexLabel": "Pick a project",
-    "site": "Go straight to the site"
+    "site": "Go straight to the site",
+    "exploring": "Being explored",
+    "closed": "An experiment that ended"
   },
   "approach": {
     "label": "Approach",
@@ -243,7 +247,9 @@
       "linkedin": "LinkedIn",
       "github": "GitHub",
       "instagram": "Instagram"
-    }
+    },
+    "usage": "In use",
+    "usageSource": "Data from {date}, {source}."
   },
   "assistant": {
     "ui": {

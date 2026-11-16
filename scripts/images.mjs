@@ -83,6 +83,13 @@ for (const name of ["via-hebraica-cover", "1kid-cover", "hyper-cover"]) {
   await variants(name, await fs.readFile(path.join(SRC, `${name}.png`)));
 }
 
+// AutomIA: the motion piece's poster (public/video/automia-poster.webp, 720×1280), cut to
+// the 4:3 list frame around the cat mark and the question; nothing is redrawn.
+await variants(
+  "automia-cover",
+  await sharp(path.join(SRC, "automia-poster.webp")).extract({ left: 0, top: 300, width: 720, height: 540 }).png().toBuffer(),
+);
+
 // Event photos for the About deck (from Iury's LinkedIn posts), kept as shot.
 for (const file of ["startup-weekend-team.webp", "startup-weekend.png", "crio-conecta.jpg"]) {
   const input = await fs.readFile(path.join(SRC, file));

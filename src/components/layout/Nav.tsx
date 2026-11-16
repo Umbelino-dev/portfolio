@@ -162,10 +162,11 @@ export function Nav({ variant = "home" }: { variant?: "home" | "case" }) {
             // Case study: one pill back to the index (Case Study R01; 44px tall on mobile).
             <Link
               href="/#projects"
-              className={`flex min-h-11 items-center gap-2.5 rounded-pill border px-4 text-[max(0.8125rem,12px)] whitespace-nowrap sm:px-4.5 font-medium ${glass} ${glassBlur} ${transition} ${focusRing}`}
+              className={`flex min-h-11 min-w-11 items-center justify-center gap-2.5 rounded-pill border px-4 text-[max(0.8125rem,12px)] whitespace-nowrap max-[26.25rem]:px-0 sm:px-4.5 font-medium ${glass} ${glassBlur} ${transition} ${focusRing}`}
             >
               <span aria-hidden="true">←</span>
-              <span className="sm:hidden">{t("projectsShort")}</span>
+              {/* Under 420px the bar would overflow beside the name: the arrow alone, the label for assistive tech. */}
+              <span className="sm:hidden max-[26.25rem]:sr-only">{t("projectsShort")}</span>
               <span className="max-sm:hidden">{t("allProjects")}</span>
             </Link>
           )}

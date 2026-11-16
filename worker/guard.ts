@@ -12,6 +12,16 @@
 
 export const MAX_REPLY_CHARS = 2000;
 
+/**
+ * /api/chat answers only the site's own pages: the browser's Origin must equal the
+ * origin of the request URL (whichever host serves the site: umbelino.dev, or the
+ * workers.dev address). No Origin header (same-origin GET-like tools) passes; the
+ * per-IP limiter and Google's quota still apply.
+ */
+export function sameOrigin(origin: string | null, requestUrl: string): boolean {
+  return !origin || origin === new URL(requestUrl).origin;
+}
+
 const EMAIL = /[a-z0-9._%+-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)+/gi;
 const URL_LIKE = /(?:https?:\/\/)?(?:[a-z0-9-]+\.)+(?:com|br|dev|app|io|net|org|me|co)\b(?:\/[^\s)]*)?/gi;
 const HANDLE = /(?<![\w.])@[a-z0-9_.]{2,}/gi;

@@ -9,7 +9,7 @@
 import type { Locale } from "@/i18n/routing";
 
 /** Project stage — encoded by shape in the UI (StatusMark), never by colour. */
-export type ProjectStatus = "concept" | "experiment" | "prototype" | "in-development" | "validating" | "live" | "evolving" | "in-use" | "pitch" | "shaping" | "mvp";
+export type ProjectStatus = "concept" | "experiment" | "prototype" | "in-development" | "validating" | "live" | "evolving" | "in-use" | "pitch" | "shaping" | "mvp" | "ended";
 
 /**
  * Where a project stands on the five-step approach (Approach section): 0 observe
@@ -44,7 +44,7 @@ export interface CaseStudyStep {
 
 export interface CaseStudyChapter {
   /** Stable id, used for anchors. */
-  id: "problem" | "build" | "audit" | "product" | "learned" | "results" | "idea" | "stage" | "use" | "origin";
+  id: "problem" | "build" | "architecture" | "audit" | "product" | "learned" | "results" | "idea" | "stage" | "use" | "origin";
   /** Which part of the project page it belongs to: "Sobre o projeto" or "Processo e desenvolvimento". */
   part: "about" | "process";
   label: Localized; // "O problema" — numbered by position
@@ -62,6 +62,23 @@ export interface Evidence {
   text: Localized;
   /** Outside research: where it comes from (a real, checked link). */
   source?: { label: string; href: string };
+}
+
+/**
+ * Usage numbers of a live product (metrics policy, Iury 2026-11-16): aggregates
+ * only, always dated and sourced, never about a person (no names, groups,
+ * attendance rates, absences or people at risk), never a screenshot of a report.
+ * A number without a source stays out; the block renders only when `confirmed`.
+ */
+export interface UsageMetrics {
+  confirmed: boolean;
+  /** ISO date of the data, e.g. "2026-11-16". */
+  asOf: string;
+  /** Where the numbers come from, said on the page. */
+  source: Localized;
+  /** One line of context said under the numbers (e.g. "em uma comunidade"). */
+  scope?: Localized;
+  items: { value: Localized; label: Localized; detail?: Localized }[];
 }
 
 /** A link related to a project that is not the product itself (its post, its repository). */
@@ -86,6 +103,8 @@ export interface CaseStudy {
    * nothing here says so; nothing is invented to fill it.
    */
   evidence?: Partial<Record<ProjectStage, Evidence[]>>;
+  /** Usage numbers shown with the facts in the presentation (see `UsageMetrics`). */
+  usage?: UsageMetrics;
   /** A video shown inside a phone frame (e.g. a motion piece). No `src` yet = "em breve". */
   video?: { src?: string; poster?: string; /** CSS aspect-ratio of the video, e.g. "9 / 16". */ aspect?: string; title: Localized };
   /** Rendered in order; a chapter without body, steps or figures is skipped. */
@@ -116,6 +135,12 @@ export interface Project {
   /** Its current step on the approach, and one line saying what that means for it. */
   stage: ProjectStage;
   stageNote: Localized;
+  /**
+   * Where it sits in the Projects list (Iury, 2026-11-16): default = live work, first
+   * and largest; "exploring" = grouped below, smaller; "closed" = an experiment that
+   * ended, outside the active fronts.
+   */
+  tier?: "exploring" | "closed";
   year?: number;
   tags: TagKey[];
   summary: Localized;

@@ -30,7 +30,8 @@
     "in-use": "Em uso",
     "pitch": "Pitch no Startup Weekend",
     "shaping": "Em estruturação",
-    "mvp": "MVP em validação"
+    "mvp": "MVP em validação",
+    "ended": "Encerrado após o evento"
   },
   "hero": {
     "cta": "Me conheça",
@@ -61,7 +62,9 @@
     "galleryPause": "Pausar fotos",
     "galleryPlay": "Reproduzir fotos",
     "galleryPrev": "Foto anterior",
-    "galleryNext": "Próxima foto"
+    "galleryNext": "Próxima foto",
+    "publicCode": "Código público",
+    "newTab": "abre em nova aba"
   },
   "experience": {
     "title": "Onde a curiosidade vira rotina.",
@@ -103,13 +106,14 @@
   },
   "projects": {
     "label": "Projetos",
-    "note": "Seis projetos, cada um na sua etapa real: do problema ainda em validação ao produto em uso diário.",
+    "note": "Três projetos no ar, dois em exploração e uma experiência encerrada. Cada um na sua etapa real.",
     "visit": "abre o site em nova aba",
     "listLabel": "Projetos",
     "openCase": "Ver o projeto",
-    "pending": "imagem em breve",
     "indexLabel": "Escolha um projeto",
-    "site": "Ir direto para o site"
+    "site": "Ir direto para o site",
+    "exploring": "Em exploração",
+    "closed": "Experiência encerrada"
   },
   "approach": {
     "label": "Abordagem",
@@ -243,7 +247,9 @@
       "linkedin": "LinkedIn",
       "github": "GitHub",
       "instagram": "Instagram"
-    }
+    },
+    "usage": "Em uso",
+    "usageSource": "Dados de {date}, {source}."
   },
   "assistant": {
     "ui": {
