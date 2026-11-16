@@ -66,3 +66,24 @@ const PERSONAL =
 export function isPersonalTopic(text: string): boolean {
   return PERSONAL.test(text.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, ""));
 }
+
+// A destination is offered only when the VISITOR's question is about that part of
+// the site (not merely when the reply touches it): "qual o nome dele?" must not
+// link to the Profile. Project pages need the project's name in the question or
+// the reply. Fewer links is the safe error.
+const strip = (t: string) => t.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+const TOPICS: Record<string, RegExp> = {
+  about:
+    /formacao|curso|faculdade|universidade|unesc|unopar|estuda|competenc|skill|habilidade|stack|tecnolog|linguagem|trajetoria|experienc|carreira|profission|giassi|educat|degree|stud(y|ies)|career|foto|evento|startup weekend|crio conecta|\bsql\b/,
+  projects: /projet|project|portfolio|produtos?\b|\bapps?\b|\bjogo|\bgames?\b|construiu|built|made/,
+  approach: /abordagem|metodo|metodologia|processo|approach|method|como (ele )?(trabalha|pensa|resolve)|how (does )?(he )?(work|think)|passos|steps/,
+  contact: /contato|contact|e-?mail|falar com|entrar em contato|reach|linkedin|github|instagram|contrat|hire|vaga|whatsapp|telefone|disponib|available/,
+};
+
+export function destinationFits(go: string, question: string, reply: string): boolean {
+  const q = strip(question);
+  const topic = TOPICS[go];
+  if (topic) return topic.test(q);
+  const name = go.replace(/-/g, " ");
+  return `${q} ${strip(reply)}`.includes(name) || `${q} ${strip(reply)}`.includes(go);
+}
