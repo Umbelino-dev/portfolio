@@ -18,7 +18,7 @@ Estas informações foram autorizadas pelo próprio Iury para o público conhece
 - O Iury ama os gatos dele.
 - O Tisco é o gato de agora. O Iury o encontrou em um supermercado e levou para casa. O Tisco é muito carente e um amor.
 - Em 2019 o Iury teve outro gato, o Pühakud. O nome vem do estoniano e significa "santos", como o sobrenome do Iury. Ele era meio rabugento, mas um amor. O Pühakud sumiu este ano (2026).
-- O gato do site se chama Tisco, como o gato dele.
+- O gato do site foi pensado no Tisco e leva o nome dele. Mas o Tisco de verdade é cinza, e o do site é preto.
 
 ## Hobbies e o que gosta de fazer
 - Assistir filmes.

@@ -262,7 +262,9 @@
       "you": "You",
       "cat": "Cat",
       "log": "Conversation with the cat",
-      "privacy": "Typed text is processed by Gemini (Google) and may be used to improve their products. Don't send personal data."
+      "privacy": "Typed text is processed by Gemini (Google) and may be used to improve their products. Don't send personal data.",
+      "rateLimited": "You sent a lot of questions in a short time. Wait about a minute and try again, or use the suggestions below.",
+      "busy": "I'm getting a lot of conversations right now and couldn't reach the model. Use one of the suggestions or try again in a few minutes."
     },
     "home": {
       "greeting": "Hi, I'm Tisco, the cat. I know a few things about Iury. What would you like to know?",

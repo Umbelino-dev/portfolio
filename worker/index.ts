@@ -40,6 +40,8 @@ const MAX_USER_CHARS = 300;
 const MAX_ASSISTANT_CHARS = 2200;
 const MAX_OUTPUT_TOKENS = 1100;
 const UPSTREAM_TIMEOUT_MS = 7000; // per model attempt
+const DEADLINE_MS = 12_000; // whole request: the browser gives up at 14 s
+const MIN_ATTEMPT_MS = 1500; // do not start an attempt with less than this left
 
 const SYSTEM_PROMPT = `Você é o Tisco, o gato do portfólio de Iury Umbelino, um assistente que responde perguntas sobre o Iury.
 
@@ -120,6 +122,19 @@ function limited(ip: string): boolean {
     for (const [k, v] of hits) if (v.every((t) => now - t >= WINDOW_MS)) hits.delete(k);
   }
   return false;
+}
+
+// Model health, per isolate: a model that just failed is tried last for a while, so
+// visitors do not each pay a timeout on the same dead or overloaded model.
+const cooldown = new Map<string, number>();
+const COOL_GONE_MS = 10 * 60_000; // 404: retired
+const COOL_QUOTA_MS = 60_000; // 429: out of quota
+const COOL_FLAKY_MS = 45_000; // 5xx, timeout, empty
+
+function healthyFirst(models: string[]): string[] {
+  const now = Date.now();
+  const ok = models.filter((m) => (cooldown.get(m) ?? 0) <= now);
+  return [...ok, ...models.filter((m) => !ok.includes(m))]; // all down? still try them all
 }
 
 function parseTurns(raw: unknown): ChatTurn[] | null {
@@ -205,10 +220,17 @@ async function chat(request: Request, env: Env, ctx: Ctx): Promise<Response> {
     generationConfig: { temperature: 0.4, maxOutputTokens: MAX_OUTPUT_TOKENS },
   });
 
+  const started = Date.now();
   let last: { error: string; status?: number } = { error: "upstream" };
-  for (const model of models) {
+  let attempts = 0;
+  let quotaHits = 0;
+  for (const model of healthyFirst(models)) {
+    const left = DEADLINE_MS - (Date.now() - started);
+    if (left < MIN_ATTEMPT_MS) break;
+    attempts += 1;
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
+    const timer = setTimeout(() => controller.abort(), Math.min(UPSTREAM_TIMEOUT_MS, left));
+    const bench = (ms: number) => cooldown.set(model, Date.now() + ms);
     try {
       const upstream = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
@@ -219,21 +241,31 @@ async function chat(request: Request, env: Env, ctx: Ctx): Promise<Response> {
           signal: controller.signal,
         },
       );
-      // 404 gone, 429 no quota, 5xx overloaded: try the next model.
-      if (upstream.status === 404 || upstream.status === 429 || upstream.status >= 500) {
+      if (!upstream.ok) {
+        // 404 retired, 429 no quota, 5xx overloaded, 400/403 this model refuses us:
+        // whatever it is, the next model may still answer.
+        if (upstream.status === 429) quotaHits += 1;
+        bench(upstream.status === 404 ? COOL_GONE_MS : upstream.status === 429 ? COOL_QUOTA_MS : COOL_FLAKY_MS);
         last = { error: upstream.status === 429 ? "quota" : "upstream", status: upstream.status };
         continue;
       }
-      if (!upstream.ok) return json({ error: "upstream", status: upstream.status, model }, 502);
 
       const data = (await upstream.json()) as GeminiResponse;
-      if (data.promptFeedback?.blockReason) return json({ error: "blocked" }, 502);
+      if (data.promptFeedback?.blockReason) {
+        last = { error: "blocked" };
+        continue;
+      }
       const candidate = data.candidates?.[0];
       const reply = (candidate?.content?.parts ?? [])
         .map((p) => p.text ?? "")
         .join("")
         .trim();
-      if (!reply) return json({ error: "empty", finish: candidate?.finishReason ?? null, model }, 502);
+      if (!reply) {
+        // Typically a "thinking" model that spent the whole token budget (MAX_TOKENS).
+        bench(COOL_FLAKY_MS);
+        last = { error: "empty" };
+        continue;
+      }
       // Second layer behind the prompt: a reply that invents a contact, leaks the
       // prompt or runs long is dropped (never shown, never cached); try the next model.
       const extracted = extractGo(reply, PROJECT_SLUGS);
@@ -258,12 +290,15 @@ async function chat(request: Request, env: Env, ctx: Ctx): Promise<Response> {
       }
       return json({ reply: text, go, model });
     } catch {
-      // Timeout or network error on this model: try the next one.
+      // Timeout or network error on this model: bench it and try the next one.
+      bench(COOL_FLAKY_MS);
       last = { error: "upstream_timeout" };
     } finally {
       clearTimeout(timer);
     }
   }
+  // Every attempt hit the quota: say so (the page tells the visitor to wait a bit).
+  if (attempts > 0 && quotaHits === attempts) last = { error: "quota" };
   return json(last, last.error === "quota" ? 429 : last.error === "upstream_timeout" ? 504 : 502);
 }
 

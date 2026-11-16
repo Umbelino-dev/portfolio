@@ -32,6 +32,10 @@ export interface AssistantUI {
   log: string;
   /** One-line notice that free text goes to an AI model (shown under the log). */
   privacy: string;
+  /** Shown when the visitor is over the per-minute limit. */
+  rateLimited: string;
+  /** Shown when the model's quota is spent (the scripted suggestions still work). */
+  busy: string;
   /** Link label per destination the cat may point to: a home section (about, projects, approach, contact) or a project slug. */
   go: Record<string, string>;
 }
@@ -560,7 +564,10 @@ export function CatAssistant({
   const scripted = (q: string, chip?: AssistantChip) =>
     chip ?? script.chips.find((c) => c.keywords.some((k) => normalize(q).includes(normalize(k))));
 
-  const askModel = async (q: string, history: Message[]): Promise<{ reply: string; go?: string } | null> => {
+  const askModel = async (
+    q: string,
+    history: Message[],
+  ): Promise<{ reply: string; go?: string } | { error: string } | null> => {
     chatAbort.current?.abort();
     const ctl = new AbortController();
     chatAbort.current = ctl;
@@ -575,7 +582,10 @@ export function CatAssistant({
         body: JSON.stringify({ messages: turns, page: context === "case" ? slug : undefined }),
         signal: ctl.signal,
       });
-      if (!res.ok) return null;
+      if (!res.ok) {
+        const body = (await res.json().catch(() => null)) as { error?: unknown } | null;
+        return { error: typeof body?.error === "string" ? body.error : "upstream" };
+      }
       const data = (await res.json()) as { reply?: unknown; go?: unknown };
       if (typeof data.reply !== "string" || !data.reply.trim()) return null;
       // Only a destination the page knows how to label is ever shown.
@@ -614,9 +624,13 @@ export function CatAssistant({
       return;
     }
     void askModel(q, history).then((answer) => {
-      if (answer) return deliver(answer.reply, undefined, answer.go);
+      if (answer && "reply" in answer) return deliver(answer.reply, undefined, answer.go);
+      const error = answer?.error;
+      // The visitor is over the per-minute limit: say so plainly, no guessing.
+      if (error === "rate_limited") return deliver(ui.rateLimited);
       const match = scripted(q);
-      deliver(match ? match.answer : script.fallback, match?.action);
+      if (match) return deliver(match.answer, match.action);
+      deliver(error === "quota" ? ui.busy : script.fallback);
     });
   };
 
@@ -789,6 +803,7 @@ export function CatAssistant({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder={ui.placeholder}
+            maxLength={300}
             autoComplete="off"
             className="h-12 min-w-0 flex-1 rounded-pill border border-paper/20 bg-ink px-4 text-base text-paper placeholder:text-gray-500 focus-visible:outline-signal"
           />

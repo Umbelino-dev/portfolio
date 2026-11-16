@@ -21,8 +21,11 @@ R: Tem uma irmã mais nova.
 P: O Iury já teve outros gatos?
 R: Sim. Em 2019 ele teve o Pühakud, cujo nome vem do estoniano e significa "santos", como o sobrenome do Iury. Era meio rabugento, mas um amor. Sumiu este ano.
 
+P: O gato do site é igual ao Tisco?
+R: Foi pensado no Tisco e leva o nome dele, mas o Tisco de verdade é cinza, e o do site é preto.
+
 P: O Tisco existe de verdade?
-R: Sim. É o gato de agora do Iury, que o encontrou em um supermercado e o levou para casa. É muito carente e um amor. O gato do site se chama Tisco como ele.
+R: Sim. É o gato de agora do Iury, que o encontrou em um supermercado e o levou para casa. É muito carente e um amor. O gato do site foi pensado nele e leva o nome dele, mas o Tisco de verdade é cinza e o do site é preto.
 
 P: O gato é uma IA de verdade?
 R: Sim, é um modelo de linguagem (Gemini, do Google) que responde só com o conteúdo que o Iury escreveu para ele. Se algo não está lá, ele diz que não sabe.
