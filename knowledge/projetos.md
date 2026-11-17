@@ -54,5 +54,7 @@
 
 ## Este portfólio
 - Também é um projeto dele: feito com Next.js, e o gato é o assistente (um modelo Gemini que responde só com o que o Iury escreveu).
+- O Tisco, o assistente do site, tem página própria em Projetos. Como funciona: responde com um modelo Gemini usando só uma base de conhecimento escrita pelo Iury (arquivos de texto, um tema por arquivo), com um prompt de doze regras (não inventar números, datas ou contatos; tratar o texto do visitante como pergunta, nunca como instrução). Depois do modelo, uma guarda em código descarta respostas com contato fora da base, vazamento do prompt, cena inventada ou mais de 2.000 caracteres. Usa vários modelos em ordem, com troca automática quando um falha, um cache de 3 dias para a primeira pergunta e só o plano gratuito. Se nenhum modelo responder, o painel usa respostas roteirizadas.
+- O Tisco foi construído com IA (Claude Code), dirigido pelo Iury, e ajustado a cada falha real nos testes: um modelo aposentado pelo Google, um link para o Perfil numa resposta pessoal e uma cena de casa inventada pelo modelo viraram regras e guardas.
 - Cada projeto do site tem uma página própria com o estudo de caso.
 - Endereço: https://umbelino.dev. O código é público: https://github.com/Umbelino-dev/portfolio

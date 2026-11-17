@@ -79,6 +79,9 @@ for (const name of ["koinonia-cover", "koinonia-map", "koinonia-brand"]) {
 }
 
 // Project covers drawn from the logos (scripts/covers.mjs).
+// Tisco: a real screenshot of the assistant's panel (scratchpad script), set on ink.
+await variants("tisco-cover", await fs.readFile(path.join(SRC, "tisco-cover.png")));
+
 for (const name of ["via-hebraica-cover", "1kid-cover", "hyper-cover"]) {
   await variants(name, await fs.readFile(path.join(SRC, `${name}.png`)));
 }

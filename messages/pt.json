@@ -106,7 +106,7 @@
   },
   "projects": {
     "label": "Projetos",
-    "note": "Três projetos no ar, dois em exploração e uma experiência encerrada. Cada um na sua etapa real.",
+    "note": "Quatro projetos no ar, dois em exploração e uma experiência encerrada. Cada um na sua etapa real.",
     "visit": "abre o site em nova aba",
     "listLabel": "Projetos",
     "openCase": "Ver o projeto",
@@ -114,6 +114,31 @@
     "site": "Ir direto para o site",
     "exploring": "Em exploração",
     "closed": "Experiência encerrada"
+  },
+  "aiPractice": {
+    "label": "IA na prática",
+    "title": "O que já funciona, e onde ver.",
+    "prompts": {
+      "kind": "Prompts e experimentos com LLMs",
+      "text": "O Tisco: um agente com Gemini preso à minha base de conhecimento. Doze regras de prompt e uma guarda em código barram respostas inventadas.",
+      "link": "Ver como o Tisco funciona"
+    },
+    "automations": {
+      "kind": "Automações",
+      "text": "No Giassi: automações em Pascal Script no DOX, processos BPM para a rede do Grupo Giassi e e-mails automáticos padronizados com HTML e SQL.",
+      "link": "Ver no Perfil"
+    },
+    "tools": {
+      "kind": "Ferramentas internas e agentes em uso",
+      "text": "O Hyper, ferramenta interna da SOU Studio para achar tendências de conteúdo, e o Tisco, um agente no ar neste site.",
+      "link": "Ver o Hyper"
+    },
+    "production": {
+      "kind": "Em produção, com resultado medido",
+      "text": "O Koinonia, construído com IA: {people} {peopleLabel} e {care} {careLabel} em uma comunidade.",
+      "note": "Fonte: {source}, {date}.",
+      "link": "Ver o Koinonia"
+    }
   },
   "approach": {
     "label": "Abordagem",

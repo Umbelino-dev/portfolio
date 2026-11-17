@@ -6,6 +6,7 @@ import { StatusMark } from "@/components/layout/StatusMark";
 import { ProjectImage } from "@/components/media/ProjectImage";
 import { ProjectList, type ProjectRow } from "./ProjectList";
 import { Approach } from "./Approach";
+import { AiPractice } from "./AiPractice";
 
 /**
  * Projects — light editorial. Projects are evidence, so they sit in daylight.
@@ -65,6 +66,8 @@ export async function Projects() {
           <p className="max-w-[34ch] text-[max(0.9375rem,13px)] leading-normal text-gray-600 md:self-end md:mr-[8.33%]">{t("note")}</p>
         </div>
         <ProjectList rows={rows} label={t("listLabel")} groupLabels={{ exploring: t("exploring"), closed: t("closed") }} />
+        {/* The AI evidence a recruiter asks for, each with a link to the real thing. */}
+        <AiPractice />
         {/* Second part: how the work is made (Approach lives inside Projects). */}
         <Approach />
       </div>

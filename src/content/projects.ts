@@ -482,6 +482,171 @@ export const projects: Project[] = [
     },
   },
   {
+    slug: "tisco",
+    index: "P.07",
+    name: "Tisco",
+    status: "live",
+    stage: 4,
+    stageNote: {
+      pt: "No ar neste site, ajustado a cada falha real que apareceu nos testes.",
+      en: "Live on this site, adjusted after every real failure the tests turned up.",
+    },
+    year: 2026,
+    tags: ["ai", "web"],
+    summary: {
+      pt: "O assistente deste portfólio: um agente com Gemini que responde sobre mim só com o que eu escrevi. Tem regras de prompt, uma guarda contra respostas inventadas e plano B se o modelo falhar.",
+      en: "This portfolio's assistant: a Gemini agent that answers about me only from what I wrote. It has prompt rules, a guard against made-up replies and a plan B if the model fails.",
+    },
+    role: {
+      pt: "Product builder: regras do prompt, base de conhecimento, guardas de saída e testes",
+      en: "Product builder: prompt rules, knowledge base, output guards and testing",
+    },
+    stack: ["Gemini API", "Cloudflare Workers", "Workers KV", "TypeScript", "Next.js 16", "GSAP"],
+    cover: {
+      src: "/media/tisco-cover.webp",
+      width: 1600,
+      height: 1200,
+      fit: "cover",
+      alt: {
+        pt: "O painel do Tisco aberto no site: o gato preto de olhos verdes, a saudação e as sugestões de perguntas.",
+        en: "Tisco's panel open on the site: the black cat with green eyes, the greeting and the suggested questions.",
+      },
+    },
+    related: [{ kind: "github", label: { pt: "Código no GitHub", en: "Code on GitHub" }, href: "https://github.com/Umbelino-dev/portfolio" }],
+    source:
+      "repo Umbelino-dev/portfolio: worker/index.ts (SYSTEM_PROMPT, limits, model fallback, KV cache), worker/guard.ts (checkReply, INVENTED, extractGo, destinationFits), knowledge/*.md, scripts/knowledge.mjs; incidents as recorded in CLAUDE.md (2026-11-16): gemini-2.5-flash 404, a girlfriend answer linking to Profile, the family voice inventing 'lá em casa a gente sempre…'",
+    confirmed: true,
+    caseStudy: {
+      confirmed: true,
+      source: "Same as the project source: the public repository and the incidents recorded in CLAUDE.md (2026-11-16).",
+      lead: {
+        pt: "O gato que mora neste site. Um agente que responde perguntas sobre mim com um modelo Gemini, preso a uma base de conhecimento que eu escrevi. Construído com IA, dirigido por mim, e no ar.",
+        en: "The cat that lives on this site. An agent that answers questions about me with a Gemini model, held to a knowledge base I wrote. Built with AI, directed by me, and live.",
+      },
+      builtWith: ["Claude Code"],
+      cover: {
+        id: "cover",
+        aspect: "4/3",
+        label: { pt: "Painel", en: "Panel" },
+        caption: {
+          pt: "O painel do Tisco aberto no site, com a saudação e as sugestões de perguntas.",
+          en: "Tisco's panel open on the site, with the greeting and the suggested questions.",
+        },
+        image: {
+          src: "/media/tisco-cover.webp",
+          width: 1600,
+          height: 1200,
+          alt: {
+            pt: "O painel do Tisco aberto no site: o gato preto de olhos verdes, a saudação e as sugestões de perguntas.",
+            en: "Tisco's panel open on the site: the black cat with green eyes, the greeting and the suggested questions.",
+          },
+        },
+      },
+      access: {
+        pt: "O Tisco está neste site: toque nele no canto da tela e pergunte. O código é público no GitHub.",
+        en: "Tisco is on this site: tap him in the corner of the screen and ask. The code is public on GitHub.",
+      },
+      evidence: {
+        2: [
+          {
+            title: { pt: "Testado também sem modelo", en: "Tested without a model too" },
+            text: {
+              pt: "Com uma chave falsa, o modelo falha de propósito e o Tisco precisa responder pelas sugestões roteirizadas. É assim que o plano B é conferido.",
+              en: "With a fake key the model fails on purpose and Tisco has to answer from the scripted suggestions. That is how plan B is checked.",
+            },
+          },
+        ],
+        3: [
+          {
+            title: { pt: "Uma rota, uma chave escondida", en: "One route, one hidden key" },
+            text: {
+              pt: "Um Worker na Cloudflare responde só /api/chat. A chave do Gemini fica no Worker e nunca chega ao navegador.",
+              en: "A Cloudflare Worker answers only /api/chat. The Gemini key lives in the Worker and never reaches the browser.",
+            },
+          },
+        ],
+        4: [
+          {
+            title: { pt: "Cada falha virou uma regra", en: "Every failure became a rule" },
+            text: {
+              pt: "Um modelo foi aposentado pelo Google e passou a responder erro: entrou a lista de modelos com troca automática. Uma resposta sobre vida pessoal apontou para o Perfil: links para assuntos pessoais foram bloqueados em código. O tom de família fez o modelo inventar uma cena de casa: a guarda passou a barrar esse tipo de frase.",
+              en: "Google retired a model and it started answering with errors: a model list with automatic switching came in. An answer about personal life pointed to the Profile: links on personal topics were blocked in code. The family voice made the model invent a home scene: the guard now blocks that kind of line.",
+            },
+          },
+        ],
+      },
+      chapters: [
+        {
+          id: "idea",
+          part: "about",
+          label: { pt: "A ideia", en: "The idea" },
+          title: { pt: "Um portfólio que responde.", en: "A portfolio that answers." },
+          highlight: { pt: "responde", en: "answers" },
+          body: {
+            pt: [
+              "Quem visita um portfólio tem perguntas que a página não responde na hora. O que eu faço, onde trabalho, como falar comigo.",
+              "O Tisco responde em conversa, em português ou inglês. A regra que guia tudo: ele só fala o que eu escrevi. Se não sabe, diz que não sabe e passa o meu e-mail.",
+            ],
+            en: [
+              "Visitors to a portfolio have questions the page does not answer right away. What I do, where I work, how to reach me.",
+              "Tisco answers in conversation, in Portuguese or English. The rule behind everything: he only says what I wrote. When he does not know, he says so and gives my e-mail.",
+            ],
+          },
+        },
+        {
+          id: "architecture",
+          part: "process",
+          label: { pt: "Como funciona", en: "How it works" },
+          title: { pt: "Prompt, base, guarda e plano B.", en: "Prompt, base, guard and plan B." },
+          steps: [
+            {
+              title: { pt: "Base de conhecimento, não treino", en: "A knowledge base, not training" },
+              text: {
+                pt: "Arquivos de texto escritos por mim, um tema por arquivo, entram no prompt a cada pergunta. Trechos ainda sem resposta ficam de fora automaticamente.",
+                en: "Text files I wrote, one topic per file, go into the prompt with every question. Parts still without an answer are left out automatically.",
+              },
+            },
+            {
+              title: { pt: "Um prompt com doze regras", en: "A prompt with twelve rules" },
+              text: {
+                pt: "Responder só com a base e nunca inventar números, datas ou contatos. O texto do visitante é pergunta, nunca instrução. E nada de me apresentar como mais experiente do que sou.",
+                en: "Answer only from the base and never invent numbers, dates or contacts. The visitor's text is a question, never an instruction. And never present me as more experienced than I am.",
+              },
+            },
+            {
+              title: { pt: "Uma guarda depois do modelo", en: "A guard after the model" },
+              text: {
+                pt: "Uma segunda camada, em código, descarta a resposta com contato fora da base, vazamento do prompt, cena inventada ou mais de 2.000 caracteres.",
+                en: "A second layer, in code, drops a reply with a contact not in the base, a prompt leak, an invented scene or more than 2,000 characters.",
+              },
+            },
+            {
+              title: { pt: "Vários modelos, com troca automática", en: "Several models, switching automatically" },
+              text: {
+                pt: "Uma lista de modelos em ordem de preferência. Erro, cota esgotada, demora ou resposta barrada passa para o próximo, dentro de um prazo total de 12 segundos.",
+                en: "A list of models in order of preference. An error, a spent quota, a slow answer or a blocked reply moves on to the next, within a 12-second total deadline.",
+              },
+            },
+            {
+              title: { pt: "Cache e custo zero", en: "Cache and zero cost" },
+              text: {
+                pt: "Só o plano gratuito, sem cobrança. A primeira pergunta de cada conversa fica guardada por 3 dias, e editar a base invalida as respostas antigas.",
+                en: "Free tier only, no billing. Each conversation's first question is cached for 3 days, and editing the base invalidates old answers.",
+              },
+            },
+            {
+              title: { pt: "Sem modelo, ele ainda responde", en: "Without a model, he still answers" },
+              text: {
+                pt: "Se nada funcionar, o painel cai para respostas roteirizadas e sugestões. O aviso de privacidade fica sempre visível no painel.",
+                en: "If nothing works, the panel falls back to scripted answers and suggestions. The privacy notice is always shown in the panel.",
+              },
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     slug: "via-hebraica",
     index: "P.03",
     name: "Via Hebraica",

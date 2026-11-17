@@ -106,7 +106,7 @@
   },
   "projects": {
     "label": "Projects",
-    "note": "Three projects live, two being explored and one experiment that has ended. Each at its real stage.",
+    "note": "Four projects live, two being explored and one experiment that has ended. Each at its real stage.",
     "visit": "opens the site in a new tab",
     "listLabel": "Projects",
     "openCase": "View the project",
@@ -114,6 +114,31 @@
     "site": "Go straight to the site",
     "exploring": "Being explored",
     "closed": "An experiment that ended"
+  },
+  "aiPractice": {
+    "label": "AI in practice",
+    "title": "What already works, and where to see it.",
+    "prompts": {
+      "kind": "Prompts and LLM experiments",
+      "text": "Tisco: a Gemini agent held to my knowledge base. Twelve prompt rules and a guard in code block made-up replies.",
+      "link": "See how Tisco works"
+    },
+    "automations": {
+      "kind": "Automations",
+      "text": "At Giassi: Pascal Script automations in DOX, BPM processes for the Giassi Group network and standardised automatic e-mails built with HTML and SQL.",
+      "link": "See it in the Profile"
+    },
+    "tools": {
+      "kind": "Internal tools and agents in use",
+      "text": "Hyper, SOU Studio's internal tool for spotting content trends, and Tisco, an agent live on this site.",
+      "link": "See Hyper"
+    },
+    "production": {
+      "kind": "In production, with measured results",
+      "text": "Koinonia, built with AI: {people} {peopleLabel} and {care} {careLabel} in one community.",
+      "note": "Source: {source}, {date}.",
+      "link": "See Koinonia"
+    }
   },
   "approach": {
     "label": "Approach",
