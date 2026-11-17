@@ -49,12 +49,16 @@ export function ProjectList({
   rows,
   label,
   groupLabels,
+  moreLabels,
 }: {
   rows: ProjectRow[];
   label: string;
   groupLabels: { exploring: string; closed: string };
+  /** The fold over the smaller groups (Iury, 2026-11-17): "Ver mais projetos" / "Ver menos". */
+  moreLabels: { more: string; less: string };
 }) {
   const [active, setActive] = useState<number | null>(null);
+  const [more, setMore] = useState(false);
   const float = useRef<HTMLDivElement>(null);
   const pos = useRef({ fx: 0, fy: 0, tx: 0, ty: 0, frame: 0, fine: false, reduced: false });
 
@@ -233,12 +237,34 @@ export function ProjectList({
 
   return (
     <div className="relative">
-      {groups.map((g) =>
-        g.key === "main" ? (
+      {groups
+        .filter((g) => g.key === "main")
+        .map((g) => (
           <ul key={g.key} aria-label={label} className="group/list flex flex-col" {...listProps}>
             {g.items.map(({ row, i }) => renderRow(row, i))}
           </ul>
-        ) : (
+        ))}
+
+      {/* Folded: the projects being explored and the experiment that ended stay one
+          tap away instead of competing with the live work (Iury, 2026-11-17). The
+          content is in the page (hidden), so it still reads without JavaScript off. */}
+      {groups.some((g) => g.key !== "main") && (
+        <button
+          type="button"
+          aria-expanded={more}
+          aria-controls="projects-more"
+          onClick={() => setMore((m) => !m)}
+          className="mt-[clamp(2.5rem,5vw,4rem)] flex min-h-11 w-fit items-center gap-2 font-display text-[1.0625rem] font-bold tracking-[-0.01em] underline decoration-1 underline-offset-[0.3em] transition-colors duration-(--duration-fast) hover:text-gray-600"
+        >
+          {more ? moreLabels.less : `${moreLabels.more} (${groups.filter((g) => g.key !== "main").reduce((n, g) => n + g.items.length, 0)})`}
+          <span aria-hidden="true" className={`inline-block transition-transform duration-(--duration-base) ${more ? "rotate-180" : ""}`}>
+            ↓
+          </span>
+        </button>
+      )}
+      <div id="projects-more" hidden={!more} className="motion-safe:animate-[fade-rise_420ms_cubic-bezier(0.2,0.7,0.1,1)]">
+      {groups.filter((g) => g.key !== "main").map((g) =>
+        (
           <div key={g.key} className="flex flex-col gap-2 pt-[clamp(3rem,6vw,5.5rem)]">
             <h3 id={`projects-${g.key}`} className="font-display text-title font-bold tracking-[-0.01em]">
               {groupLabels[g.key]}
@@ -249,6 +275,7 @@ export function ProjectList({
           </div>
         ),
       )}
+      </div>
 
       {/* The floating preview: decorative, fine pointers only. */}
       <div

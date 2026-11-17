@@ -113,32 +113,9 @@
     "indexLabel": "Pick a project",
     "site": "Go straight to the site",
     "exploring": "Being explored",
-    "closed": "An experiment that ended"
-  },
-  "aiPractice": {
-    "label": "AI in practice",
-    "title": "What already works, and where to see it.",
-    "prompts": {
-      "kind": "Prompts and LLM experiments",
-      "text": "Tisco: a Gemini agent held to my knowledge base. Twelve prompt rules and a guard in code block made-up replies.",
-      "link": "See how Tisco works"
-    },
-    "automations": {
-      "kind": "Automations",
-      "text": "In Koinonia: the AWAKE leader spent over an hour sending a message to everyone; now WhatsApp messages come from ready-made templates. At Giassi: Pascal Script automations in DOX and automatic e-mails built with HTML and SQL.",
-      "link": "See it in Koinonia"
-    },
-    "tools": {
-      "kind": "Internal tools and agents in use",
-      "text": "Hyper, SOU Studio's internal tool for spotting content trends, and Tisco, an agent live on this site.",
-      "link": "See Hyper"
-    },
-    "production": {
-      "kind": "In production, with measured results",
-      "text": "Koinonia, built with AI: {people} {peopleLabel} and {care} {careLabel} in one community.",
-      "note": "Source: {source}, {date}.",
-      "link": "See Koinonia"
-    }
+    "closed": "An experiment that ended",
+    "more": "See more projects",
+    "less": "See less"
   },
   "approach": {
     "label": "Approach",
@@ -320,7 +297,8 @@
             "lovable",
             "koinonia"
           ],
-          "answer": "The fullest case is Koinonia, a live product built with AI. Iury defined the problem, wrote the directives, ran the build and tested the result. At work he uses AI to write rules and automations on the DOX platform."
+          "answer": "In practice, yes. Koinonia is a live product in use, built with AI under his direction. Tisco, that's me, is an LLM agent he built for this site, with prompt rules and a guard against made-up answers. At work he uses AI to write rules and automations in DOX. He is early in his career and learns by building.",
+          "action": "projects"
         },
         {
           "label": "See projects",

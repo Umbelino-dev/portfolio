@@ -80,6 +80,16 @@ export interface Skill {
 /** Skills and stack, no repeats (Iury, 2026-11-13). */
 export const skills: Skill[] = [
   {
+    // Iury, 2026-11-17: AI shown "nas entrelinhas", where it is really used.
+    name: { pt: "IA aplicada (LLMs)", en: "Applied AI (LLMs)" },
+    note: {
+      pt: "Construo com IA: o Koinonia saiu de briefings e planos meus executados com Lovable e Claude, e o Tisco usa a API do Gemini com regras de prompt e uma guarda em código.",
+      en: "I build with AI: Koinonia came from my briefs and plans carried out with Lovable and Claude, and Tisco runs on the Gemini API with prompt rules and a guard in code.",
+    },
+    // Drafted from the project facts (not Iury's own wording); not a Giassi tool.
+    daily: false,
+  },
+  {
     name: { pt: "SQL & PL/SQL", en: "SQL & PL/SQL" },
     note: {
       pt: "Manipulação, consultas e correção de dados em banco Oracle para destravar processos na TI do Giassi.",

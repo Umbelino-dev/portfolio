@@ -113,32 +113,9 @@
     "indexLabel": "Escolha um projeto",
     "site": "Ir direto para o site",
     "exploring": "Em exploração",
-    "closed": "Experiência encerrada"
-  },
-  "aiPractice": {
-    "label": "IA na prática",
-    "title": "O que já funciona, e onde ver.",
-    "prompts": {
-      "kind": "Prompts e experimentos com LLMs",
-      "text": "O Tisco: um agente com Gemini preso à minha base de conhecimento. Doze regras de prompt e uma guarda em código barram respostas inventadas.",
-      "link": "Ver como o Tisco funciona"
-    },
-    "automations": {
-      "kind": "Automações",
-      "text": "No Koinonia: o líder da AWAKE gastava mais de uma hora enviando mensagem para todos, e agora as mensagens de WhatsApp saem de modelos prontos. No Giassi: automações em Pascal Script no DOX e e-mails automáticos com HTML e SQL.",
-      "link": "Ver no Koinonia"
-    },
-    "tools": {
-      "kind": "Ferramentas internas e agentes em uso",
-      "text": "O Hyper, ferramenta interna da SOU Studio para achar tendências de conteúdo, e o Tisco, um agente no ar neste site.",
-      "link": "Ver o Hyper"
-    },
-    "production": {
-      "kind": "Em produção, com resultado medido",
-      "text": "O Koinonia, construído com IA: {people} {peopleLabel} e {care} {careLabel} em uma comunidade.",
-      "note": "Fonte: {source}, {date}.",
-      "link": "Ver o Koinonia"
-    }
+    "closed": "Experiência encerrada",
+    "more": "Ver mais projetos",
+    "less": "Ver menos"
   },
   "approach": {
     "label": "Abordagem",
@@ -322,7 +299,8 @@
             "lovable",
             "koinonia"
           ],
-          "answer": "O caso mais completo é o Koinonia, um produto no ar feito com IA. O Iury definiu o problema, escreveu as diretrizes, conduziu a construção e testou o resultado. No trabalho, usa IA para escrever regras e automações na plataforma DOX."
+          "answer": "Na prática, sim. O Koinonia é um produto no ar e em uso, construído com IA sob a direção dele. O Tisco, eu mesmo, é um agente com LLM que ele fez para este site, com regras de prompt e uma guarda contra respostas inventadas. No trabalho, ele usa IA para escrever regras e automações no DOX. Está no início da carreira e aprende construindo.",
+          "action": "projects"
         },
         {
           "label": "Ver projetos",

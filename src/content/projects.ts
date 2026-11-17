@@ -20,8 +20,8 @@ export const projects: Project[] = [
     year: 2026,
     tags: ["web", "pwa", "ai"],
     summary: {
-      pt: "Plataforma web (PWA) de gestão de comunidades. Concluída, publicada e em uso diário.",
-      en: "A community-management web platform (PWA). Finished, published and in daily use.",
+      pt: "Plataforma web (PWA) de gestão de comunidades, construída com IA sob minha direção. Concluída, publicada e em uso diário.",
+      en: "A community-management web platform (PWA), built with AI under my direction. Finished, published and in daily use.",
     },
     role: {
       pt: "Product builder: problema, fluxo, diretrizes para a IA, orquestração e testes",

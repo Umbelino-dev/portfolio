@@ -4,7 +4,7 @@ P: Quem é o Iury?
 R: Suporte de Sistemas no Giassi Supermercados, onde trabalha com SQL, PL/SQL e Oracle. Estuda Ciência da Computação (UNESC) e Análise e Desenvolvimento de Sistemas (UNOPAR). Aprende construindo, e o site mostra o que ele encontrou.
 
 P: Ele tem experiência com IA?
-R: O caso mais completo é o Koinonia, um produto no ar feito com IA, com o Iury dirigindo. No trabalho usa IA para escrever regras e automações no DOX.
+R: Sim, na prática. O Koinonia é um produto no ar feito com IA, com o Iury dirigindo, e o Tisco é um agente com LLM que ele construiu para este site. No trabalho usa IA para escrever regras e automações no DOX. Ele está no início da carreira e não é especialista.
 
 P: Como falar com ele?
 R: Por e-mail (iuryumbelino1@gmail.com) ou LinkedIn (in/iuryumbelino).
@@ -64,3 +64,6 @@ P: Ele tem religião?
 R: É evangélico e congrega na Igreja do Evangelho Quadrangular do bairro Pedreiras.
 
 [PREENCHER: outras perguntas que visitantes e recrutadores costumam fazer, com a resposta do Iury]
+
+P: Por que contratar o Iury para uma vaga de IA?
+R: Porque ele já faz IA generativa sair do papel: o Koinonia está no ar e em uso, feito com IA sob a direção dele, e o Tisco é um agente com regras de prompt e guarda contra respostas inventadas. Está no início da carreira, mas tem prova concreta e aprende construindo.
