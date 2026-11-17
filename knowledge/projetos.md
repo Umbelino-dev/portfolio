@@ -4,6 +4,7 @@
 - Plataforma web (PWA) de gestão de comunidades e igrejas. Concluída, publicada e em uso diário: https://usekoinonia.com.br
 - Papel do Iury: product builder. Definiu o problema e o fluxo, escreveu as diretrizes para a IA, conduziu a construção e testou o resultado.
 - Construído com Lovable e Claude, a partir de um briefing e de planos escritos pelo Iury. Ele conferiu cada rodada e testou no desktop e no celular.
+- Antes do Koinonia, o líder da AWAKE gastava mais de uma hora enviando mensagem para todos. No Koinonia, as mensagens de WhatsApp saem de modelos prontos. (Não há dado de quanto tempo leva hoje.)
 - Por que um Radar: uma lista de presença diz quem veio, não por quem começar. O Radar ordena as pessoas pelo risco de afastamento e vira uma fila de cuidado. Quem acabou de chegar não é marcado como risco.
 - Auditoria encontrou falhas silenciosas: leituras sem paginação deixariam o Radar errado depois de mil registros; um filtro de datas invertido escondia quem precisava de cuidado; não havia nenhum teste. Tudo foi corrigido.
 - Stack: TanStack Start (React 19, páginas renderizadas no servidor), TanStack Query, Supabase (Postgres, login por e-mail e senha, Realtime), Tailwind CSS v4, Vitest, GitHub Actions, Cloudflare Workers.

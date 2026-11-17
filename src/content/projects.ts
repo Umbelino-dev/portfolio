@@ -40,7 +40,7 @@ export const projects: Project[] = [
       },
     },
     links: [{ label: { pt: "Ver o Koinonia", en: "Visit Koinonia" }, href: "https://usekoinonia.com.br" }],
-    source: "CV §Projetos; Iury (chat, 2026-11-09); repo Umbelino-dev/koinonia.app (README, docs/PRODUTO.md, docs/AUDITORIA.md, docs/historico, git log)",
+    source: "CV §Projetos; Iury (chat, 2026-11-09; 2026-11-17: the AWAKE leader spent over an hour messaging everyone); repo Umbelino-dev/koinonia.app (README, docs/PRODUTO.md, docs/AUDITORIA.md, docs/historico, git log)",
     confirmed: true,
     caseStudy: {
       confirmed: true,
@@ -98,6 +98,14 @@ export const projects: Project[] = [
             text: {
               pt: "Na AWAKE, a liderança fazia quase tudo de memória: quem veio aos encontros, quem estava faltando, aniversários, quem procurar.",
               en: "At AWAKE, leaders did almost everything from memory: who came to meetings, who was missing, birthdays, who to reach out to.",
+            },
+          },
+          {
+            // Iury, 2026-11-17. Only the "before" is known; the time it takes now is not.
+            title: { pt: "Mais de uma hora em mensagens", en: "Over an hour on messages" },
+            text: {
+              pt: "O líder da AWAKE gastava mais de uma hora enviando mensagem para todos. No Koinonia, as mensagens de WhatsApp saem de modelos prontos.",
+              en: "The AWAKE leader spent over an hour sending a message to everyone. In Koinonia, WhatsApp messages come from ready-made templates.",
             },
           },
         ],
